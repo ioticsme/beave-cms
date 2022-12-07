@@ -31,47 +31,11 @@ const sendSMS = async (mobile, senderID, message) => {
 const sendOTP = async (otp, mobile, brand, smsSettings) => {
     const message = `Dear customer, your one time password for ${brand} is ${otp}`
     sendSMS(mobile, senderID, message)
-    // if (process.env.NODE_ENV == 'production') {
-        // axios
-        //     .get(
-        //         `${baseURL}${message}&sender=${senderID}&uniCode=0&to=${mobile}`
-        //     )
-        //     .then(function (response) {
-        //         // console.log(response)
-        //     })
-        //     .catch(function (error) {
-        //         console.log(error)
-        //         // TODO::Send slack notification to the admin
-        //     })
-    // } else {
-    //     axios.post(`${process.env.SLACK_ADMIN_CHANNEL}`, {
-    //         username: 'LML-OTP',
-    //         text: message,
-    //     })
-    // }
 }
 const sendTransactionOTP = async (otp, mobile, brand) => {
     const message = `Thank you for your purchase at ${brand}.\nYour Transaction OTP is ${otp}.\nPlease show this OTP to ${brand} staff to complete your Transaction.`
     // console.log(message, mobile, senderID, message)
     sendSMS(mobile, senderID, message)
-    // if (process.env.NODE_ENV == 'production') {
-        // axios
-        //     .get(
-        //         `${baseURL}${message}&sender=${senderID}&uniCode=0&to=${mobile}`
-        //     )
-        //     .then(function (response) {
-        //         // console.log(response)
-        //     })
-        //     .catch(function (error) {
-        //         console.log(error)
-        //         // TODO::Send slack notification to the admin
-        //     })
-    // } else {
-    //     axios.post(`${process.env.SLACK_ADMIN_CHANNEL}`, {
-    //         username: 'LML-OTP',
-    //         text: message,
-    //     })
-    // }
 }
 const sendThanks = async (message, mobile, brand, smsSettings) => {
     const senderID = `${smsSettings.sender_id}`
