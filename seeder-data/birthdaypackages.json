@@ -1,0 +1,122 @@
+[
+    {
+        "slug": "awesome-party-package",
+        "type": "birthday-package",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "page",
+        "in_home": false,
+        "content": {
+            "en": {
+                "available_items": "<p>Kids Meal</p><p>Voucher Booklet &nbsp;</p><p>1 Hour Play Area&nbsp;</p><p>15 Blue Play (Valid for 1 Month) &nbsp;</p><p>Evite &nbsp;</p><p>1000 Redemption tickets (For celebrant only)</p>",
+                "non_available_items": "<p>2 Balloon Standees&nbsp;</p><p>Party Host&nbsp;</p><p>3 Party games with prizes&nbsp;</p>",
+                "weekday_price": "AED1,100",
+                "weekend_price": "AED1,500",
+                "title": "Awesome Party Package",
+                "body_content": "<p>Min 10 kids for 2 hours &nbsp;</p>"
+            },
+            "ar": {
+                "available_items": "<p>Kids Meal</p><p>Voucher Booklet &nbsp;</p><p>1 Hour Play Area&nbsp;</p><p>15 Blue Play (Valid for 1 Month) &nbsp;</p><p>Evite &nbsp;</p><p>1000 Redemption tickets (For celebrant only)</p>",
+                "non_available_items": "<p>2 Balloon Standees&nbsp;</p><p>Party Host&nbsp;</p><p>3 Party games with prizes&nbsp;</p>",
+                "weekday_price": "AED1,100",
+                "weekend_price": "AED1,500",
+                "title": "Awesome Party Package",
+                "body_content": "<p>Min 10 kids for 2 hours &nbsp;</p>"
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "Awesome Party Package",
+                "keywords": "Awesome Party Package",
+                "description": "Awesome Party Package"
+            },
+            "ar": {
+                "title": "Awesome Party Package",
+                "keywords": "Awesome Party Package",
+                "description": "Awesome Party Package"
+            }
+        }
+    },
+    {
+        "slug": "ultimate-party-package",
+        "type": "birthday-package",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "page",
+        "in_home": false,
+        "content": {
+            "ar": {
+                "available_items": "<p>Kids Meal</p><p>Voucher Booklet &nbsp;</p><p>1 Hour Play Area&nbsp;</p><p>15 Blue Play (Valid for 1 Month) &nbsp;</p><p>Evite &nbsp;</p><p>2500 Redemption tickets (For celebrants only)</p><p>2 Balloon Standees&nbsp;</p><p>Party Host&nbsp;</p><p>3 Party games with prizes&nbsp;</p>",
+                "non_available_items": "",
+                "weekday_price": "AED 1,100",
+                "weekend_price": "AED 1,500",
+                "title": "Ultimate Party Package",
+                "body_content": "<p>Min 10 kids for 2 hours &nbsp;</p>"
+            },
+            "en": {
+                "available_items": "<p>Kids Meal</p><p>Voucher Booklet &nbsp;</p><p>1 Hour Play Area&nbsp;</p><p>15 Blue Play (Valid for 1 Month) &nbsp;</p><p>Evite &nbsp;</p><p>2500 Redemption tickets (For celebrants only)</p><p>2 Balloon Standees&nbsp;</p><p>Party Host&nbsp;</p><p>3 Party games with prizes&nbsp;</p>",
+                "non_available_items": "",
+                "weekday_price": "AED 1,100",
+                "weekend_price": "AED 1,500",
+                "title": "Ultimate Party Package",
+                "body_content": "<p>Min 10 kids for 2 hours &nbsp;</p>"
+            },
+            "common": {
+                "featured": true
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "Ultimate Party Package",
+                "keywords": "Ultimate Party Package",
+                "description": "Ultimate Party Package"
+            },
+            "ar": {
+                "title": "Ultimate Party Package",
+                "keywords": "Ultimate Party Package",
+                "description": "Ultimate Party Package"
+            }
+        }
+    },
+    {
+        "slug": "awesome-party-package-2",
+        "type": "birthday-package",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "page",
+        "in_home": false,
+        "content": {
+            "ar": {
+                "available_items": "<p>Kids Meal</p><p>Voucher Booklet &nbsp;</p><p>1 Hour Play Area&nbsp;</p><p>15 Blue Play (Valid for 1 Month) &nbsp;</p><p>Evite &nbsp;</p><p>2500 Redemption tickets (For celebrants only)</p><p>2 Balloon Standees&nbsp;</p>",
+                "non_available_items": "<p>Party Host&nbsp;</p><p>3 Party games with prizes&nbsp;</p>",
+                "weekday_price": "AED 1,100",
+                "weekend_price": "AED 1,500",
+                "title": "Awesome Party Package 2",
+                "body_content": "<p>Min 10 kids for 2 hours &nbsp;</p>"
+            },
+            "en": {
+                "available_items": "<p>Kids Meal</p><p>Voucher Booklet &nbsp;</p><p>1 Hour Play Area&nbsp;</p><p>15 Blue Play (Valid for 1 Month) &nbsp;</p><p>Evite &nbsp;</p><p>2500 Redemption tickets (For celebrants only)</p><p>2 Balloon Standees&nbsp;</p>",
+                "non_available_items": "<p>Party Host&nbsp;</p><p>3 Party games with prizes&nbsp;</p>",
+                "weekday_price": "AED 1,100",
+                "weekend_price": "AED 1,500",
+                "title": "Awesome Party Package 2",
+                "body_content": "<p>Min 10 kids for 2 hours &nbsp;</p>"
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "Awesome Party Package",
+                "keywords": "Awesome Party Package",
+                "description": "Awesome Party Package"
+            },
+            "ar": {
+                "title": "Awesome Party Package",
+                "keywords": "Awesome Party Package",
+                "description": "Awesome Party Package"
+            }
+        }
+    }
+]

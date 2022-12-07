@@ -1,0 +1,50 @@
+doctype html
+head
+  base(href='../../')
+  title
+    | Error 500
+  meta(charset='utf-8')
+  meta(name='description' content='The most advanced Bootstrap Admin Theme on Themeforest trusted by 100,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue & Laravel versions. Grab your copy now and get life-time updates for free.')
+  meta(name='keywords' content='Metronic, bootstrap, bootstrap 5, Angular, VueJs, React, Laravel, admin themes, web design, figma, web development, free templates, free admin themes, bootstrap theme, bootstrap template, bootstrap dashboard, bootstrap dak mode, bootstrap button, bootstrap datepicker, bootstrap timepicker, fullcalendar, datatables, flaticon')
+  meta(name='viewport' content='width=device-width, initial-scale=1')
+  meta(property='og:locale' content='en_US')
+  meta(property='og:type' content='article')
+  meta(property='og:title' content='Metronic - Bootstrap 5 HTML, VueJS, React, Angular & Laravel Admin Dashboard Theme')
+  meta(property='og:url' content='https://keenthemes.com/metronic')
+  meta(property='og:site_name' content='Keenthemes | Metronic')
+  link(rel='canonical' href='https://preview.keenthemes.com/metronic8')
+  link(rel='shortcut icon' href='assets/media/logos/favicon.ico')
+  link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700')
+  link(href='/admin/assets/plugins/global/plugins.bundle.css' rel='stylesheet' type='text/css')
+  link(href='/admin/assets/css/style.bundle.css' rel='stylesheet' type='text/css')
+script.
+  if ( document.documentElement ) { const defaultThemeMode = "system"; const name = document.body.getAttribute("data-kt-name"); let themeMode = localStorage.getItem("kt_" + ( name !== null ? name + "_" : "" ) + "theme_mode_value"); if ( themeMode === null ) { if ( defaultThemeMode === "system" ) { themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } else { themeMode = defaultThemeMode; } } document.documentElement.setAttribute("data-theme", themeMode); }
+#kt_app_root.d-flex.flex-column.flex-root
+  // begin::Page bg image
+  style.
+    body { background-image: url('/admin/assets/media/auth/bg7.jpg'); } [data-theme="dark"] body { background-image: url('assets/media/auth/bg7-dark.jpg'); }
+  
+  .d-flex.flex-column.flex-center.flex-column-fluid
+    
+    .d-flex.flex-column.flex-center.text-center.p-10
+      
+      .card.card-flush.w-lg-650px.py-5
+        .card-body.py-15.py-lg-20
+          
+          h1.fw-bolder.fs-2qx.text-gray-900.mb-4 System Error
+         
+          .fw-semibold.fs-6.text-gray-500.mb-7 Something went wrong! Please try again later.
+         
+          .mb-11
+            img.mw-100.mh-300px.theme-light-show(src='/admin/assets/media/auth/500-error.png' alt='')
+            img.mw-100.mh-300px.theme-dark-show(src='/admin/assets/media/auth/500-error-dark.png' alt='')
+        
+          .mb-0
+            a.btn.btn-sm.btn-primary(href='javascript:history.back()') Return Back
+          
+script.
+  var hostUrl = "assets/";
+// begin::Global Javascript Bundle(used by all pages)
+script(src='/admin/assets/plugins/global/plugins.bundle.js')
+script(src='/admin/assets/js/scripts.bundle.js')
+

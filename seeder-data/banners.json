@@ -1,0 +1,116 @@
+[
+	{
+		"slug": "home-page",
+		"title": "Home Page",
+		"in_home": true,
+		"published": true,
+		"banner_items": [
+			{
+				"title": {
+					"en": "Play membership",
+					"ar": "Play membership"
+				},
+				"description": {
+					"en": "Are you a Fun member yet? Get unlimited access to our soft play area!",
+					"ar": "Are you a Fun member yet? Get unlimited access to our soft play area!"
+				},
+				"btn_text": {
+					"en": "Know More",
+					"ar": "Know More"
+				},
+				"btn_url": {
+					"en": "###",
+					"ar": "###"
+				},
+				"images": {
+					"common_image": {
+						"en": {
+							"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/banner1_P8uD6-Jjd.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663573054864",
+							"media_id": "631f79578e653f3c05acc135"
+						},
+						"ar": {
+							"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/banner1_P8uD6-Jjd.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663573054864",
+							"media_id": "631f78638e653f3c05acc0e0"
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"slug": "attractions",
+		"title": "Attractions",
+		"in_home": false,
+		"published": true,
+		"banner_items": [
+			{
+				"title": {
+					"en": "Attractions",
+					"ar": "Attractions"
+				},
+				"description": {
+					"en": "Are you a Fun member yet? Get unlimited access to our soft play area!",
+					"ar": "Are you a Fun member yet? Get unlimited access to our soft play area!"
+				},
+				"btn_text": {
+					"en": "Know More",
+					"ar": "Know More"
+				},
+				"btn_url": {
+					"en": "###",
+					"ar": "###"
+				},
+				"images": {
+					"common_image": {
+						"en": {
+							"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/banner3_nva0ak6wY.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663573054903",
+							"media_id": "631f79578e653f3c05acc135"
+						},
+						"ar": {
+							"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/banner3_nva0ak6wY.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663573054903",
+							"media_id": "631f78638e653f3c05acc0e0"
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"slug": "promotions",
+		"title": "Promotions",
+		"in_home": false,
+		"published": true,
+		"banner_items": [
+			{
+				"title": {
+					"en": "Promotions",
+					"ar": "Promotions"
+				},
+				"description": {
+					"en": "Sit back and relax while we ensure your child enjoys their special day! Check out our package options below and book yours today.",
+					"ar": "Sit back and relax while we ensure your child enjoys their special day! Check out our package options below and book yours today."
+				},
+				"btn_text": {
+					"en": "Know More",
+					"ar": "Know More"
+				},
+				"btn_url": {
+					"en": "###",
+					"ar": "###"
+				},
+				"images": {
+					"common_image": {
+						"en": {
+							"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/banner2_TOG3cdguS.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663573054711",
+							"media_id": "631f79578e653f3c05acc135"
+						},
+						"ar": {
+							"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/banner2_TOG3cdguS.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663573054711",
+							"media_id": "631f78638e653f3c05acc0e0"
+						}
+					}
+				}
+			}
+		]
+	}
+]

@@ -1,0 +1,187 @@
+extends ../../layouts/master.pug
+
+block csslib
+	link(href='/admin/assets/plugins/custom/datatables/datatables.bundle.css' rel='stylesheet' type='text/css')
+
+block jslib
+	script(src='/admin/assets/plugins/custom/datatables/datatables.bundle.js')
+	script(src='/admin/assets/js/custom/apps/ecommerce/sales/listing.js')
+	script(src='/admin/assets/js/widgets.bundle.js')
+	script(src='/admin/assets/js/custom/widgets.js')
+	script(src='/admin/assets/js/custom/apps/chat/chat.js')
+	script(src='/admin/assets/js/custom/utilities/modals/upgrade-plan.js')
+	script(src='/admin/assets/js/custom/utilities/modals/create-app.js')
+	script(src='/admin/assets/js/custom/utilities/modals/users-search.js')
+
+block content
+
+	.d-flex.flex-column.flex-column-fluid
+		#kt_app_toolbar.app-toolbar.py-3.py-lg-6
+			#kt_app_toolbar_container.app-container.container-xxl.d-flex.flex-stack
+				.page-title.d-flex.flex-column.justify-content-center.flex-wrap.me-3
+					h1.page-heading.d-flex.text-dark.fw-bold.fs-3.flex-column.justify-content-center.my-0 Orders Listing
+					ul.breadcrumb.breadcrumb-separatorless.fw-semibold.fs-7.my-0.pt-1
+						li.breadcrumb-item.text-muted
+							a.text-muted.text-hover-primary(href='/admin/dashboard') Home
+						li.breadcrumb-item
+							span.bullet.bg-gray-400.w-5px.h-2px
+						li.breadcrumb-item.text-muted eCommerce
+						li.breadcrumb-item
+							span.bullet.bg-gray-400.w-5px.h-2px
+						li.breadcrumb-item.text-muted Sales
+				//- .d-flex.align-items-center.gap-2.gap-lg-3
+					.m-0
+						a.btn.btn-sm.btn-flex.bg-body.btn-color-gray-700.btn-active-color-primary.fw-bold(href='#' data-kt-menu-trigger='click' data-kt-menu-placement='bottom-end')
+							span.svg-icon.svg-icon-6.svg-icon-muted.me-1
+								svg(width='24' height='24' viewbox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg')
+									path(d='M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z' fill='currentColor')
+							|  Filter
+						#kt_menu_62c3e3252d7b6.menu.menu-sub.menu-sub-dropdown.w-250px.w-md-300px(data-kt-menu='true')
+							.px-7.py-5
+								.fs-5.text-dark.fw-bold Filter Options
+							.separator.border-gray-200
+							.px-7.py-5
+								.mb-10
+									label.form-label.fw-semibold Status:
+									div
+										select.form-select.form-select-solid(data-kt-select2='true' data-placeholder='Select option' data-dropdown-parent='#kt_menu_62c3e3252d7b6' data-allow-clear='true')
+											option
+											option(value='1') Approved
+											option(value='2') Pending
+											option(value='2') In Process
+											option(value='2') Rejected
+								.mb-10
+									label.form-label.fw-semibold Member Type:
+									.d-flex
+										label.form-check.form-check-sm.form-check-custom.form-check-solid.me-5
+											input.form-check-input(type='checkbox' value='1')
+											span.form-check-label Author
+										label.form-check.form-check-sm.form-check-custom.form-check-solid
+											input.form-check-input(type='checkbox' value='2' checked='checked')
+											span.form-check-label Customer
+								.mb-10
+									label.form-label.fw-semibold Notifications:
+									.form-check.form-switch.form-switch-sm.form-check-custom.form-check-solid
+										input.form-check-input(type='checkbox' value='' name='notifications' checked='checked')
+										label.form-check-label Enabled
+								.d-flex.justify-content-end
+									button.btn.btn-sm.btn-light.btn-active-light-primary.me-2(type='reset' data-kt-menu-dismiss='true') Reset
+									button.btn.btn-sm.btn-primary(type='submit' data-kt-menu-dismiss='true') Apply
+					a.btn.btn-sm.fw-bold.btn-primary(href='#' data-bs-toggle='modal' data-bs-target='#kt_modal_create_app') Create
+		#kt_app_content.app-content.flex-column-fluid
+			#kt_app_content_container.app-container.container-xxl
+				.card.card-flush
+					.card-header.align-items-center.py-5.gap-2.gap-md-5
+						.card-title
+							.d-flex.align-items-center.position-relative.my-1
+								span.svg-icon.svg-icon-1.position-absolute.ms-4
+									svg(width='24' height='24' viewbox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg')
+										rect(opacity='0.5' x='17.0365' y='15.1223' width='8.15546' height='2' rx='1' transform='rotate(45 17.0365 15.1223)' fill='currentColor')
+										path(d='M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z' fill='currentColor')
+								input.form-control.form-control-solid.w-250px.ps-14(type='text' data-kt-ecommerce-order-filter='search' placeholder='Search Order')
+						.card-toolbar.flex-row-fluid.justify-content-end.gap-5
+							.input-group.w-250px
+								input#kt_ecommerce_sales_flatpickr.form-control.form-control-solid.rounded.rounded-end-0(placeholder='Pick date range')
+								button#kt_ecommerce_sales_flatpickr_clear.btn.btn-icon.btn-light
+									span.svg-icon.svg-icon-2
+										svg(width='24' height='24' viewbox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg')
+											rect(opacity='0.5' x='7.05025' y='15.5356' width='12' height='2' rx='1' transform='rotate(-45 7.05025 15.5356)' fill='currentColor')
+											rect(x='8.46447' y='7.05029' width='12' height='2' rx='1' transform='rotate(45 8.46447 7.05029)' fill='currentColor')
+							.w-100.mw-150px
+								select.form-select.form-select-solid(data-control='select2' data-hide-search='true' data-placeholder='Status' data-kt-ecommerce-order-filter='status')
+									option
+									option(value='all') All
+									option(value='Success') Success
+									option(value='Cancelled') Cancelled
+									option(value='Failed') Failed
+									option(value='Pending') Pending
+									option(value='Hold') Hold
+									//- option(value='Denied') Denied
+									//- option(value='Expired') Expired
+									//- option(value='Processing') Processing
+									//- option(value='Refunded') Refunded
+									//- option(value='Delivered') Delivered
+									//- option(value='Delivering') Delivering
+							//- a.btn.btn-primary(href='../../demo1/dist/apps/ecommerce/catalog/add-product.html') Add Order
+					.card-body.pt-0
+						table#kt_ecommerce_sales_table.table.align-middle.table-row-dashed.fs-6.gy-5
+							thead
+								tr.text-start.text-gray-400.fw-bold.fs-7.text-uppercase.gs-0
+									th.w-10px.pe-2
+										.form-check.form-check-sm.form-check-custom.form-check-solid.me-3
+											input.form-check-input(type='checkbox' data-kt-check='true' data-kt-check-target='#kt_ecommerce_sales_table .form-check-input' value='1')
+									th.min-w-150px Order No
+									th.min-w-150px Customer
+									th.text-end.min-w-70px Payment Status
+									if globalModuleConfig.has_semnox
+										th.text-end.min-w-70px Semnox Status
+									th.text-end.min-w-100px Date Created
+									th.text-end.min-w-100px Date Modified
+									th.text-end.min-w-100px Total
+									th.text-end.min-w-100px Actions
+							tbody.fw-semibold.text-gray-600
+								each item,i in data
+									tr
+										td
+											.form-check.form-check-sm.form-check-custom.form-check-solid
+												input.form-check-input(type='checkbox' value='1')
+										td(data-kt-ecommerce-order-filter='order_id')
+											a.text-gray-800.text-hover-primary.fw-bold(href=`/admin/ecommerce/orders/detail/${item._id}`) #{item.order_no}
+										td
+											.d-flex.align-items-center
+												//- .symbol.symbol-circle.symbol-50px.overflow-hidden.me-3
+													a(href='../../demo1/dist/apps/user-management/users/view.html')
+														.symbol-label.fs-3.bg-light-danger.text-danger O
+												.ms-5
+													.text-gray-800.text-hover-primary.fs-5.fw-bold(href='') #{item.user ? item.user.first_name : "User Name"}
+										//- Payment status
+										if item.payment_status =="success"
+											td.text-end.pe-0(data-order='Completed')
+												.badge.badge-success Completed
+										else if item.payment_status =="cancelled"
+											td.text-end.pe-0(data-order='Cancelled')
+												.badge.badge-danger Cancelled
+										else if item.payment_status =="failed"
+											td.text-end.pe-0(data-order='Failed')
+												.badge.badge-danger Failed
+										else if item.payment_status =="hold"
+											td.text-end.pe-0(data-order='Hold')
+												.badge.badge-warning Hold
+										else if item.payment_status =="pending"
+											td.text-end.pe-0(data-order='Pending')
+												.badge.badge-light Pending
+										
+										//- Semnox status
+										if globalModuleConfig.has_semnox
+											if item.semnox_status =="success"
+												td.text-end.pe-0(data-order='Success')
+													.badge.badge-success Success
+											else if item.semnox_status =="cancelled"
+												td.text-end.pe-0(data-order='Cancelled')
+													.badge.badge-danger Cancelled
+											else if item.semnox_status =="failed"
+												td.text-end.pe-0(data-order='Failed')
+													.badge.badge-danger Failed
+											else if item.semnox_status =="hold"
+												td.text-end.pe-0(data-order='Hold')
+													.badge.badge-warning On-Hold
+											else if item.semnox_status =="pending"
+												td.text-end.pe-0(data-order='Pending')
+													.badge.badge-light Pending
+
+										td.text-end(data-order=`${item.date_created_filter}`)
+											span.fw-bold #{item.date_created_display}
+										td.text-end(data-order=`${item.date_updated_filter}`)
+											span.fw-bold #{item.date_updated_display}
+										td.text-end.pe-0
+											span.fw-bold #{Number(item.amount).toFixed(2) || 0.00} 
+										td.text-end
+											a.btn.btn-sm.btn-light.btn-active-light-primary(href='#' data-kt-menu-trigger='click' data-kt-menu-placement='bottom-end')
+												| Actions 
+												span.svg-icon.svg-icon-5.m-0
+													svg(width='24' height='24' viewbox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg')
+														path(d='M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z' fill='currentColor')
+											.menu.menu-sub.menu-sub-dropdown.menu-column.menu-rounded.menu-gray-600.menu-state-bg-light-primary.fw-semibold.fs-7.w-125px.py-4(data-kt-menu='true')
+												.menu-item.px-3
+													a.menu-link.px-3(href=`/admin/ecommerce/orders/detail/${item._id}`) View
+

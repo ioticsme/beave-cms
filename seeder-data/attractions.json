@@ -1,0 +1,284 @@
+[
+    {
+        "slug": "big-rides", 
+        "type": "attraction",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "attraction",
+        "in_home": true,
+        "banner": "attractions",
+        "gallery": "attractions-detail-page",
+        "content": {
+            "en": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/0adf688f8dd87a94a4c5be264d1ad259_H4ln-Txr8",
+                    "media_id": {
+                        "$oid": "631ed5a262abc077cd0f215c"
+                    }
+                },
+                "title": "Big Rides",
+                "body_content": "<h1>A thrilling start to your day!</h1><p>Meet your adrenaline rush needs on our family fun Big rides. Whether you're an adult bringing out your inner child or keeping your kids' company, our big rides are the most exhilarating attractions you must try. The minimum Height required to try out our big rides is XXXX</p>",
+                "excerpt": "Just when you catch your breath, you're left gasping for more! Experience every twist, turn, and drop on our big rides."
+            },
+            "ar": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/c5c9f475ae4a9e0452a918c69a3113f8_HrKA0mLvZ",
+                    "media_id": {
+                        "$oid": "631ed5a862abc077cd0f215e"
+                    }
+                },
+                "title": "العاب الركوب الكبيرة ",
+                "body_content": "<h1>بداية مذهلة ليومك !</h1><p>احصل على دفعة هائلة من الادرينالين عند تجربة العاب الركوب الكبيرة لدينا المناسبة لكل افراد العائلة . سواء كنت بالغا تريد اخراج الطفل بداخلك او انك تشارك الاطفال في المرح , فان العاب الركوب هي أكثر أماكن الجذب متعة و إثارة التي يجب أن تجربها. تطبق سياسة الاطوال داخل العاب الركوب  </p>",
+                "excerpt": "لا يوجد وقت لالتقاط الانفاس مع  العاب الركوب الاكثر اثارة  ! قم بتجربة الدوران و السقوط و الانعطاف داخل العاب الركوب الكبيرة "
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "funcity attraction page",
+                "description": "funcity attraction page",
+                "keywords": "funcity , kids play area"
+            },
+            "ar": {
+                "title": "funcity attraction page",
+                "description": "funcity attraction page",
+                "keywords": "funcity . kids play area"
+            }
+        }
+    },
+    {
+        "slug": "kiddie-rides",
+        "type": "attraction",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "attraction",
+        "in_home": true,
+        "banner": "attractions",
+        "gallery": "attractions-detail-page",
+        "content": {
+            "en": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/76d9fccf0697014545d2052ad4f2c8aa__ekSnIJtl-",
+                    "media_id": {
+                        "$oid": "631ed5fd62abc077cd0f2178"
+                    }
+                },
+                "title": "Kiddie Rides",
+                "body_content": "<h1>Kiddie rides at Fun City are a must try</h1><p>Keep your little ones entertained for hours on our Crazy Gliders, Hello Kitty Fun House, Ocean Carousels and more. Our kiddie rides are so gentle, safe, and fun that your kids will not want to stop. They're perfect for kids ages from 1-5 years old with a minimum height of 100 cms</p>",
+                "excerpt": "Experience our truly magical kiddie rides such as Hello Kitty, Carousel and more!"
+            },
+            "ar": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/6c812f38bd160b3cf050e7663588f075_X-y3JwbKd",
+                    "media_id": {
+                        "$oid": "631ed60162abc077cd0f217a"
+                    }
+                },
+                "title": "العاب الركوب للاطفال ",
+                "body_content": "<h1>يجب تجربة العاب الركوب للاطفال في فن سيتي </h1><p>اترك صغارك يستمتعون بساعات من اللعب داخل العاب كريزي جليدر , هالو كيتي  فن هاوس  , اوشن  كاروسيل و المزيد . العاب الركوب للاطفال لدينا آمنة و ممتعة للاطفال لن يتوقفوا ابدا عن اللعب   . مناسبة للاطفال مابين 1-5 سنوات مع طول لا يقل عن 100 سم </p>",
+                "excerpt": "تجربة العاب الركوب الساحرة  للاطفال مثل العاب هالو كيتي  و كاروسيل  والمزيد !"
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "Kiddie rides at Fun City are a must try",
+                "keywords": "Kiddie rides at Fun City are a must try",
+                "description": "Kiddie rides at Fun City are a must try"
+            },
+            "ar": {
+                "title": "Kiddie rides at Fun City are a must try",
+                "keywords": "Kiddie rides at Fun City are a must try",
+                "description": "Kiddie rides at Fun City are a must try"
+            }
+        }
+    },
+    {
+        "slug": "video-games",
+        "type": "attraction",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "attraction",
+        "in_home": true,
+        "banner": "attractions",
+        "gallery": "attractions-detail-page",
+        "content": {
+            "en": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/0671d44ad5ce7352d67a44f49e7fb5a1_vorqY98vW",
+                    "media_id": {
+                        "$oid": "631f1a95cc08d3e89ccbbf11"
+                    }
+                },
+                "title": "Video Games",
+                "body_content": "<h1>Get your GAME MODE ON!</h1><p>Whether you're an old-school gamer or next-gen gamer, Fun City has a variety of video games and skilled games such as The Fast and the Furious, ,NBA Hoops,Super Bikes 2, and Air Hockey and many more. Perfect for all ages, our video games and skilled games are great way to bond with your child and make special play memories.</p>",
+                "excerpt": "We offer an impressive range of video games that will have you and your kids hooked!"
+            },
+            "ar": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/5d1bab367814b99ee9715ffa1445dd5c_q9tCJSB6v",
+                    "media_id": {
+                        "$oid": "631f1a99cc08d3e89ccbbf13"
+                    }
+                },
+                "title": "العاب الفيديو ",
+                "body_content": "<h1>استعد للعب !</h1><p>سواء كنت لاعب قديم او لاعب من الجيل الجديد   , فن سيتي لديها الكثير من العاب الفيديو و العاب المهارة  مثل فاست اند فيروز  , ان بي ايه هوبس , سوبر بايك 2 و اير هوكي  و المزيد , مناسب لكل الاعمار والاجيال  , العابنا  الفيديو  والمهارة طريقة رائعة للتواصل مع اطفالك وصنع ذكريات مميزة </p>",
+                "excerpt": "لدينا مجموعة هائلة من العاب الفيديو  التي ستجعلك انت وصغارك دائما متحمسون للعب !"
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "Get your GAME MODE ON!",
+                "keywords": "Get your GAME MODE ON!",
+                "description": "Get your GAME MODE ON!"
+            },
+            "ar": {
+                "title": "Get your GAME MODE ON!",
+                "keywords": "Get your GAME MODE ON!",
+                "description": "Get your GAME MODE ON!"
+            }
+        }
+    },
+    {
+        "slug": "redemption-and-novelty",
+        "type": "attraction",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "attraction",
+        "in_home": true,
+        "banner": "attractions",
+        "gallery": "attractions-detail-page",
+        "content": {
+            "en": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/1eb17928a261bc12b57d8eaa66cd916c_CFKCc7fU9",
+                    "media_id": {
+                        "$oid": "631f433a87d824ee8a8575a6"
+                    }
+                },
+                "title": "Redemption & Novelty games ",
+                "body_content": "<h1>A WINNING ADVENTURE</h1><p>Load your powercard, play, and win e-tickets! Trade them in for prizes at the redemption counter or stand a chance to win them while playing our novelty games.&nbsp;</p>",
+                "excerpt": " Play, collect e-tickets from our redemption games, and redeem them for awesome fun prizes!"
+            },
+            "ar": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/6216927c05028b985492803d3dee39b1_-O7ttcWwl",
+                    "media_id": {
+                        "$oid": "631f433e87d824ee8a8575a8"
+                    }
+                },
+                "title": "العاب الجوائز و الاسترداد ",
+                "body_content": "<h1>مغامرة رابحة </h1><p>قم بتعبئة بطاقة اللعب خاصتك وانطلق نحو اللعب واربح تذاكر إلكترونية ! استبدلها بجوائز عند كاونتر الاسترداد او احصل على فرصة الفوز بالجوائز اثناء اللعب داخل العاب الجوائز .</p>",
+                "excerpt": "العب واجمع التذاكر الكترونية من العاب الاسترداد  واستبدلهم مقابل جوائز رائعة "
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "A WINNING ADVENTURE ",
+                "keywords": "A WINNING ADVENTURE ",
+                "description": "A WINNING ADVENTURE "
+            },
+            "ar": {
+                "title": "A WINNING ADVENTURE ",
+                "keywords": "A WINNING ADVENTURE",
+                "description": "A WINNING ADVENTURE "
+            }
+        }
+    },
+    {
+        "slug": "play-area",
+        "type": "attraction",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "attraction",
+        "in_home": true,
+        "banner": "attractions",
+        "gallery": "attractions-detail-page",
+        "content": {
+            "en": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/1eb17928a261bc12b57d8eaa66cd916c_CFKCc7fU9",
+                    "media_id": {
+                        "$oid": "631f433a87d824ee8a8575a6"
+                    }
+                },
+                "title": "Play Area",
+                "body_content": "<h1>EXPLORE A WORLD OF ACTIVE PLAY</h1><p>Our multi-level soft play area which is well equipped with climbing frames, colorful ball pools, crawl tunnels and giant slides to have them burn all the pent up energy. Fun City's indoor Play Areas meet the highest safety standards and have trained staff to ensure so you can enjoy your day while your kids are at play. Our Play areas have a minimum height requirement of 170 cms. </p>",
+                "excerpt": "Our multi-level soft play area which is well equipped with climbing frames, colorful ball pools, crawl tunnels and giant slides to have them burn all the pent up energy."
+            },
+            "ar": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/6216927c05028b985492803d3dee39b1_-O7ttcWwl",
+                    "media_id": {
+                        "$oid": "631f433e87d824ee8a8575a8"
+                    }
+                },
+                "title": "Play Area",
+                "body_content": "<h1>اكتشف عالم اللعب النشط </h1><p>   يوجد لدينا منطقة اللعب اللينة متعددة المستويات بإطارات للتسلق وبرك مليئة بالكرات الملونة وعناصر تفاعلية وأنفاق للزحف وعوائق متدرجة وجسور من الحبال وزحليقة عملاقة ستجعل وقت لعب الاطفال مليئ بالمرح واللعب وافراغ الطاقات بداخلهم . تطبق مناطق اللعب الداخلية في فن سيتي أعلى معايير السلامة ولديها موظفين مدربين لضمان استمتاع الاطفال بيومهم  أثناء اللعب . تتطلب مناطق اللعب لدينا حد أدنى للارتفاع يبلغ 170 سم  </p>",
+                "excerpt": "Our multi-level soft play area which is well equipped with climbing frames, colorful ball pools, crawl tunnels and giant slides to have them burn all the pent up energy."
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "Play Area ",
+                "keywords": "A WINNING ADVENTURE ",
+                "description": "A WINNING ADVENTURE "
+            },
+            "ar": {
+                "title": "Play Area",
+                "keywords": "A WINNING ADVENTURE ",
+                "description": "A WINNING ADVENTURE "
+            }
+        }
+    },
+    {
+        "slug": "balls-and-walls",
+        "type": "attraction",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "attraction",
+        "in_home": true,
+        "banner": "attractions",
+        "gallery": "attractions-detail-page",
+        "content": {
+            "en": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/ee14ac1dd9edb6559193f52daa90d4ee_mSUqB3hPs",
+                    "media_id": {
+                        "$oid": "631f45bf87d824ee8a8575f0"
+                    }
+                },
+                "title": "Balls & Walls",
+                "body_content": "<h1>IT'S SO IMMERSIVE THAT YOU'LL NOT WANT TO STOP</h1><p>Balls and Walls is a unique, interactive indoor playground with over 15 unique games in the same space. Choose from various games like Angry Bird Smash, Zombies Vs Brains, Ice Cream Factory, Break it Soccer, and much more and challenge your kids to healthy competition.</p>",
+                "excerpt": "Step into a world of immersive play with this family game at Bawadi Mall"
+            },
+            "ar": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/3e77e207ad33ffe7633ab0613750dde5_LmmQ6gCRPa",
+                    "media_id": {
+                        "$oid": "631f45c387d824ee8a8575f2"
+                    }
+                },
+                "title": "Balls and Walls",
+                "body_content": "<h1>انها لعبة مذهلة ستجعلكم لن تتوقفوا عن اللعب </h1><p>Balls and Walls هو ملعب داخلي فريد  وتفاعلي يضم أكثر من 15 لعبة فريدة في نفس المساحة. اختر من بين العديد من الألعاب مثل انجري بيرد سماش  و زومبي ضد براينز و مصنع الايس كريم  وبريك ات سوكر  وغير ذلك الكثير وتحدي أطفالك في منافسة صحية.</p>",
+                "excerpt": "ادخل عالم اللعب التفاعلي مع هذة اللعبة العائلية داخل البوادي مول "
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "IT'S SO IMMERSIVE THAT YOU'LL NOT WANT TO STOP ",
+                "keywords": "IT'S SO IMMERSIVE THAT YOU'LL NOT WANT TO STOP ",
+                "description": "IT'S SO IMMERSIVE THAT YOU'LL NOT WANT TO STOP "
+            },
+            "ar": {
+                "title": "IT'S SO IMMERSIVE THAT YOU'LL NOT WANT TO STOP ",
+                "keywords": "IT'S SO IMMERSIVE THAT YOU'LL NOT WANT TO STOP ",
+                "description": "IT'S SO IMMERSIVE THAT YOU'LL NOT WANT TO STOP "
+            }
+        }
+    }
+]

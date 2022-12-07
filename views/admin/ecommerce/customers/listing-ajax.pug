@@ -1,0 +1,78 @@
+extends ../../layouts/master.pug
+
+block csslib
+	link(href='/admin/assets/plugins/custom/datatables/datatables.bundle.css' rel='stylesheet' type='text/css')
+
+block jslib
+	script(src='/admin/assets/plugins/custom/datatables/datatables.bundle.js')
+	//- script(src='/admin/assets/js/custom/apps/ecommerce/sales/listing.js')
+	script(src='/admin/assets/js/widgets.bundle.js')
+	script(src='/admin/assets/js/custom/widgets.js')
+	script(src='/admin/assets/js/custom/apps/chat/chat.js')
+	script(src='/admin/assets/js/custom/utilities/modals/upgrade-plan.js')
+	script(src='/admin/assets/js/custom/utilities/modals/create-app.js')
+	script(src='/admin/assets/js/custom/utilities/modals/users-search.js')
+	script(src='/common/js/ajax-customer-table.js')
+	//- script(src='/common/js/listing-ajax.js')
+
+block content
+
+	.d-flex.flex-column.flex-column-fluid
+		#kt_app_toolbar.app-toolbar.py-3.py-lg-6
+			#kt_app_toolbar_container.app-container.container-xxl.d-flex.flex-stack
+				.page-title.d-flex.flex-column.justify-content-center.flex-wrap.me-3
+					h1.page-heading.d-flex.text-dark.fw-bold.fs-3.flex-column.justify-content-center.my-0 Customers Listing
+					ul.breadcrumb.breadcrumb-separatorless.fw-semibold.fs-7.my-0.pt-1
+						li.breadcrumb-item.text-muted
+							a.text-muted.text-hover-primary(href='/admin/dashboard') Home
+						li.breadcrumb-item
+							span.bullet.bg-gray-400.w-5px.h-2px
+						li.breadcrumb-item.text-muted eCommerce
+						li.breadcrumb-item
+							span.bullet.bg-gray-400.w-5px.h-2px
+						li.breadcrumb-item.text-muted Customers
+		#kt_app_content.app-content.flex-column-fluid
+			#kt_app_content_container.app-container.container-xxl
+				.card.card-flush
+					.card-header.align-items-center.py-5.gap-2.gap-md-5
+						.card-title
+							.d-flex.align-items-center.position-relative.my-1
+								span.svg-icon.svg-icon-1.position-absolute.ms-4
+									svg(width='24' height='24' viewbox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg')
+										rect(opacity='0.5' x='17.0365' y='15.1223' width='8.15546' height='2' rx='1' transform='rotate(45 17.0365 15.1223)' fill='currentColor')
+										path(d='M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z' fill='currentColor')
+								input.form-control.form-control-solid.w-250px.ps-14(type='text' data-kt-docs-table-filter='search' placeholder='Search customer')
+						//- .card-toolbar.flex-row-fluid.justify-content-end.gap-5
+							.input-group.w-250px
+								input#kt_ecommerce_sales_flatpickr.form-control.form-control-solid.rounded.rounded-end-0(placeholder='Pick date range')
+								button#kt_ecommerce_sales_flatpickr_clear.btn.btn-icon.btn-light
+									span.svg-icon.svg-icon-2
+										svg(width='24' height='24' viewbox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg')
+											rect(opacity='0.5' x='7.05025' y='15.5356' width='12' height='2' rx='1' transform='rotate(-45 7.05025 15.5356)' fill='currentColor')
+											rect(x='8.46447' y='7.05029' width='12' height='2' rx='1' transform='rotate(45 8.46447 7.05029)' fill='currentColor')
+							.w-100.mw-150px
+								select.form-select.form-select-solid(data-control='select2' data-hide-search='true' data-placeholder='Status' data-kt-docs-table-filter='status')
+									option
+									option(value='all') All
+									option(value='Success') Success
+									option(value='Cancelled') Cancelled
+									option(value='Failed') Failed
+									option(value='Pending') Pending
+									option(value='Hold') Hold
+
+					.card-body.pt-0
+						table#kt_datatable_example_1.table.align-middle.table-row-dashed.fs-6.gy-5
+							thead
+								tr.text-start.text-gray-400.fw-bold.fs-7.text-uppercase.gs-0
+									th.w-10px.pe-2
+										.form-check.form-check-sm.form-check-custom.form-check-solid.me-3
+										//- input.form-check-input(type='checkbox' data-kt-check='true' data-kt-check-target='#kt_datatable_example_1' value='1')
+									th.min-w-125px Customer Name
+									th.min-w-125px Email
+									th.min-w-125px Mobile
+									th.min-w-125px Status
+									th.min-w-125px Created Date
+									th.text-end.min-w-70px Actions
+							tbody.text-gray-600.fw-semibold 
+						
+

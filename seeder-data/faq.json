@@ -1,0 +1,62 @@
+[
+    {
+        "slug": "how-can-i-top-up-my-card",
+        "type": "faq",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "faq",
+        "in_home": false,
+        "content": {
+            "en": {
+                "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry?",
+                "body_content": "Pellentesque nam fermentum dignissim habitasse. Neque elementum, viverra pharetra, id dui. Fringilla sed id condimentum bibendum. At quisque ultricies sed scelerisque imperdiet leo sed massa magna."
+            },
+            "ar": {
+                "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry? AR",
+                "body_content": "Pellentesque nam fermentum dignissim habitasse. Neque elementum, viverra pharetra, id dui. Fringilla sed id condimentum bibendum. At quisque ultricies sed scelerisque imperdiet leo sed massa magna."
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "topup card",
+                "keywords": "card,topup",
+                "description": "topup existing card",
+                "og_image": "og-image-url"
+            },
+            "ar": {
+                "keywords": ""
+            }
+        }
+    },
+    {
+        "slug": "how-can-i-top-up-my-card",
+        "type": "faq",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "faq",
+        "in_home": false,
+        "content": {
+            "en": {
+                "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry?",
+                "body_content": "Pellentesque nam fermentum dignissim habitasse. Neque elementum, viverra pharetra, id dui. Fringilla sed id condimentum bibendum. At quisque ultricies sed scelerisque imperdiet leo sed massa magna."
+            },
+            "ar": {
+                "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry? AR",
+                "body_content": "Pellentesque nam fermentum dignissim habitasse. Neque elementum, viverra pharetra, id dui. Fringilla sed id condimentum bibendum. At quisque ultricies sed scelerisque imperdiet leo sed massa magna."
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "topup card",
+                "keywords": "card, topup",
+                "description": "topup existing card",
+                "og_image": "og-image-url"
+            },
+            "ar": {
+                "keywords": "card, topup"
+            }
+        }
+    }
+]

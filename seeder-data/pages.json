@@ -1,0 +1,221 @@
+[
+    {
+        "slug": "about",
+        "type": "page",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "page",
+        "in_home": false,
+        "banner": "home-page",
+        "gallery": "about-us",
+        "content": {
+            "en": {
+                "title": "About Us",
+                "body_content": "<p>Landmark Leisure is the entertainment division of the iconic Landmark Group and was founded in 1999 with its flagship brand, Fun City. Since then, it has been the best-recognized family entertainment brand across the UAE, Bahrain, KSA, Kuwait, Oman, and India catering to children from 1-12 years old. Our brands encourage children to learn whilst they play, with a variety of activities focused on their growth and development.</p>"
+            },
+            "ar": {
+                "title": "نبذة عنا",
+                "body_content": "<p>لاندمارك ليجر هي ذراع التسلية والترفيه المنضوية تحت مظلة مجموعة  لاندمارك  المتميزة والتي تأسست في عام 1999 إلى جانب علامتها التجارية الشهيرة فن سيتي ومنذ ذلك الحين، برزت  لاندمارك للترفيه كإحدى أفضل العلامات التجارية المتخصصة في مجال الترفيه العائلي في دولة الإمارات العربية المتحدة وسلطنة عمان والبحرين وقطر والسعودية والهند، وهي موجهة للأطفال من سن 1-12 عاماً كما تشجعهم على التعلم أثناء اللعب وذلك من خلال مجموعة متنوعة من الأنشطة التي تركز على نمو الأطفال و تطوير مهاراتهم.</p>"
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "About - Fun City | Indoor Play Zone for Kids in UAE | Fun City",
+                "keywords": "funcity, kids play area",
+                "description": "Fun City is an ideal play center for kids between 1 to 12 years. It is an active and safe Indoor Play Zone for Kids. Come and play at Fun City in UAE.",
+                "og_image": "og-image-url"
+            },
+            "ar": {
+                "title": "نبذة عن فن سيتي | مناطق ترفيهية داخلية في الامارات | فن سيتي",
+                "description": "فن سيتي هي المكان المثالي للألعاب للأطفال ما بين سنة و12 سنة فهي تحتوي على ألعاب داخلية وآمنة لجميع الأعمار... زوروا فن سيتي في الامارات.",
+                "keywords": "نبذة عن فن سيتي, مناطق ترفيهية داخلية في الامارات,فن سيتي"
+            }
+        }
+    },
+    {
+        "slug": "attractions",
+        "type": "page",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "page",
+        "in_home": false,
+        "banner": "attractions",
+        "gallery": "about-us",
+        "content": {
+            "en": {
+                "title": "Ride, Play & Win!",
+                "body_content": "<p>Get your Play Mode with our one-of-a-kind Attractions. Gentle kiddie rides for the little ones to Big thrilling rides, Video Games, redemptions games to win BIG, Bumper car fun and so much more. You name it, we have it! You can also enjoy endless hours of fun at the massive Play area is super safe, and well-equipped to unleash all their pent-up energy. Don’t forget to check out our brand new attractions called Balls & Walls in Bawadi Mall which is perfect for the entire family!</p>"
+            },
+            "ar": {
+                "title": "العب و اربح !",
+                "body_content": "<p>ابقى مستعد  للاستمتاع بالعاب فريدة من نوعها تشمل العاب  ركوب للأطفال و العاب الركوب الكبيرة  الاكثر اثارة وألعاب الفيديو وألعاب الاسترداد للفوز بجوائز  كبيرة  ومتعة  لعبة تصادم السيارات  والمزيد . كل ما  تريدة  تجده عندنا ! يمكنك أيضاً الاستمتاع بساعات لا حصر لها من المرح في منطقة اللعب العملاقة  الآمنة للغاية والمجهزة جيداً لإطلاق كل الطاقات الكامنة بداخلهم  . لا تنسَ الاطلاع على أماكن لعبتنا  الجديدة المعروفة باسم   Balls & Walls في البوادي مول - العين  , التي تعد مثالية لجميع أفراد العائلة!</p>"
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "funcity attraction page",
+                "keywords": "funcity, kids play area",
+                "description": "funcity attraction page",
+                "og_image": "og-image-url"
+            },
+            "ar": {
+                "title": "funcity attraction page",
+                "keywords": "funcity, kids play area",
+                "description": "funcity attraction page",
+                "og_image": "og-image-url"
+            }
+        }
+    },
+    {
+        "slug": "promotions",
+        "type": "page",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "page",
+        "in_home": false,
+        "banner": "promotions",
+        "gallery": "about-us",
+        "content": {
+            "en": {
+                "title": "Pay Less, Play more",
+                "body_content": "<p>Enjoy great savings and more family fun time with our exclusive promotions</p>"
+            },
+            "ar": {
+                "title": "ادفع اقل العب اكثر ",
+                "body_content": "<p>اسمتع بتوفيرات كبيرة مع قضاء مزيد من وقت مرح العائلة مع  عروضنا  الحصرية </p>"
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "funcity attraction page",
+                "keywords": "funcity, kids play area",
+                "description": "funcity attraction page",
+                "og_image": "og-image-url"
+            },
+            "ar": {
+                "title": "funcity attraction page",
+                "keywords": "funcity, kids play area",
+                "description": "funcity attraction page",
+                "og_image": "og-image-url"
+            }
+        }
+    },
+    {
+        "slug": "packages",
+        "type": "page",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "page",
+        "in_home": false,
+        "banner": "promotions",
+        "gallery": "about-us",
+        "content": {
+            "en": {
+                "title": "Packages",
+                "body_content": ""
+            },
+            "ar": {
+                "title": "Packages",
+                "body_content": ""
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "funcity Packages page",
+                "keywords": "funcity, kids play area",
+                "description": "funcity Packages page",
+                "og_image": "og-image-url"
+            },
+            "ar": {
+                "title": "funcity Packages page",
+                "keywords": "funcity, kids play area",
+                "description": "funcity Packages page",
+                "og_image": "og-image-url"
+            }
+        }
+    },
+    {
+        "slug": "birthday-packages",
+        "type": "page",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "page",
+        "in_home": false,
+        "banner": "promotions",
+        "gallery": "birthdays",
+        "content": {
+            "en": {
+                "title": "OUR BIRTHDAY PARTY PACKAGES",
+                "body_content": ""
+            },
+            "ar": {
+                "title": "باقات حفلات اعياد الميلاد ",
+                "body_content": ""
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "funcity Birthday Packages page",
+                "keywords": "funcity, kids play area",
+                "description": "funcity Birthday Packages page",
+                "og_image": "og-image-url"
+            },
+            "ar": {
+                "title": "funcity Birthday Packages page",
+                "keywords": "funcity,kids play area",
+                "description": "funcity Birthday Packages page",
+                "og_image": "og-image-url"
+            }
+        }
+    },
+    {
+        "slug": "contact",
+        "type": "page",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "template_name": "page",
+        "in_home": false,
+        "banner": "promotions",
+        "gallery": "about-us",
+        "content": {
+            "en": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/c05d5e2f2e4d380f5eecbd3d4fef5171_sbNJX-l8X",
+                    "media_id": {
+                        "$oid": "631f10d7212c2e2d48aa0b15"
+                    }
+                },
+                "title": "Get in touch",
+                "body_content": "<p>For all queries, please fill the form below and we will get in touch with you right away</p>"
+            },
+            "ar": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Funcity/Content/b483f604a80a5ab33e9991974e643c8c_lDAYp2hb-",
+                    "media_id": {
+                        "$oid": "631f10db212c2e2d48aa0b17"
+                    }
+                },
+                "title": "ابقى على تواصل ",
+                "body_content": "<p>لجميع الاستفسارات ، الرجاء ملء النموذج أدناه وسنتواصل معك على الفور</p>"
+            }
+        },
+        "meta": {
+            "en": {
+                "title": "Get in touch",
+                "keywords": "Get in touch",
+                "description": "Get in touch"
+            },
+            "ar": {
+                "title": "Get in touch",
+                "keywords": "Get in touch",
+                "description": "Get in touch"
+            }
+        }
+    }
+]

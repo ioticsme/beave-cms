@@ -1,0 +1,62 @@
+[
+    {
+        "slug": "csr",
+        "type": "content-block",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "in_home": false,
+        "content": {
+            "en": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Development/Funcity/Sample/DSC03478_4_uD9vDRdmm.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1663875564580",
+                    "media_id": {
+                        "$oid": "631ed5a262abc077cd0f215c"
+                    }
+                },
+                "title": "Corporate Social Responsibility",
+                "body_content": "<p>Fun City collaborates with You Gov to conduct the Children's Play Index so that we are able to assess the and compare the play behaviour of children in the GCC to children across the world. This activity is conducted once every 2 years. The results from the last Play Index held in 2016, show that in comparison to the rest of the world, children in the GCC indulge more in active play.</p>"
+            },
+            "ar": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Development/Funcity/Sample/DSC03478_4_uD9vDRdmm.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1663875564580",
+                    "media_id": {
+                        "$oid": "631ed5a862abc077cd0f215e"
+                    }
+                },
+                "title": "Corporate Social Responsibility",
+                "body_content": "<p>Fun City collaborates with You Gov to conduct the Children's Play Index so that we are able to assess the and compare the play behaviour of children in the GCC to children across the world. This activity is conducted once every 2 years. The results from the last Play Index held in 2016, show that in comparison to the rest of the world, children in the GCC indulge more in active play.</p>"
+            }
+        }
+    },
+    {
+        "slug": "backwallbanner",
+        "type": "content-block",
+        "brand": "fc",
+        "country": "UAE",
+        "attached_type": [],
+        "in_home": true,
+        "content": {
+            "en": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Development/Funcity/Sample/DSC03467_4_18g6BdKux.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1663881603213",
+                    "media_id": {
+                        "$oid": "631ed5a262abc077cd0f215c"
+                    }
+                },
+                "title": "Let’s make your birthday party FUNTASTIC!",
+                "body_content": "<p>Make your kid's birthday truly stand out from the crowd with our special birthday party packages. Leave the planning to us while your child and birthday guests enjoy a specially decorated party hall, games, food, playtime and more.</p>"
+            },
+            "ar": {
+                "featured_image": {
+                    "media_url": "https://ik.imagekit.io/3olumvfrg/Development/Funcity/Sample/DSC03467_4_18g6BdKux.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1663881603213",
+                    "media_id": {
+                        "$oid": "631ed5a862abc077cd0f215e"
+                    }
+                },
+                "title": "معاً سنجعل حفلة عيد ميلادك مذهلة لا تنسى  !",
+                "body_content": "<p>لنجعله عيد ميلاد متميز عن الاخرين يمكنك الاختيار ما بين مجموعة من الباقات الخاصة جداً ,  اترك التخطيط لنا بينما يستمتع طفلك وضيوفه  باللعب و اطيب الطعام و قاعة الاحتفال مزينة بشكل خاص والمزيد.</p>"
+            }
+        }
+    }
+]

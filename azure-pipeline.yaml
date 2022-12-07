@@ -1,0 +1,182 @@
+#
+# Azure DevOps pipeline
+#
+# Application:     CMS
+# Deployment:      Docker Host
+# Deployment tool: docker-compose (VM)
+# Maintained by:   IOTICS
+#
+
+
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+    - staging
+    #- azure-pipelines
+  paths:
+    exclude:
+    - azure-pipelines.yaml
+    - README.md
+    - Dockerfile
+
+
+# Don't run against PRs
+pr: none
+
+variables:
+- group: cms
+
+- name: tag
+  value:  $(Build.SourceBranchName)-$(GitShortSha)
+
+- name: vmImageName
+  value: 'ubuntu-latest'
+
+- name: containerRegistryServiceConnection
+  value: 'ACR'
+
+- name: imageRepository
+  value: '$(appName)/$(imageName)'
+
+- name: DockerEnvironmentProd
+  value: 'Production VM'
+
+- name: DockerEnvironmentStage
+  value: 'Staging VM'
+
+
+stages:
+- stage: Build
+  displayName: Build image
+
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+    - checkout: self
+      clean: true
+      displayName: Cleaning local repo
+
+    - script: GitShortSha=`git rev-parse --short HEAD` && echo "##vso[task.setvariable variable=GitShortSha]$GitShortSha"
+      displayName: Set the Git Short SHA as an environment variablie
+             
+    - task: Docker@2
+      displayName: Build Container Image
+      inputs:
+        containerRegistry: '$(containerRegistryServiceConnection)'
+        repository: '$(imageRepository)'
+        command: 'build'
+        Dockerfile: '**/Dockerfile'
+        tags: '$(tag)'
+        
+    - task: Docker@2
+      displayName: Push Image to ACR
+      inputs:
+        containerRegistry: '$(containerRegistryServiceConnection)'
+        repository: '$(imageRepository)'
+        command: 'push'
+        tags: '$(tag)'
+
+    - task: Bash@3
+      displayName: Set variables to share between stages 
+      inputs:
+        targetType: 'inline'
+        script: |
+          mkdir $(System.DefaultWorkingDirectory)/variables
+          echo $(tag) > $(System.DefaultWorkingDirectory)/variables/tag
+    - task: PublishPipelineArtifact@1
+      displayName: Publish artifacts
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)/variables'
+        artifact: 'drop'
+
+- stage: DeployStage
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/staging'))
+  dependsOn: Build
+
+  jobs:
+  - deployment: Stage
+    displayName: Deploy Stage
+    pool:
+      vmImage: $(vmImageName)
+    environment:
+      name: $(DockerEnvironmentStage)
+      resourceType: VirtualMachine
+    strategy:
+        runOnce:
+          deploy:
+            steps:
+
+            - task: DownloadPipelineArtifact@2
+              inputs:
+                artifact: drop
+         
+            - script: tag=`cat $(Pipeline.Workspace)/drop/tag` && echo "##vso[task.setvariable variable=tag]$tag"
+              displayName: Set the Git Short SHA as an environment variable
+
+            - task: Bash@3
+              displayName: switch to application directory
+              inputs:
+                targetType: 'inline'
+                script: 'cd /data/funcity-apps'
+
+            - task: Bash@3
+              displayName: Update new image tag
+              inputs:
+                targetType: 'inline'
+                script: sed -E -i'' "s/(.$(imageName):).*/\1$(tag)/" '/data/funcity-apps/docker-compose.yaml'
+
+            - task: Bash@3
+              displayName: Start app with new image
+              inputs:
+                targetType: 'inline'
+                script: 'docker-compose -f /data/funcity-apps/docker-compose.yaml up -d'
+
+- stage: DeployProduction
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  dependsOn: Build
+
+  jobs:
+  - deployment: Production
+    displayName: Deploy Production
+    pool:
+      vmImage: $(vmImageName)
+    environment:
+      name: $(DockerEnvironmentProd)
+      resourceType: VirtualMachine
+    strategy:
+        runOnce:
+          deploy:
+            steps:
+
+            - task: DownloadPipelineArtifact@2
+              inputs:
+                artifact: drop
+         
+            - script: tag=`cat $(Pipeline.Workspace)/drop/tag` && echo "##vso[task.setvariable variable=tag]$tag"
+              displayName: Set the Git Short SHA as an environment variable
+
+            - task: Bash@3
+              displayName: switch to application directory
+              inputs:
+                targetType: 'inline'
+                script: 'cd /data/funcity-apps'
+
+            - task: Bash@3
+              displayName: Update new image tag
+              inputs:
+                targetType: 'inline'
+                script: sed -E -i'' "s/(.$(imageName):).*/\1$(tag)/" '/data/funcity-apps/docker-compose.yaml'
+
+            - task: Bash@3
+              displayName: Start app with new image
+              inputs:
+                targetType: 'inline'
+                script: 'docker-compose -f /data/funcity-apps/docker-compose.yaml up -d'
+

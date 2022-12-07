@@ -1,0 +1,38 @@
+[
+	{
+		"id" : 1,
+		"name" : "UAE",
+		"code" : "ARE",
+		"currency" : "AED"
+	},
+	{
+		"id" : 2,
+		"name" : "Oman",
+		"code" : "OMN",
+		"currency" : "OMR"
+	},
+	{
+		"id" : 3,
+		"name" : "Bahrain",
+		"code" : "BHR",
+		"currency" : "BHD"
+	},
+	{
+		"id" : 4,
+		"name" : "Kuwait",
+		"code" : "KWT",
+		"currency" : "KWD"
+	},
+	{
+		"id" : 5,
+		"name" : "Saudi Arabia",
+		"code" : "SAU",
+		"currency" : "SAR"
+	},
+	{
+		"id" : 6,
+		"name" : "Qatar",
+		"code" : "QAT",
+		"currency" : "QAR"
+	}
+]

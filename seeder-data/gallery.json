@@ -1,0 +1,241 @@
+[
+	{
+		"title": "Attractions Detail page",
+		"description": {
+			"en": "It really is amazing when you think about it that just by looking up on any given night, you could see.",
+			"ar": "It really is amazing when you think about it that just by looking up on any given night, you could see."
+		},
+		"in_home": false,
+		"published": true,
+		"gallery_items": [
+			{
+				"position": 1,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/adp-1_bqxQdj_4Wq.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757820887",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/adp-1_bqxQdj_4Wq.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757820887",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			},
+			{
+				"position": 2,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/adp-2_xvlKfQuY18.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757820989",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/adp-2_xvlKfQuY18.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757820989",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			},
+			{
+				"position": 3,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/adp-3_w4KY-Xt1ZP.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757821026",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/adp-3_w4KY-Xt1ZP.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757821026",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			},
+			{
+				"position": 4,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/adp-4_-QCKBLyOh1.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757820606",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/adp-4_-QCKBLyOh1.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757820606",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			}
+		]
+	},
+	{
+		"title": "Birthdays",
+		"description": {
+			"en": "It really is amazing when you think about it that just by looking up on any given night, you could see virtually hundreds of thousands of stars, star systems.",
+			"ar": "It really is amazing when you think about it that just by looking up on any given night, you could see virtually hundreds of thousands of stars, star systems."
+		},
+		"in_home": false,
+		"published": true,
+		"gallery_items": [
+			{
+				"position": 1,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/gallery1_lZH9tCmyA.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663580191607",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/gallery1_lZH9tCmyA.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663580191607",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			},
+			{
+				"position": 2,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/banner1_P8uD6-Jjd.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663573054864",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/banner1_P8uD6-Jjd.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663573054864",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			},
+			{
+				"position": 3,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/banner1_P8uD6-Jjd.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663573054864",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/banner1_P8uD6-Jjd.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663573054864",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			},
+			{
+				"position": 4,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/banner1_P8uD6-Jjd.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663573054864",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/banner1_P8uD6-Jjd.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663573054864",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			}
+		]
+	},
+	{
+		"title": "About Us",
+		"description": {
+			"en": "It really is amazing when you think about it that just by looking up on any given night, you could see virtually hundreds of thousands of stars, star systems.",
+			"ar": "It really is amazing when you think about it that just by looking up on any given night, you could see virtually hundreds of thousands of stars, star systems."
+		},
+		"in_home": false,
+		"published": true,
+		"gallery_items": [
+			{
+				"position": 1,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/au-1_cF8p1s8Xw.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757820591",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/au-1_cF8p1s8Xw.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757820591",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			},
+			{
+				"position": 2,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/au-2_BaLrBjq-l.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757820719",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/au-2_BaLrBjq-l.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757820719",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			},
+			{
+				"position": 3,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/au-3_Jo3ow3QMFb.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757821199",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/au-3_Jo3ow3QMFb.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757821199",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			}
+		]
+	},
+	{
+		"title": "Info Template",
+		"description": {
+			"en": "It really is amazing when you think about it that just by looking up on any given night, you could see virtually hundreds of thousands of stars, star systems.",
+			"ar": "It really is amazing when you think about it that just by looking up on any given night, you could see virtually hundreds of thousands of stars, star systems."
+		},
+		"in_home": false,
+		"published": true,
+		"gallery_items": [
+			{
+				"position": 1,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/info-1_zViccIfKI.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757846009",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/info-1_zViccIfKI.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757846009",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			},
+			{
+				"position": 2,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/info-2_eNpJb6pUv.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757845894",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/info-2_eNpJb6pUv.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757845894",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			},
+			{
+				"position": 3,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/info-3_ksa6Sw3wi3.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757845906",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/info-3_ksa6Sw3wi3.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757845906",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			},
+			{
+				"position": 4,
+				"image": {
+					"en": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/info-4_cd8fpKjVvd.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757845749",
+						"media_id": "631f79578e653f3c05acc135"
+					},
+					"ar": {
+						"media_url": "https://ik.imagekit.io/xjqteosrw/Sample/info-4_cd8fpKjVvd.png?ik-sdk-version=javascript-1.4.3&updatedAt=1663757845749",
+						"media_id": "631f78638e653f3c05acc0e0"
+					}
+				}
+			}
+		]
+	}
+]
