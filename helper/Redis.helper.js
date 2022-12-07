@@ -15,9 +15,9 @@ const redisConnect = async () => {
             // client.end()
         })
 
-        // client.on('connect', () => {
-        //     console.log('✅ Connect redis success !')
-        // })
+        client.on('connect', () => {
+            console.log('✅ Connect redis success !')
+        })
 
         await client.connect()
 

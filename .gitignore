@@ -1,0 +1,10 @@
+node_modules/
+.env
+.npmrc
+views/Template/
+.cache
+.DS_Store
+.vscode/
+uploads/
+test/
+log/
