@@ -5,6 +5,7 @@ const router = express.Router()
 require('express-group-routes')
 
 // BEGIN:: Route Groups
+const configRoutes = require('./config.routes')
 const authRoutes = require('./auth.routes')
 const dashboardRoutes = require('./dashboard.routes')
 const ecommerceRoutes = require('./ecommerce.routes')
@@ -42,6 +43,7 @@ router.use('/forms', formsRoutes)
 router.use('/custom-forms', customFormsRoutes)
 router.use('/log', logRoutes)
 router.use('/user', userRoutes)
+router.use('/config', configRoutes)
 // END:: Routes
 
 module.exports = router

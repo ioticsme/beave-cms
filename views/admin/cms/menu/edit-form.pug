@@ -1,0 +1,101 @@
+extends ../../layouts/master.pug
+
+block csslib
+	link(href='/admin/assets/plugins/custom/datatables/datatables.bundle.css' rel='stylesheet' type='text/css')
+	link(href='/admin/assets/plugins/global/plugins.bundle.css' rel='stylesheet' type='text/css')
+	link(href='/admin/assets/css/style.bundle.css' rel='stylesheet' type='text/css')
+
+block jslib
+	// begin::Vendors Javascript(used by this page)
+	script(src='/admin/assets/plugins/custom/datatables/datatables.bundle.js')
+	script(src='/admin/assets/plugins/custom/formrepeater/formrepeater.bundle.js')
+	// end::Vendors Javascript
+	// begin::Custom Javascript(used by this page)
+	script(src='/admin/assets/js/custom/apps/ecommerce/catalog/save-category.js')
+	script(src='/admin/assets/js/widgets.bundle.js')
+	script(src='/admin/assets/js/custom/widgets.js')
+	script(src='/admin/assets/js/custom/apps/chat/chat.js')
+	script(src='/admin/assets/js/custom/utilities/modals/upgrade-plan.js')
+	script(src='/admin/assets/js/custom/utilities/modals/create-app.js')
+	script(src='/admin/assets/js/custom/utilities/modals/users-search.js')
+
+	// Form Submission Script
+	script(src='/common/js/form-data-json.min.js')
+	script(src='/common/js/es-form.js')
+
+block customScript 
+	script.
+
+block content
+	.d-flex.flex-column.flex-column-fluid
+		#kt_app_toolbar.app-toolbar.py-3.py-lg-6
+			#kt_app_toolbar_container.app-container.container-xxl.d-flex.flex-stack
+				.page-title.d-flex.flex-column.justify-content-center.flex-wrap.me-3
+					h1.page-heading.d-flex.text-dark.fw-bold.fs-3.flex-column.justify-content-center.my-0
+						| Edit Menu
+					ul.breadcrumb.breadcrumb-separatorless.fw-semibold.fs-7.my-0.pt-1
+						li.breadcrumb-item.text-muted
+							a.text-muted.text-hover-primary(href='/admin/dashboard') Home
+						li.breadcrumb-item
+							span.bullet.bg-gray-400.w-5px.h-2px
+						li.breadcrumb-item.text-muted CMS
+						li.breadcrumb-item
+							span.bullet.bg-gray-400.w-5px.h-2px
+						li.breadcrumb-item.text-muted Menu
+
+		#kt_app_content.app-content.flex-column-fluid
+			#kt_app_content_container.app-container.container-xxl
+				form#kt_modal_create_app_form.form.es-form(action=`/admin/cms/menu/${navPosition}/edit` data-kt-redirect-url=`/admin/cms/menu`  method='post')
+					input(hidden name="id" value=`${menuItem._id}`)
+					input(hidden name="level" value=`${menuItem.level}`)
+					if menuItem.level =='1'
+						input(hidden name="parent_index" value=`${menuItem.parent_index}`)
+					else if menuItem.level =='2'
+						input(hidden name="parent_index" value=`${menuItem.parent_index}`)
+						input(hidden name="sec_parent_index" value=`${menuItem.sec_parent_index}`)
+					.card.card-flush.py-4
+						.card-header
+							.card-title
+								h2.fw-bold Edit Menu Item
+							.card-toolbar
+								button.btn.btn-sm.btn-success.form-submit-btn(id="save-btn" type='submit')
+									span.label Save
+									span.preloader.d-none Saving...
+						.card-body.pt-0
+							.col-md-6
+								label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+									span.required  Menu Position
+									i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='path' data-kt-initialized='1')
+								select#kt_ecommerce_add_product_status_select.form-select.mb-2(data-control='select2' disabled name="menu_position" data-hide-search='true' data-placeholder='Select an option')
+									each nav,i in menulist
+										option(value=nav.nav_position selected=nav.nav_position==navPosition) #{nav.nav_label}
+								.fv-plugins-message-container.invalid-feedback(id=`field-error-menu_position`)
+							ul.nav.nav-tabs.nav-line-tabs.mb-5.fs-6
+								each brandLanguage, i in authUser.selected_brand.languages
+									li.nav-item
+										a.nav-link(class= (i== 0 ? 'active' : '') data-bs-toggle='tab' href=`#kt_tab_pane_${brandLanguage.prefix}`) #{brandLanguage.name}
+							#myTabContent.tab-content.tab-content-fields
+								each brandLanguage, i in authUser.selected_brand.languages
+									.tab-pane.fade(class= (i== 0 ? 'active show' : '') role='tabpanel' id=`kt_tab_pane_${brandLanguage.prefix}`)
+										.d-flex.flex-column.fv-row.fv-plugins-icon-container.col-md-6
+											label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+												span.required  Menu name (#{brandLanguage.prefix})
+												i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='label' data-kt-initialized='1')
+											input.form-control.mb-2(type='text' name=`label[${brandLanguage.prefix}]` placeholder='Menu label' value=`${menuItem.label[brandLanguage.prefix]}`)
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-label_${brandLanguage.prefix}`)
+										.col-md-6
+											label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+												span.required  Path (#{brandLanguage.prefix})
+												i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='path' data-kt-initialized='1')
+											input.form-control.mb-2(type='text' name=`path[${brandLanguage.prefix}]` placeholder='Menu path url' value=`${menuItem.url[brandLanguage.prefix]}`)
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-path_${brandLanguage.prefix}`)
+							.col-md-6
+								label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+									span  Link Type
+									i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='path' data-kt-initialized='1')
+								.form-check.form-check-custom.form-check-solid
+									input#flexCheckChecked.form-check-input(type='checkbox' name="external" value='true' checked=menuItem.url.external==true)
+									label.form-check-label(for='flexCheckChecked') External
+
+				
+

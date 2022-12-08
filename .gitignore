@@ -8,3 +8,4 @@ views/Template/
 uploads/
 test/
 log/
+.DS_Store

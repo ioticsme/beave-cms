@@ -1,0 +1,283 @@
+extends ../../layouts/master.pug
+
+block csslib
+	link(href='/admin/assets/plugins/custom/datatables/datatables.bundle.css' rel='stylesheet' type='text/css')
+
+block jslib
+	// begin::Vendors Javascript(used by this page)
+	script(src='/admin/assets/plugins/custom/datatables/datatables.bundle.js')
+	script(src='/admin/assets/plugins/custom/formrepeater/formrepeater.bundle.js')
+	// end::Vendors Javascript
+	// begin::Custom Javascript(used by this page)
+	//- script(src='/admin/assets/js/custom/apps/ecommerce/catalog/save-product.js')
+	script(src='/admin/assets/js/widgets.bundle.js')
+	script(src='/admin/assets/js/custom/widgets.js')
+	script(src='/admin/assets/js/custom/apps/chat/chat.js')
+	script(src='/admin/assets/js/custom/utilities/modals/upgrade-plan.js')
+	script(src='/admin/assets/js/custom/utilities/modals/create-app.js')
+	script(src='/admin/assets/js/custom/utilities/modals/users-search.js')
+
+	// CKEditor Build Bundles
+	script(src='/admin/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js')
+
+	// Form Submission Script
+	script(src='/common/js/form-data-json.min.js')
+	script(src='/common/js/es-form.js')
+
+
+block customScript
+	script.
+
+		document.querySelectorAll('.content_wysiwyg').forEach(function(e) {
+			ClassicEditor
+			.create(document.querySelector(`#${e.getAttribute('id')}`))
+			.then(editor => {
+			})
+			.catch(error => {
+			console.error(error);
+			});
+		})
+
+		$('#categories').repeater({
+			initEmpty: false,
+
+			defaultValues: {
+				'text-input': 'foo'
+			},
+
+			show: function () {
+				// Re-init select2
+				$(this).find('[data-kt-repeater="select2"]').select2();
+				console.log(this)
+				this.querySelectorAll("#categories select").forEach((item)=>{
+					console.log("IT",item)
+				})
+				$(this).slideDown();
+			},
+
+			hide: function (deleteElement) {
+				$(this).slideUp(deleteElement);
+			}
+		});
+
+block content
+	.d-flex.flex-column.flex-column-fluid
+		#kt_app_toolbar.app-toolbar.py-3.py-lg-6
+			#kt_app_toolbar_container.app-container.container-xxl.d-flex.flex-stack
+				.page-title.d-flex.flex-column.justify-content-center.flex-wrap.me-3
+					h1.page-heading.d-flex.text-dark.fw-bold.fs-3.flex-column.justify-content-center.my-0
+						| Edit Landing Page
+					ul.breadcrumb.breadcrumb-separatorless.fw-semibold.fs-7.my-0.pt-1
+						li.breadcrumb-item.text-muted
+							a.text-muted.text-hover-primary(href='/admin/dashboard') Home
+						li.breadcrumb-item
+							span.bullet.bg-gray-400.w-5px.h-2px
+						li.breadcrumb-item.text-muted Cms
+						li.breadcrumb-item
+							span.bullet.bg-gray-400.w-5px.h-2px
+						li.breadcrumb-item.text-muted 
+							a.text-muted.text-hover-primary(href='/admin/cms/landing') Landing
+		#kt_app_content.app-content.flex-column-fluid
+			#kt_app_content_container.app-container.container-xxl
+				form#kt_ecommerce_add_product_form.es-form.form.d-flex.flex-column.flex-lg-row(action=`/admin/cms/landing/save` data-kt-redirect-url=`/admin/cms/landing`  method='post')
+					input(value=content._id name="id" hidden)
+					-var data = content.sections 
+						.d-flex.flex-column.flex-row-fluid.gap-7.gap-lg-10
+							.tab-content
+								#kt_ecommerce_add_product_general.tab-pane.fade.show.active(role='tab-panel')
+									.d-flex.flex-column.gap-7.gap-lg-10
+										.card.card-flush.py-4
+											.card-header
+												.card-title
+													h2 Banner section 1
+												.card-toolbar
+													button.btn.btn-sm.btn-success.form-submit-btn(type='submit')
+														span.label Save
+														span.preloader.d-none Saving...
+											.card-body.pt-0
+												label.form-label Banners
+												select.form-select.mb-2(data-control='select2' name="banner_1" data-placeholder='Select an option' data-allow-clear='true' )
+													option
+													each banner in banners 
+														option(value=`${banner._id}` selected=data.banner_section1.banner == banner._id) #{banner.content.en.title}
+												.text-muted.fs-7.mb-7 Select Banner
+												.fv-plugins-message-container.invalid-feedback(id=`field-error-banner_1`)
+										//- .card.card-flush.py-4
+											.card-header
+												.card-title
+													h2 Category Section
+											.card-body.pt-0
+												select.form-select.mb-2(data-control='select2' name="cat_id" data-placeholder='Select an option' data-allow-clear='true' multiple="multiple")
+													option
+													each category,i in categories
+														option(value=`${category._id}` selected=data.category_section.banner == category._id) #{category.name.en} 
+												//- .text-muted.fs-7 Select Banner
+												.fv-plugins-message-container.invalid-feedback(id=`field-error-cat_id`)
+												div
+													ul.nav.nav-tabs.nav-line-tabs.mb-5.fs-6
+														each brandLanguage, i in authUser.selected_brand.languages
+															li.nav-item
+																a.nav-link(class= (i== 0 ? 'active' : '') data-bs-toggle='tab' href=`#kt_tab_pane_${brandLanguage.prefix}`) #{brandLanguage.name}
+													#myTabContent.tab-content.tab-content-fields
+														each brandLanguage, i in authUser.selected_brand.languages
+															.tab-pane.fade(class= (i== 0 ? 'active show' : '') role='tabpanel' id=`kt_tab_pane_${brandLanguage.prefix}`)
+																.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container
+																	// begin::Label
+																	label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+																		span.required  Title (#{brandLanguage.prefix})
+																		i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
+																	// end::Label
+																	input.form-control.mb-2(type='text' name=`cat_title[${brandLanguage.prefix}]` placeholder='Product name' value='')
+																	.fv-plugins-message-container.invalid-feedback(id=`field-error-cat_title_${brandLanguage.prefix}`)
+																	div
+																		// begin::Label
+																		label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+																			span.required  Description (#{brandLanguage.prefix})
+																			i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
+																		// end::Label
+																		textarea.form-control.content_wysiwy(name=`cat_description[${brandLanguage.prefix}]` id=`wysiwyg-${brandLanguage.prefix}-${i}`)
+																	.fv-plugins-message-container.mt-2.invalid-feedback(id=`field-error-cat_description_${brandLanguage.prefix}`)
+																	style.
+																		.image-input-placeholder {
+																		background-image: url('/admin/assets/media/svg/files/blank-image.svg');
+																		}
+																		[data-theme="dark"] .image-input-placeholder {
+																		background-image: url('/admin/assets/media/svg/files/blank-image-dark.svg');
+																		}
+																	.mt-0
+																		label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+																			span.required  Category Image (#{brandLanguage.prefix})
+																		.image-input.image-input-empty.image-input-outline.image-input-placeholder.mb-3(data-kt-image-input='true' style='<br /> <b>Warning</b>: Undefined variable $imageBg in <b>C:\wamp64\www\keenthemes\core\html\dist\view\pages\apps\ecommerce\catalog\edit-product\_thumbnail.php</b> on line <b>30</b><br />')
+																			.image-input-wrapper.w-150px.h-150px
+																			label.btn.btn-icon.btn-circle.btn-active-color-primary.w-25px.h-25px.bg-body.shadow(data-kt-image-input-action='change' data-bs-toggle='tooltip' title='Change avatar')
+																				i.bi.bi-pencil-fill.fs-7
+																				input(type='file' name=`cat_image.${brandLanguage.prefix}` accept='.png, .jpg, .jpeg')
+																			span.btn.btn-icon.btn-circle.btn-active-color-primary.w-25px.h-25px.bg-body.shadow(data-kt-image-input-action='cancel' data-bs-toggle='tooltip' title='Cancel avatar')
+																				i.bi.bi-x.fs-2
+																			span.btn.btn-icon.btn-circle.btn-active-color-primary.w-25px.h-25px.bg-body.shadow(data-kt-image-input-action='remove' data-bs-toggle='tooltip' title='Remove avatar')
+																				i.bi.bi-x.fs-2
+																	.fv-plugins-message-container.invalid-feedback(id=`field-error-cat_image_${brandLanguage.prefix}`)
+										.card.card-flush.py-4
+											.card-header
+												.card-title
+													h2 Categories
+											.card-body.pt-0
+												div(data-kt-ecommerce-catalog-add-product='auto-options')
+													//- label.form-label Add Product Variations
+													#categories
+														.form-group
+															.d-flex.flex-column.gap-3(data-repeater-list='categories')
+																.form-group.d-flex.flex-wrap.align-items-center.gap-5(data-repeater-item='')
+																	div
+																		select.form-select.mb-2(data-control='select2' data-kt-repeater="select2" name="cat_id" data-placeholder='Select an option' data-allow-clear='true' )
+																			option
+																			each category,i in categories
+																				option(value=`${category._id}` selected=data.category_section.banner == category._id) #{category.name.en} 
+																		//- .text-muted.fs-7 Select Banner
+																		.fv-plugins-message-container.invalid-feedback(id=`field-error-cat_id`)
+																		ul.nav.nav-tabs.nav-line-tabs.mb-5.fs-6
+																			each brandLanguage, i in authUser.selected_brand.languages
+																				li.nav-item
+																					a.nav-link(class= (i== 0 ? 'active' : '') data-bs-toggle='tab' href=`#kt_tab_pane_${brandLanguage.prefix}`) #{brandLanguage.name}
+																		#myTabContent.tab-content.tab-content-fields
+																			each brandLanguage, i in authUser.selected_brand.languages
+																				.tab-pane.fade(class= (i== 0 ? 'active show' : '') role='tabpanel' id=`kt_tab_pane_${brandLanguage.prefix}`)
+																					.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container
+																						// begin::Label
+																						label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+																							span.required  Title (#{brandLanguage.prefix})
+																							i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
+																						// end::Label
+																						input.form-control.mb-2(type='text' name=`cat_title[${brandLanguage.prefix}]` placeholder='Product name' value='')
+																						.fv-plugins-message-container.invalid-feedback(id=`field-error-cat_title_${brandLanguage.prefix}`)
+																						div
+																							// begin::Label
+																							label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+																								span.required  Description (#{brandLanguage.prefix})
+																								i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
+																							// end::Label
+																							textarea.form-control.content_wysiwy(name=`cat_description[${brandLanguage.prefix}]` id=`wysiwyg-${brandLanguage.prefix}-${i}`)
+																						.fv-plugins-message-container.mt-2.invalid-feedback(id=`field-error-cat_description_${brandLanguage.prefix}`)
+																	button.btn.btn-sm.btn-icon.btn-light-danger(type='button' data-repeater-delete='')
+																		span.svg-icon.svg-icon-1
+																			svg(width='24' height='24' viewbox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg')
+																				rect(opacity='0.5' x='7.05025' y='15.5356' width='12' height='2' rx='1' transform='rotate(-45 7.05025 15.5356)' fill='currentColor')
+																				rect(x='8.46447' y='7.05029' width='12' height='2' rx='1' transform='rotate(45 8.46447 7.05029)' fill='currentColor')
+
+														.form-group.mt-5
+															button.btn.btn-sm.btn-light-primary(type='button' data-repeater-create='')
+																span.svg-icon.svg-icon-2
+																	svg(width='24' height='24' viewbox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg')
+																		rect(opacity='0.5' x='11' y='18' width='12' height='2' rx='1' transform='rotate(-90 11 18)' fill='currentColor')
+																		rect(x='6' y='11' width='12' height='2' rx='1' fill='currentColor')
+																| Add another category
+
+										//- Best seller Section
+										.card.card-flush.py-4
+											.card-header
+												.card-title
+													h2.fw-bold Best Seller Section
+											.card-body.pt-0
+												label.form-label Products
+												select.form-select.mb-2(data-control='select2' name="products" data-placeholder='Select an option' data-allow-clear='true' multiple="multiple")
+													option
+													each product in products 
+														option(value=`${product._id}` selected=data.best_seller_section.product_id == product._id) #{product.name.en} 
+												.text-muted.fs-7.mb-7 Select products
+												.fv-plugins-message-container.invalid-feedback(id=`field-error-products`)
+										//- Banner Section 2
+										.card.card-flush.py-4
+											.card-header
+												.card-title
+													h2.fw-bold Banner Section 2
+											.card-body.pt-0
+												label.form-label Banners
+												select.form-select.mb-2(data-control='select2' name="banner_2" data-placeholder='Select an option' data-allow-clear='true' )
+													option
+													each banner in banners 
+														option(value=`${banner._id}` selected=data.banner_section2.banner == banner._id) #{banner.content.en.title} 
+												.text-muted.fs-7.mb-7 Select banner
+												.fv-plugins-message-container.invalid-feedback(id=`field-error-banner_2`)
+										//- .card.card-flush.py-4
+											.card-header
+												.card-title
+													h2 Pricing
+											.card-body.pt-0
+												.mb-10.fv-row
+													label.required.form-label Base Price
+													input.form-control.mb-2(type='number' name='actual_price' placeholder='Product price' value='')
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-actual_price`)
+												.mb-10.fv-row
+													label.required.form-label Sale Price
+													input.form-control.mb-2(type='number' name='sales_price' placeholder='Product sales price' value='')
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-sales_price`)
+
+										//- Brand list section
+										.card.card-flush.py-4
+											.card-header
+												.card-title
+													h2.fw-bold Brandlist Section												
+											.card-body.pt-0
+												ul.nav.nav-tabs.nav-line-tabs.mb-5.fs-6
+													each brandLanguage, i in authUser.selected_brand.languages
+														li.nav-item
+															a.nav-link(class= (i== 0 ? 'active' : '') data-bs-toggle='tab' href=`#kt_tab_pane_${brandLanguage.prefix}2`) #{brandLanguage.name}
+												#myTabContent.tab-content.tab-content-fields
+													each brandLanguage, i in authUser.selected_brand.languages
+														.tab-pane.fade(class= (i== 0 ? 'active show' : '') role='tabpanel' id=`kt_tab_pane_${brandLanguage.prefix}2`)
+															.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container
+																// begin::Label
+																label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+																	span.required  Title (#{brandLanguage.prefix})
+																	i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
+																// end::Label
+																input.form-control.mb-2(type='text' name=`brand_title[${brandLanguage.prefix}]` placeholder='Brand section title' value='')
+																.fv-plugins-message-container.invalid-feedback(id=`field-error-brand_title_${brandLanguage.prefix}`)
+																div
+																	// begin::Label
+																	label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+																		span.required  Description (#{brandLanguage.prefix})
+																		i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
+																	// end::Label
+																	textarea.content_wysiwyg(name=`brand_description[${brandLanguage.prefix}]` id=`wysiwyg-${brandLanguage.prefix}-${i}-2`)
+																.fv-plugins-message-container.mt-2.invalid-feedback(id=`field-error-brand_description_${brandLanguage.prefix}`)

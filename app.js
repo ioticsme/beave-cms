@@ -104,7 +104,7 @@ app.use(
     session(sessionConfig)
 )
 
-console.log('SESSION STARTED')
+// console.log('SESSION STARTED')
 
 app.use(cookieParser())
 
@@ -242,7 +242,7 @@ app.use('/api', webAPIRoutes)
 app.use('/admin', adminRoutes)
 
 try{
-    const superAdminRoutes = require('./node_modules/@ioticsme/cms-installer/routes/super_admin.routes')
+    const superAdminRoutes = require('./node_modules/@ioticsme/cms-installer/dist/routes/super_admin.routes')
     app.use('/superadmin', superAdminRoutes)
 }catch(e){}
 

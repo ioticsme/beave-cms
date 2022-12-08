@@ -1,6 +1,9 @@
 const collect = require('collect.js')
 const { getCache, setCache } = require('../helper/Redis.helper')
-const Menu = require('../model/Menu')
+let Menu
+try {
+    Menu = require('@ioticsme/cms/model/Menu')
+} catch (e) {}
 
 const getNav = async (req, res, next) => {
     try {

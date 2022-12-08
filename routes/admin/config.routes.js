@@ -1,0 +1,37 @@
+const express = require('express')
+require('express-group-routes')
+const router = express.Router()
+const adminController = require('../../controller/config/admin.controller')
+const countryController = require('../../controller/config/country.controller')
+const languageController = require('../../controller/config/language.controller')
+
+router.group('/', (router) => {
+    router.group('/admin', (router) => {
+        router.get('/', adminController.list)
+        router.get('/add', adminController.add)
+        router.get('/edit/:id', adminController.edit)
+        router.post('/save', adminController.save)
+        router.post('/change-status', adminController.changeStatus)
+        router.post('/delete', adminController.deleteItem)
+    })
+    router.group('/country', (router) => {
+        router.get('/', countryController.list)
+        router.get('/add', countryController.add)
+        router.get('/edit/:id', countryController.edit)
+        router.post('/save', countryController.save)
+        // router.post('/change-status', countryController.changeStatus)
+        router.post('/delete', countryController.deleteItem)
+    })
+    router.group('/language', (router) => {
+        router.get('/', languageController.list)
+        router.get('/add', languageController.add)
+        router.get('/edit/:id', languageController.edit)
+        router.post('/save', languageController.save)
+        // router.post('/change-status', countryController.changeStatus)
+        router.post('/delete', languageController.deleteItem)
+    })
+    // router.get('/country', configController.profileUpdate)
+})
+// router.post('/', userController.verifyOtp)
+
+module.exports = router

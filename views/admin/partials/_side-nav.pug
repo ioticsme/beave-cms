@@ -1,7 +1,47 @@
 .app-sidebar-menu.overflow-hidden.flex-column-fluid
     #kt_app_sidebar_menu_wrapper.app-sidebar-wrapper.hover-scroll-overlay-y.my-5(data-kt-scroll='true' data-kt-scroll-activate='true' data-kt-scroll-height='auto' data-kt-scroll-dependencies='#kt_app_sidebar_logo, #kt_app_sidebar_footer' data-kt-scroll-wrappers='#kt_app_sidebar_menu' data-kt-scroll-offset='5px' data-kt-scroll-save-state='true')
         .menu.menu-column.menu-rounded.menu-sub-indention.px-3(id='#kt_app_sidebar_menu' data-kt-menu='true' data-kt-menu-expand='false')
-            .menu-item.here.show.menu-accordion(data-kt-menu-trigger='click')
+            if authUser.admin_role == 'super_admin'
+                .menu-item.pt-5
+                    .menu-content
+                        span.menu-heading.fw-bold.text-uppercase.fs-7 Configurations
+                .menu-item.menu-accordion(data-kt-menu-trigger='click' class=`${activeNav.includes(`/admin/config/`) ? 'here show' : ''}`)
+                    span.menu-link
+                        span.menu-icon
+                            span.svg-icon.svg-icon-2
+                                svg(width='24' height='24' viewbox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg')
+                                    path(opacity='0.3' d='M22.0318 8.59998C22.0318 10.4 21.4318 12.2 20.0318 13.5C18.4318 15.1 16.3318 15.7 14.2318 15.4C13.3318 15.3 12.3318 15.6 11.7318 16.3L6.93177 21.1C5.73177 22.3 3.83179 22.2 2.73179 21C1.63179 19.8 1.83177 18 2.93177 16.9L7.53178 12.3C8.23178 11.6 8.53177 10.7 8.43177 9.80005C8.13177 7.80005 8.73176 5.6 10.3318 4C11.7318 2.6 13.5318 2 15.2318 2C16.1318 2 16.6318 3.20005 15.9318 3.80005L13.0318 6.70007C12.5318 7.20007 12.4318 7.9 12.7318 8.5C13.3318 9.7 14.2318 10.6001 15.4318 11.2001C16.0318 11.5001 16.7318 11.3 17.2318 10.9L20.1318 8C20.8318 7.2 22.0318 7.59998 22.0318 8.59998Z' fill='currentColor')
+                                    path(d='M4.23179 19.7C3.83179 19.3 3.83179 18.7 4.23179 18.3L9.73179 12.8C10.1318 12.4 10.7318 12.4 11.1318 12.8C11.5318 13.2 11.5318 13.8 11.1318 14.2L5.63179 19.7C5.23179 20.1 4.53179 20.1 4.23179 19.7Z' fill='currentColor')
+                        span.menu-title Configurations
+                        span.menu-arrow
+                    .menu-sub.menu-sub-accordion
+                        .menu-item
+                            a.menu-link(href='/admin/config/admin' class=`${activeNav == `/admin/config/admin` ? 'active' : ''}`)
+                                span.menu-bullet
+                                    span.bullet.bullet-dot
+                                span.menu-title Admin
+                        .menu-item
+                            a.menu-link(href='/admin/config/country' class=`${activeNav == `/admin/config/country` ? 'active' : ''}`)
+                                span.menu-bullet
+                                    span.bullet.bullet-dot
+                                span.menu-title Country
+                        .menu-item
+                            a.menu-link(href='/admin/config/language' class=`${activeNav == `/admin/config/language` ? 'active' : ''}`)
+                                span.menu-bullet
+                                    span.bullet.bullet-dot
+                                span.menu-title Languages
+                        .menu-item
+                            a.menu-link(href='/admin/config/brand' class=`${activeNav == `/admin/config/brand` ? 'active' : ''}`)
+                                span.menu-bullet
+                                    span.bullet.bullet-dot
+                                span.menu-title Brands
+                        //- .menu-item
+                        //-     a.menu-link(href='/admin/dashboard/analytics')
+                        //-         span.menu-bullet
+                        //-             span.bullet.bullet-dot
+                        //-         span.menu-title Analytics
+            hr
+            .menu-item.here.show.menu-accordion(data-kt-menu-trigger='click' class=`${activeNav.includes(`/admin/dashboard`) ? 'here show' : ''}`)
                 span.menu-link
                     span.menu-icon
                         span.svg-icon.svg-icon-2
