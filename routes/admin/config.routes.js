@@ -4,6 +4,7 @@ const router = express.Router()
 const adminController = require('../../controller/config/admin.controller')
 const countryController = require('../../controller/config/country.controller')
 const languageController = require('../../controller/config/language.controller')
+const brandController = require('../../controller/config/brand.controller')
 
 router.group('/', (router) => {
     router.group('/admin', (router) => {
@@ -29,6 +30,14 @@ router.group('/', (router) => {
         router.post('/save', languageController.save)
         // router.post('/change-status', countryController.changeStatus)
         router.post('/delete', languageController.deleteItem)
+    })
+    router.group('/brand', (router) => {
+        router.get('/', brandController.list)
+        router.get('/add', brandController.add)
+        router.get('/edit/:id', brandController.edit)
+        router.post('/save', brandController.save)
+        router.post('/change-status', brandController.changeStatus)
+        router.post('/delete', brandController.deleteItem)
     })
     // router.get('/country', configController.profileUpdate)
 })
