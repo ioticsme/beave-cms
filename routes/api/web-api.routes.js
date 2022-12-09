@@ -4,8 +4,8 @@ require('express-group-routes')
 const authController = require('../../controller/api/auth.controller')
 const testController = require('../../controller/api/test.controller')
 const generalController = require('../../controller/api/general.controller')
-// const pageController = require('../../controller/api/page.controller')
-// const contentTypeController = require('../../controller/api/contentType.controller')
+const pageController = require('../../controller/api/page.controller')
+const contentTypeController = require('../../controller/api/contentType.controller')
 const catalogController = require('../../controller/api/catalog.controller')
 const formController = require('../../controller/api/form.controller')
 const customFormController = require('../../controller/api/customForm.controller')
@@ -50,8 +50,18 @@ router.group('/', (router) => {
     //     router.get('/:contentType/:slug', contentTypeController.detail)
     // })
     if (globalModuleConfig.has_cms) {
-        const cmsPackageAPIRoutes = require('../../node_modules/@ioticsme/cms/routes/api.routes')
-        router.use('/cms', cmsPackageAPIRoutes)
+        // const cmsPackageAPIRoutes = require('../../node_modules/@ioticsme/cms/routes/api.routes')
+        // router.use('/cms', cmsPackageAPIRoutes)
+        // Content
+        router.group('/cms', (router) => {
+            router.get('/home', pageController.homePage)
+            router.get('/:contentType', contentTypeController.list)
+            router.get(
+                '/:contentType/static-path',
+                contentTypeController.generateStaticPath
+            ) // Mainly using for NextJs Static file generations
+            router.get('/:contentType/:slug', contentTypeController.detail)
+        })
     }
 
     // catalog

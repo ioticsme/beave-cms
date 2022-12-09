@@ -241,12 +241,12 @@ app.use('/app', mobileAPIRoutes)
 app.use('/api', webAPIRoutes)
 app.use('/admin', adminRoutes)
 
-try{
-    const superAdminRoutes = require('./node_modules/@ioticsme/cms-installer/dist/routes/super_admin.routes')
-    app.use('/superadmin', superAdminRoutes)
-}catch(e){}
+// try{
+//     const superAdminRoutes = require('./node_modules/@ioticsme/cms-installer/dist/routes/super_admin.routes')
+//     app.use('/superadmin', superAdminRoutes)
+// }catch(e){}
 
-// app.use('/payment', paymentRoutes)
+// app.use('/payment', paymentRoutes) 
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

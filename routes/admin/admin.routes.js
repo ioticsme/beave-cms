@@ -9,7 +9,7 @@ const configRoutes = require('./config.routes')
 const authRoutes = require('./auth.routes')
 const dashboardRoutes = require('./dashboard.routes')
 const ecommerceRoutes = require('./ecommerce.routes')
-// const cmsRoutes = require('./cms.routes')
+const cmsRoutes = require('./cms.routes')
 const settingsRoutes = require('./settings.routes')
 const formsRoutes = require('./form.routes')
 const customFormsRoutes = require('./customForm.routes')
@@ -35,8 +35,8 @@ if (globalModuleConfig.has_ecommerce) {
 }
 // router.use('/cms', cmsRoutes)
 if (globalModuleConfig.has_cms) {
-    const cmsPackageRoutes = require('../../node_modules/@ioticsme/cms/routes/admin.routes')
-    router.use('/cms', cmsPackageRoutes)
+    // const cmsPackageRoutes = require('../../node_modules/@ioticsme/cms/routes/admin.routes')
+    router.use('/cms', cmsRoutes)
 }
 router.use('/settings', settingsRoutes)
 router.use('/forms', formsRoutes)

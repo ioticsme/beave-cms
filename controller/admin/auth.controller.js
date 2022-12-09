@@ -74,11 +74,14 @@ const loginSubmit = async (req, res) => {
                         brand.domains[0].country.currency_symbol,
                     settings: settings ? settings : {},
                 }
+                return res.status(200).json({
+                    redirect_to: '/admin/dashboard',
+                })
+            } else {
+                return res.status(200).json({
+                    redirect_to: '/admin/config/admin',
+                })
             }
-
-            return res.status(200).json({
-                redirect_to: '/admin/config/admin'
-            })
         } else {
             return res.status(401).json({ error: 'Invalid email or password' })
         }

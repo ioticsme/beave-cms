@@ -7,6 +7,7 @@ const Joi = require('joi')
 const bcrypt = require('bcrypt')
 
 const Admin = require('../../model/Admin')
+const { object } = require('joi')
 
 const list = async (req, res) => {
     // return res.sendFile('./views/index.html', {root: './node_modules/cms-installer'});
@@ -29,6 +30,7 @@ const edit = async (req, res) => {
     const admin = await Admin.findOne({
         _id: req.params.id,
     })
+    console.log('admin :>> ', admin);
     // res.send(contentType)
     return res.render('admin/config/admin/form', {
         admin,
@@ -60,7 +62,13 @@ const save = async (req, res) => {
         return
     }
 
-    const adminExist = await Admin.findOne({ email: req.body.email })
+    let options = {
+        email: req.body.email,
+    }
+    if (req.body.id) {
+        options._id = { $ne: req.body.id }
+    }
+    const adminExist = await Admin.findOne(options)
     if (adminExist) {
         return res.status(422).json({
             details: [

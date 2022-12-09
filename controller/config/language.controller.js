@@ -13,7 +13,7 @@ const list = async (req, res) => {
     })
 }
 
-const add = async (req, res) => {
+const add = async (req, res) => { 
     // return res.sendFile('./views/index.html', {root: './node_modules/cms-installer'});
     // const contentTypes = await ContentType.find()
     return res.render('admin/config/language/form', {

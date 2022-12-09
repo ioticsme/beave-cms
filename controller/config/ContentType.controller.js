@@ -1,16 +1,14 @@
-import * as dotenv from 'dotenv'
-dotenv.config({ path: '../../../../.env' })
-// const mongoose = require("mongoose");
-import * as path from 'path'
-import { Request, Response } from 'express'
-import Joi, { any } from 'joi'
-import slugify from 'slugify'
-const ContentType = require('../../../cms/model/ContentType')
+const path = require('path')
+const express = require('express')
+const Joi = require('joi')
+const bcrypt = require('bcrypt')
+const ContentType = require('../../model/ContentType')
 
 const list = async (req, res) => {
     // return res.sendFile('./views/index.html', {root: './node_modules/cms-installer'});
     const contentTypes = await ContentType.find()
-    return res.render(path.join(__dirname, '../../views/contenttype', 'index'), {
+    console.log('contentTypes :>> ', contentTypes[0]);
+    return res.render('admin/config/content-type/listing', {
         contentTypes,
     })
 }
@@ -18,9 +16,12 @@ const list = async (req, res) => {
 const add = async (req, res) => {
     // return res.sendFile('./views/index.html', {root: './node_modules/cms-installer'});
     // const contentTypes = await ContentType.find()
-    return res.render(path.join(__dirname, '../../views/contenttype', 'form'), {
-        isEdit: false,
-    })
+    return res.render(
+        'admin/config/content-type/form',
+        {
+            isEdit: false,
+        }
+    )
 }
 
 const edit = async (req, res) => {
@@ -29,10 +30,13 @@ const edit = async (req, res) => {
         _id: req.params.id,
     })
     // res.send(contentType)
-    return res.render(path.join(__dirname, '../../views/contenttype', 'form'), {
-        contentType,
-        isEdit: true,
-    })
+    return res.render(
+        'admin/config/content-type/edit-form',
+        {
+            contentType,
+            isEdit: true,
+        }
+    )
 }
 
 const save = async (req, res) => {

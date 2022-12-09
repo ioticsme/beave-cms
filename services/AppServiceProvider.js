@@ -9,7 +9,7 @@ const baseConfig = async (req, res, next) => {
     res.locals.clientName = `${process.env.CLIENT_NAME}`
     res.locals.cmsLogoLarge = `${process.env.CMS_LOGO_LARGE}`
     res.locals.cmsLogoSmall = `${process.env.CMS_LOGO_SMALL}`
-    res.locals.globalModuleConfig = globalModuleConfig
+    res.locals.globalModuleConfig = globalModuleConfig 
     next()
 }
 
@@ -60,7 +60,7 @@ const authUser = async (req, res, next) => {
 
 const mainNavGenerator = async (req, res, next) => {
     if (globalModuleConfig.has_cms) {
-        const ContentType = require('../node_modules/@ioticsme/cms/model/ContentType')
+        const ContentType = require('../model/ContentType')
         const contentTypes = await ContentType.find({ in_use: true }).sort([
             ['position', 'ascending'],
         ])

@@ -5,6 +5,7 @@ const adminController = require('../../controller/config/admin.controller')
 const countryController = require('../../controller/config/country.controller')
 const languageController = require('../../controller/config/language.controller')
 const brandController = require('../../controller/config/brand.controller')
+const contentTypeController = require('../../controller/config/contentType.controller')
 
 router.group('/', (router) => {
     router.group('/admin', (router) => {
@@ -38,6 +39,12 @@ router.group('/', (router) => {
         router.post('/save', brandController.save)
         router.post('/change-status', brandController.changeStatus)
         router.post('/delete', brandController.deleteItem)
+    })
+    router.group('/content-type', (router) => {
+        router.get('', contentTypeController.list)
+        router.get('/add', contentTypeController.add)
+        router.get('/edit/:id', contentTypeController.edit)
+        router.post('/save', contentTypeController.save)
     })
     // router.get('/country', configController.profileUpdate)
 })
