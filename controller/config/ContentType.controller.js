@@ -7,7 +7,7 @@ const ContentType = require('../../model/ContentType')
 const list = async (req, res) => {
     // return res.sendFile('./views/index.html', {root: './node_modules/cms-installer'});
     const contentTypes = await ContentType.find()
-    console.log('contentTypes :>> ', contentTypes[0]);
+    // console.log('contentTypes :>> ', contentTypes[0]);
     return res.render('admin/config/content-type/listing', {
         contentTypes,
     })

@@ -44,7 +44,6 @@ const edit = async (req, res)  => {
 }
 
 const save = async (req, res)  => {
-    console.log(req.body)
     const schema = Joi.object({
         name: Joi.string().required().min(3).max(60),
         code: Joi.string().required().min(2).max(10),

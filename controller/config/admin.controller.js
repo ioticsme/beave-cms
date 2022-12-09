@@ -30,7 +30,7 @@ const edit = async (req, res) => {
     const admin = await Admin.findOne({
         _id: req.params.id,
     })
-    console.log('admin :>> ', admin);
+    // console.log('admin :>> ', admin);
     // res.send(contentType)
     return res.render('admin/config/admin/form', {
         admin,
