@@ -68,8 +68,8 @@ const dashboard = async (req, res) => {
         // console.log(dateObject)
         const dashBoardData = {}
         const orders = await Order.find({
-            brand: req.authUser.selected_brand._id,
-            country: req.authUser.selected_brand.country,
+            brand: req.authUser.selected_brand?._id,
+            country: req.authUser.selected_brand?.country,
             created_at: {
                 $gte: dateObject.sd_prev_month,
                 $lte: dateObject.ed_current_month,

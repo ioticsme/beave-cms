@@ -37,8 +37,7 @@ const loginSubmit = async (req, res) => {
         })
 
         if (!admin) {
-            res.status(401).json({ error: 'Invalid email or password' })
-            return
+            return res.status(401).json({ error: 'Invalid email or password' })
         }
 
         if (bcrypt.compareSync(req.body.password, admin.password)) {
@@ -53,32 +52,38 @@ const loginSubmit = async (req, res) => {
             session.admin_id = admin._id
             session.admin_name = admin.name
             session.admin_role = admin.role
-            const settings = await Settings.findOne({
-                brand: brand,
-                country: brand.domains[0].country._id,
-            }).select('-brand -country -__v -created_at -updated_at -author')
 
-            session.selected_brand = {
-                _id: brand._id,
-                name: brand.name,
-                code: brand.code,
-                languages: brand.languages,
-                country: brand.domains[0].country._id,
-                country_name: brand.domains[0].country.name.en,
-                country_code: brand.domains[0].country.code,
-                country_currency: brand.domains[0].country.currency,
-                country_currency_symbol:
-                    brand.domains[0].country.currency_symbol,
-                settings: settings ? settings : {},
+            if (admin.role != 'super_admin') {
+                const settings = await Settings.findOne({
+                    brand: brand,
+                    country: brand.domains[0].country._id,
+                }).select(
+                    '-brand -country -__v -created_at -updated_at -author'
+                )
+
+                session.selected_brand = {
+                    _id: brand._id,
+                    name: brand.name,
+                    code: brand.code,
+                    languages: brand.languages,
+                    country: brand.domains[0].country._id,
+                    country_name: brand.domains[0].country.name.en,
+                    country_code: brand.domains[0].country.code,
+                    country_currency: brand.domains[0].country.currency,
+                    country_currency_symbol:
+                        brand.domains[0].country.currency_symbol,
+                    settings: settings ? settings : {},
+                }
             }
 
-            res.status(200).json(admin)
-            return
+            return res.status(200).json({
+                redirect_to: '/admin/config/admin'
+            })
         } else {
-            res.status(401).json({ error: 'Invalid email or password' })
-            return
+            return res.status(401).json({ error: 'Invalid email or password' })
         }
     } catch (error) {
+        console.log(error)
         return res.status(404).json({ error: 'Something went wrong' })
     }
 }

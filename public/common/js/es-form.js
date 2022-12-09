@@ -175,10 +175,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     //     }
                     // })
                     // console.log(callback)
-                    if (callback) {
-                        window.location.href = callback
-                    } else if (pageRefresh) {
-                        location.reload()
+                    if (data.redirect_to) {
+                        window.location.href = data.redirect_to
+                    } else {
+                        if (callback) {
+                            console.log('callback called')
+                            window.location.href = callback
+                        } else if (pageRefresh) {
+                            location.reload()
+                        }
                     }
                 } else if (resStatus == 422) {
                     console.log(data.details)
