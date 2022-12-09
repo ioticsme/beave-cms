@@ -1,4 +1,4 @@
-# LANDMARK LEISURE - CMS
+# IOTICS - CMS
 Operations handling
 
 - Global CMS or all brands

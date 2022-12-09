@@ -17,6 +17,13 @@ const logRoutes = require('./log.routes')
 const userRoutes = require('./user.routes')
 // END:: Route Groups
 
+const checkSuperAdmin = (req, res, next) => {
+    if(req.authUser.admin_role != 'super_admin') {
+        return res.render(`admin/error-500`)
+    }
+    next()
+}
+
 // BEGIN::Admin Auth Check Middleware
 const authCheck = require('../../middleware/auth.middleware')
 // END::Admin Auth Check Middleware
@@ -43,7 +50,7 @@ router.use('/forms', formsRoutes)
 router.use('/custom-forms', customFormsRoutes)
 router.use('/log', logRoutes)
 router.use('/user', userRoutes)
-router.use('/config', configRoutes)
+router.use('/config', checkSuperAdmin ,configRoutes)
 // END:: Routes
 
 module.exports = router
