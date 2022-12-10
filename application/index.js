@@ -6,8 +6,8 @@ const Tracing = require('@sentry/tracing')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
 var session = require('express-session')
-const redis = require('redis');
-var redisStore = require('connect-redis')(session);
+const redis = require('redis')
+var redisStore = require('connect-redis')(session)
 
 const fs = require('fs')
 const path = require('path')
@@ -30,7 +30,12 @@ if (fs.existsSync('./node_modules/@ioticsme/cms/index.js')) {
 }
 
 // BEGIN::Service Providers
-const ServiceProvider = require('./services/AppServiceProvider')
+const {
+    baseConfig,
+    authUser,
+    mainNavGenerator,
+    allBrands,
+} = require('./middleware/cms.middleware')
 // END::Service Providers
 
 // BEGIN::Security Headers
@@ -50,43 +55,46 @@ app.use(express.urlencoded({ extended: true }))
 // Assets folder
 app.use('/cms-static', express.static(path.join(__dirname, './public')))
 
-
 //Configure redis client
 
-var client  = redis.createClient({legacyMode: true});
+var client = redis.createClient({ legacyMode: true })
 
-(async () => {
-    client.on('error', (err) => {console.log('Redis Client Error', err);});
-    await client.connect();
-})();
+;(async () => {
+    client.on('error', (err) => {
+        console.log('Redis Client Error', err)
+    })
+    await client.connect()
+})()
 
 const sessionConfig = {
-    store: new redisStore({ host: 'localhost', port: 6379, client: client,ttl :  260}),
+    store: new redisStore({
+        host: 'localhost',
+        port: 6379,
+        client: client,
+        ttl: 260,
+    }),
     secret: `${process.env.APP_KEY}`,
     saveUninitialized: false,
     resave: false,
     // cookie: {
     //     secure: false, // if true only transmit cookie over https
-    //     httpOnly: false, // if true prevent client side JS from reading the cookie 
+    //     httpOnly: false, // if true prevent client side JS from reading the cookie
     //     maxAge: 1000 * 60 * 60 * 24 // session max age in miliseconds
-    // } 
+    // }
 }
 
 //session middleware
 if (process.env.NODE_ENV === 'production') {
-    app.set('trust proxy', 1);
+    app.set('trust proxy', 1)
 }
 // sessionConfig.store = new RedisStore({ host: 'localhost', port: 6379, client: redisClient,ttl :  260}),
 
-app.use(
-    session(sessionConfig)
-)
+app.use(session(sessionConfig))
 
 // console.log('SESSION STARTED')
 
 app.use(cookieParser())
 
-app.use(ServiceProvider.baseConfig)
 // app.use(ServiceProvider.moduleConfig)
 
 // Template Engine
@@ -113,26 +121,10 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:')) //TODO:
 app.get('/health', async (req, res) => {
     const appKey =
         process.env.APP_KEY === undefined ? 'APP Key is missing!!!' : 'OK'
-
-    const envCheck = () => {
-        if (
-            process.env.PAYFORT_URL === undefined ||
-            process.env.MERCHANT_IDENTIFIER === undefined ||
-            process.env.ACCESS_CODE === undefined ||
-            process.env.SHA_REQUEST_PARSE === undefined ||
-            process.env.SHA_RESPONSE_PARSE === undefined ||
-            process.env.SHA_TYPE === undefined
-        ) {
-            return 'Payment Gateway Config is missing'
-        } else {
-            return 'OK'
-        }
-    }
     res.status(200).json({
         'DB Connected': dbSuccess,
         Health: 'OK',
         'App Key': appKey,
-        'Payment Gateway Config': envCheck(),
         Timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         TimeNow: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
     })
@@ -143,10 +135,6 @@ const adminRoutes = require('./routes/admin/admin.routes')
 const webAPIRoutes = require('./routes/api/web-api.routes')
 const mobileAPIRoutes = require('./routes/api/mobile-api.routes')
 // END:: API Route Groups
-
-// app.use('/', async(req, res) => {
-//     res.json('redirect to dashboard')
-// })
 
 // TODO::Below code is only for continuos development purpose. Should be removed on staging and production
 // BEGIN::Admin automatic auth on each server restart for development purpose
@@ -197,12 +185,6 @@ if (process.env.NODE_ENV == 'development') {
 }
 // END::Admin aautomatic auth for development purpose
 
-// BEGIN::Main Nav Generator (Global)
-app.use(ServiceProvider.authUser)
-app.use(ServiceProvider.mainNavGenerator)
-app.use(ServiceProvider.allBrands)
-// END::Main Nav Generator (Global)
-
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 1000, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
@@ -217,6 +199,10 @@ app.get('/', (req, res) => {
 })
 app.use('/app', mobileAPIRoutes)
 app.use('/api', webAPIRoutes)
-app.use('/admin', adminRoutes)
+app.use(
+    '/admin',
+    [baseConfig, authUser, mainNavGenerator, allBrands],
+    adminRoutes
+)
 
 module.exports = app

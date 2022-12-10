@@ -7,7 +7,7 @@ const menuController = require('../../controller/admin/menu.controller')
 const mediaController = require('../../controller/admin/media.controller')
 const bannerController = require('../../controller/admin/banner.controller')
 const galleryController = require('../../controller/admin/gallery.controller')
-const contentTypeCheck = require('../../middleware/contentType.middleware')
+const { contentTypeCheck } = require('../../middleware/cms.middleware')
 
 const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })

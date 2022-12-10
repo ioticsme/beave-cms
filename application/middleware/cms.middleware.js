@@ -1,8 +1,8 @@
+require('dotenv').config()
 const Brand = require('../model/Brand')
-const Country = require('../model/Country')
-const Language = require('../model/Language')
-var session = require('express-session')
 const Settings = require('../model/Settings')
+const ContentType = require('../model/ContentType')
+var session = require('express-session')
 
 const baseConfig = async (req, res, next) => {
     res.locals.baseURL = `${process.env.DOMAIN}`
@@ -13,16 +13,33 @@ const baseConfig = async (req, res, next) => {
     next()
 }
 
-// const moduleConfig = async (req, res, next) => {
-//     res.locals.moduleConfig = moduleConfig
-//     // req.moduleConfig = {
-//     //     has_ecommerce: process.env.HAS_ECOMMERCE == 'true' ? true : false,
-//     //     has_semnox: process.env.HAS_SEMNOX == 'true' ? true : false,
-//     //     has_pam: process.env.HAS_PAM == 'true' ? true : false,
-//     //     has_cms: has_cms || false,
-//     // }
-//     next()
-// }
+const authCheck = async (req, res, next) => {
+    if (!req.session || !req.session.admin_id) {
+        res.redirect('/admin/auth/login')
+        return
+    }
+
+    req.authUser = req.session
+    next()
+}
+
+const contentTypeCheck = async (req, res, next) => {
+    if (!req.params.contentType) {
+        res.json('Not Found')
+        return
+    }
+    try {
+        const contentType = await ContentType.findOne({
+            slug: req.params.contentType,
+        })
+        req.contentType = contentType
+    } catch (err) {
+        res.json('Not Found')
+        return
+    }
+
+    next()
+}
 
 const authUser = async (req, res, next) => {
     if (!req.session.selected_brand) {
@@ -88,7 +105,8 @@ const allBrands = async (req, res, next) => {
 
 module.exports = {
     baseConfig,
-    // moduleConfig,
+    authCheck,
+    contentTypeCheck,
     authUser,
     mainNavGenerator,
     allBrands,

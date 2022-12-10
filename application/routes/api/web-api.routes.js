@@ -20,8 +20,8 @@ const {
     UserAuthCheck,
     ecommerceModeCheck,
 } = require('../../middleware/api.middleware')
-const getNav = require('../../middleware/nav.middleware')
-const { app } = require('firebase-admin')
+const { getNav } = require('../../middleware/api.middleware')
+// const { app } = require('firebase-admin')
 
 router.use(BrandWithCountryCheck)
 router.use(webDefaultHeader)

@@ -11,46 +11,43 @@ const dashboardRoutes = require('./dashboard.routes')
 const ecommerceRoutes = require('./ecommerce.routes')
 const cmsRoutes = require('./cms.routes')
 const settingsRoutes = require('./settings.routes')
-const formsRoutes = require('./form.routes')
+// const formsRoutes = require('./form.routes')
 const customFormsRoutes = require('./customForm.routes')
 const logRoutes = require('./log.routes')
 const userRoutes = require('./user.routes')
 // END:: Route Groups
 
 const checkSuperAdmin = (req, res, next) => {
-    if(req.authUser.admin_role != 'super_admin') {
+    if (req.authUser.admin_role != 'super_admin') {
         return res.render(`admin/error-500`)
     }
     next()
 }
 
 // BEGIN::Admin Auth Check Middleware
-const authCheck = require('../../middleware/auth.middleware')
+const { authCheck } = require('../../middleware/cms.middleware')
 // END::Admin Auth Check Middleware
 
 // BEGIN:: Routes
 router.use('/auth', authRoutes)
-// router.use(authCheck) //Admin Auth Check middleware
-router.use(authCheck)
 router.get('/', (req, res) => {
     res.redirect('/admin/dashboard')
 })
-router.use('/dashboard', dashboardRoutes)
+router.use('/dashboard', [authCheck], dashboardRoutes)
 
 if (globalModuleConfig.has_ecommerce) {
-    router.use('/ecommerce', ecommerceRoutes)
+    router.use('/ecommerce', [authCheck], ecommerceRoutes)
 }
 // router.use('/cms', cmsRoutes)
 if (globalModuleConfig.has_cms) {
-    // const cmsPackageRoutes = require('../../node_modules/@ioticsme/cms/routes/admin.routes')
-    router.use('/cms', cmsRoutes)
+    router.use('/cms', [authCheck], cmsRoutes)
 }
-router.use('/settings', settingsRoutes)
+router.use('/settings', [authCheck], settingsRoutes)
 // router.use('/forms', formsRoutes)
-router.use('/custom-forms', customFormsRoutes)
-router.use('/log', logRoutes)
-router.use('/user', userRoutes)
-router.use('/config', checkSuperAdmin ,configRoutes)
+router.use('/custom-forms', [authCheck], customFormsRoutes)
+router.use('/log', [authCheck], logRoutes)
+router.use('/user', [authCheck], userRoutes)
+router.use('/config', [authCheck, checkSuperAdmin], configRoutes)
 // END:: Routes
 
 module.exports = router
