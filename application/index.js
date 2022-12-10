@@ -21,14 +21,8 @@ global.globalModuleConfig = {
     has_ecommerce: process.env.HAS_ECOMMERCE == 'true' ? true : false,
     has_semnox: process.env.HAS_SEMNOX == 'true' ? true : false,
     has_pam: process.env.HAS_PAM == 'true' ? true : false,
-    // has_cms: true,
+    has_cms: process.env.HAS_CMS == 'true' ? true : false,
 }
-if (fs.existsSync('./node_modules/@ioticsme/cms/index.js')) {
-    global.globalModuleConfig.has_cms = true
-} else {
-    global.globalModuleConfig.has_cms = false
-}
-
 // BEGIN::Service Providers
 const {
     baseConfig,

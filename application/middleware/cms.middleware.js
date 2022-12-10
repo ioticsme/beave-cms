@@ -9,7 +9,7 @@ const baseConfig = async (req, res, next) => {
     res.locals.clientName = `${process.env.CLIENT_NAME}`
     res.locals.cmsLogoLarge = `${process.env.CMS_LOGO_LARGE}`
     res.locals.cmsLogoSmall = `${process.env.CMS_LOGO_SMALL}`
-    res.locals.globalModuleConfig = globalModuleConfig 
+    res.locals.globalModuleConfig = globalModuleConfig
     next()
 }
 
@@ -103,6 +103,13 @@ const allBrands = async (req, res, next) => {
     next()
 }
 
+const checkSuperAdmin = (req, res, next) => {
+    if (req.authUser.admin_role != 'super_admin') {
+        return res.render(`admin/error-500`)
+    }
+    next()
+}
+
 module.exports = {
     baseConfig,
     authCheck,
@@ -110,4 +117,5 @@ module.exports = {
     authUser,
     mainNavGenerator,
     allBrands,
+    checkSuperAdmin,
 }

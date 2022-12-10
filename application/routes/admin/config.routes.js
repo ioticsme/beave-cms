@@ -21,7 +21,6 @@ router.group('/', (router) => {
         router.get('/add', countryController.add)
         router.get('/edit/:id', countryController.edit)
         router.post('/save', countryController.save)
-        // router.post('/change-status', countryController.changeStatus)
         router.post('/delete', countryController.deleteItem)
     })
     router.group('/language', (router) => {
@@ -29,7 +28,6 @@ router.group('/', (router) => {
         router.get('/add', languageController.add)
         router.get('/edit/:id', languageController.edit)
         router.post('/save', languageController.save)
-        // router.post('/change-status', countryController.changeStatus)
         router.post('/delete', languageController.deleteItem)
     })
     router.group('/brand', (router) => {
@@ -46,8 +44,6 @@ router.group('/', (router) => {
         router.get('/edit/:id', contentTypeController.edit)
         router.post('/save', contentTypeController.save)
     })
-    // router.get('/country', configController.profileUpdate)
 })
-// router.post('/', userController.verifyOtp)
 
 module.exports = router

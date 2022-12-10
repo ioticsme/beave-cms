@@ -11,21 +11,13 @@ const dashboardRoutes = require('./dashboard.routes')
 const ecommerceRoutes = require('./ecommerce.routes')
 const cmsRoutes = require('./cms.routes')
 const settingsRoutes = require('./settings.routes')
-// const formsRoutes = require('./form.routes')
 const customFormsRoutes = require('./customForm.routes')
 const logRoutes = require('./log.routes')
 const userRoutes = require('./user.routes')
 // END:: Route Groups
 
-const checkSuperAdmin = (req, res, next) => {
-    if (req.authUser.admin_role != 'super_admin') {
-        return res.render(`admin/error-500`)
-    }
-    next()
-}
-
 // BEGIN::Admin Auth Check Middleware
-const { authCheck } = require('../../middleware/cms.middleware')
+const { authCheck, checkSuperAdmin } = require('../../middleware/cms.middleware')
 // END::Admin Auth Check Middleware
 
 // BEGIN:: Routes
@@ -38,12 +30,12 @@ router.use('/dashboard', [authCheck], dashboardRoutes)
 if (globalModuleConfig.has_ecommerce) {
     router.use('/ecommerce', [authCheck], ecommerceRoutes)
 }
+
 // router.use('/cms', cmsRoutes)
 if (globalModuleConfig.has_cms) {
     router.use('/cms', [authCheck], cmsRoutes)
 }
 router.use('/settings', [authCheck], settingsRoutes)
-// router.use('/forms', formsRoutes)
 router.use('/custom-forms', [authCheck], customFormsRoutes)
 router.use('/log', [authCheck], logRoutes)
 router.use('/user', [authCheck], userRoutes)
