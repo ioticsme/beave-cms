@@ -1,3 +1,4 @@
+// TODO:: This route file should be removed
 const express = require('express')
 require('express-group-routes')
 const router = express.Router()

@@ -46,7 +46,7 @@ if (globalModuleConfig.has_cms) {
     router.use('/cms', cmsRoutes)
 }
 router.use('/settings', settingsRoutes)
-router.use('/forms', formsRoutes)
+// router.use('/forms', formsRoutes)
 router.use('/custom-forms', customFormsRoutes)
 router.use('/log', logRoutes)
 router.use('/user', userRoutes)
