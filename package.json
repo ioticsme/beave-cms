@@ -1,7 +1,7 @@
 {
-    "name": "@ioticsme/hixly",
+    "name": "@ioticsme/cms",
     "version": "1.0.0",
-    "description": "Landmark Leisure - CMS",
+    "description": "Iotics - CMS",
     "main": "app.js",
     "scripts": {
         "dev": "nodemon app.js",
