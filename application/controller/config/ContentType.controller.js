@@ -3,19 +3,16 @@ const express = require('express')
 const Joi = require('joi')
 const bcrypt = require('bcrypt')
 const ContentType = require('../../model/ContentType')
+const { default: slugify } = require('slugify')
 
 const list = async (req, res) => {
-    // return res.sendFile('./views/index.html', {root: './node_modules/cms-installer'});
     const contentTypes = await ContentType.find()
-    // console.log('contentTypes :>> ', contentTypes[0]);
     return res.render('admin/config/content-type/listing', {
         contentTypes,
     })
 }
 
 const add = async (req, res) => {
-    // return res.sendFile('./views/index.html', {root: './node_modules/cms-installer'});
-    // const contentTypes = await ContentType.find()
     return res.render(
         'admin/config/content-type/form',
         {
@@ -25,13 +22,11 @@ const add = async (req, res) => {
 }
 
 const edit = async (req, res) => {
-    // return res.sendFile('./views/index.html', {root: './node_modules/cms-installer'});
     const contentType = await ContentType.findOne({
         _id: req.params.id,
     })
-    // res.send(contentType)
     return res.render(
-        'admin/config/content-type/edit-form',
+        'admin/config/content-type/form',
         {
             contentType,
             isEdit: true,
@@ -40,12 +35,11 @@ const edit = async (req, res) => {
 }
 
 const save = async (req, res) => {
-    // console.log(req.body)
     const schema = Joi.object({
         title: Joi.string().required().min(3).max(60),
         slug: Joi.string().required().min(3).max(60),
         template_name: Joi.string().required().min(3).max(60),
-        nav_position: Joi.number().required(),
+        position: Joi.number().required(),
         admin_icon: Joi.string().required(),
         has_banner: Joi.boolean().optional(),
         has_gallery: Joi.boolean().optional(),
@@ -110,7 +104,7 @@ const save = async (req, res) => {
         title: req.body.title,
         slug: slugify(req.body.slug.toLowerCase()),
         template_name: req.body.template_name,
-        position: req.body.nav_position,
+        position: req.body.position,
         admin_icon: req.body.admin_icon,
         allowed_type: req.body.allowed_type || [],
         has_banner: req.body?.has_banner || false,

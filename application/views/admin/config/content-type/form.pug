@@ -69,40 +69,152 @@ block content
 							h3.fw-bold.m-0 Content Type Form
 					#kt_account_settings_profile_details.collapse.show
 						form#kt_account_profile_details_form.form.es-form(action=`/admin/config/content-type/save` data-redirect-url=`/admin/config/content-type`  method='post' autocomplete="off")
-							//- input(type="hidden" name="id" )
+							input(type='hidden' name='id' value=`${contentType ? contentType._id : ''}`)
 							.card-body.border-top.p-9
 								.row.mb-6
 									label.col-lg-4.col-form-label.required.fw-semibold.fs-6 Title
 									.col-lg-8
 										.row
 											.col-lg-12.fv-row
-												input.form-control.form-control-lg.form-control-solid.mb-3.mb-lg-0(type='text' name='title' placeholder='Title' )
+												input.form-control.form-control-lg.form-control-solid.mb-3.mb-lg-0(type='text' name='title' placeholder='Title' value=`${contentType ? contentType.title : ''}`)
 												.fv-plugins-message-container.invalid-feedback(id=`field-error-title`)
 								.row.mb-6
 									label.col-lg-4.col-form-label.required.fw-semibold.fs-6 URL
 									.col-lg-8.fv-row
-										input.form-control.form-control-lg.form-control-solid(type='text' name='slug' placeholder='URL' )
+										input.form-control.form-control-lg.form-control-solid(type='text' name='slug' placeholder='URL' value=`${contentType ? contentType.slug : ''}`)
 										.fv-plugins-message-container.invalid-feedback(id=`field-error-slug`)
 								.row.mb-6
 									label.col-lg-4.col-form-label.required.fw-semibold.fs-6 Template Name
 									.col-lg-8.fv-row
-										input.form-control.form-control-lg.form-control-solid(type='text' name='currency' placeholder='Template Name' value=`${country ? country.currency : ''}`)
-										.fv-plugins-message-container.invalid-feedback(id=`field-error-currency`)
+										input.form-control.form-control-lg.form-control-solid(type='text' name='template_name' placeholder='Template Name' value=`${contentType ? contentType.template_name : ''}`)
+										.fv-plugins-message-container.invalid-feedback(id=`field-error-template_name`)
 								.row.mb-6
-									label.col-lg-4.col-form-label.required.fw-semibold.fs-6 Currency Symbol
+									label.col-lg-4.col-form-label.required.fw-semibold.fs-6 Position
 									.col-lg-8.fv-row
-										input.form-control.form-control-lg.form-control-solid(type='text' name='currency_symbol' placeholder='Currency Symbol' value=`${country ? country.currency_symbol : ''}`)
-										.fv-plugins-message-container.invalid-feedback(id=`field-error-currency_symbol`)
+										input.form-control.form-control-lg.form-control-solid(type='number' name='position' placeholder='Position' value=`${contentType ? contentType.position : 0}`)
+										.fv-plugins-message-container.invalid-feedback(id=`field-error-position`)
 								.row.mb-6
-									label.col-lg-4.col-form-label.required.fw-semibold.fs-6 Currency Decimal Points
+									label.col-lg-4.col-form-label.required.fw-semibold.fs-6 Admin Icon (SVG Code)
 									.col-lg-8.fv-row
-										input.form-control.form-control-lg.form-control-solid(type='text' name='currency_decimal_points' placeholder='Currency Percision' value=`${country ? country.currency_decimal_points : ''}`)
-										.fv-plugins-message-container.invalid-feedback(id=`field-error-currency_decimal_points`)
+										textarea.form-control.form-control-lg.form-control-solid(type='text' name='admin_icon' placeholder='Admin Icon' ) #{contentType ? contentType.admin_icon : ''}
+										.fv-plugins-message-container.invalid-feedback(id=`field-error-admin_icon`)
+								.row.mb-6#form-holder
+									span.col-lg-4.col-form-label.required.fw-semibold.fs-6 Custom Fields
+									if isEdit
+										if(contentType && contentType.custom_fields && contentType.custom_fields.length)
+											each cf in contentType.custom_fields
+												.col-lg-12.fv-row.cf-card.row
+													h5.text-center Custom Field
+													.col-md-6
+														input.form-control.form-control-lg.form-control-solid(type='text' name='field_label[]' placeholder='Field Label' value=`${cf.field_label || ''}`)
+														.fv-plugins-message-container.invalid-feedback(id=`field-error-field_label[]`)
+													.col-md-6
+														input.form-control.form-control-lg.form-control-solid(type='text' name='field_name[]' placeholder='Field Name' value=`${cf.field_name || ''}`)
+														.fv-plugins-message-container.invalid-feedback(id=`field-error-field_name[]`)
+													.mt-2.col-md-6
+														input.form-control.form-control-lg.form-control-solid(type='text' name='placeholder[]' placeholder='Placeholder' value=`${cf.placeholder || ''}`)
+														.fv-plugins-message-container.invalid-feedback(id=`field-error-placeholder[]`)
+													.mt-2.col-md-6
+														input.form-control.form-control-lg.form-control-solid(type='text' name='validation[]' placeholder='Validation' value=`${cf.validation || ''}`)
+														.fv-plugins-message-container.invalid-feedback(id=`field-error-validation[]`)
+													.mt-2.col-md-6
+														select.form-select.mb-2(name="bilingual[]" data-placeholder='Select a role' )
+															//- TODO::edit selection list item
+															option(value="" ) Select language type
+															option(value="true" selected=cf && cf.bilingual == true) Bilingual
+															option(value="false" selected=cf && cf.bilingual == false) English Only
+													.mt-2.col-md-6
+														select.form-select.mb-2(name="field_type[]" data-placeholder='Select a type' value=admin && admin.role)
+															option(value='') Select Field Type
+															option(value='text' selected=cf.field_type=='text') Text
+															option(value='wysiwig' selected=cf.field_type=='wysiwig') WYSIWYG
+															option(value='textarea' selected=cf.field_type=='textarea') Textarea
+															option(value='date' selected=cf.field_type=='date') Date
+															option(value='dropdown' selected=cf.field_type=='dropsown') Dropdown
+															option(value='radio' selected=cf.field_type=='radio') Radio
+															option(value='checkbox' selected=cf.field_type=='checkbox') Checkbox
+															option(value='file' selected=cf.field_type=='file') File
+													-var optionLabels = cf.options?.map((op)=>op.label)
+													-var optionValues = cf.options?.map((op)=>op.value)
+													.mt-2.col-md-6
+														textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_label[]' placeholder='Dropdown option label seperated by comma(,)' ) #{optionLabels}
+														.fv-plugins-message-container.invalid-feedback(id=`field-error-option_label[]`)
+													.mt-2.col-md-6
+														textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_value[]' placeholder='Dropdown option value seperated by comma(,)' ) #{optionValues}
+														.fv-plugins-message-container.invalid-feedback(id=`field-error-option_value[]`)
+									.col-lg-12.fv-row.cf-card.row
+										h5.text-center Custom Field
+										.col-md-6
+											input.form-control.form-control-lg.form-control-solid(type='text' name='field_label[]' placeholder='Field Label' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-field_label[]`)
+										.col-md-6
+											input.form-control.form-control-lg.form-control-solid(type='text' name='field_name[]' placeholder='Field Name' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-field_name[]`)
+										.mt-2.col-md-6
+											input.form-control.form-control-lg.form-control-solid(type='text' name='placeholder[]' placeholder='Placeholder' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-placeholder[]`)
+										.mt-2.col-md-6
+											input.form-control.form-control-lg.form-control-solid(type='text' name='validation[]' placeholder='Validation' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-validation[]`)
+										.mt-2.col-md-6
+											select.form-select.mb-2(name="bilingual[]" data-placeholder='Select a role' value=admin && admin.role)
+												//- TODO::edit selection list item
+												option(value="" ) Select language type
+												option(value="true" selected=contentType && contentType.bilingual == true) Bilingual
+												option(value="false" selected=contentType && contentType.bilingual == false) English Only
+										.mt-2.col-md-6
+											select.form-select.mb-2(name="field_type[]" data-placeholder='Select a type' value=admin && admin.role)
+												//- TODO::edit selection list item
+												option(value='') Select Field Type
+												option(value='text' ) Text
+												option(value='wysiwig' ) WYSIWYG
+												option(value='textarea' ) Textarea
+												option(value='date' ) Date
+												option(value='dropdown' ) Dropdown
+												option(value='radio' ) Radio
+												option(value='checkbox' ) Checkbox
+												option(value='file' ) File
+										.mt-2.col-md-6
+											textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_label[]' placeholder='Dropdown option label seperated by comma(,)' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-option_label[]`)
+										.mt-2.col-md-6
+											textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_value[]' placeholder='Dropdown option value seperated by comma(,)' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-option_value[]`)
+								.mt-3.text-center
+									.btn.btn-primary(onClick='cloneChild()') 
+										span Add more
 								.row.mb-6
-									label.col-lg-4.col-form-label.required.fw-semibold.fs-6 Timezone
-									.col-lg-8.fv-row
-										input.form-control.form-control-lg.form-control-solid(type='text' name='timezone' placeholder='Timezone' value=`${country ? country.timezone : ''}`)
-										.fv-plugins-message-container.invalid-feedback(id=`field-error-timezone`)
+									span.col-lg-4.col-form-label.required.fw-semibold.fs-6 Features Checklist
+									small Please include the following in your content type.
+									.row.mt-3
+										.form-check.form-check-custom.form-check-solid.form-check-sm.col-md-4.mt-4
+											input#in_use.form-check-input(type='checkbox' value='true' name='in_use' checked=(contentType ? contentType.in_use : false))
+											label.form-check-label(for='in_use') In Use
+										.form-check.form-check-custom.form-check-solid.form-check-sm.col-md-4.mt-4
+											input#has_banner.form-check-input(type='checkbox' value='true' name='has_banner' checked=(contentType ? contentType.has_banner : false))
+											label.form-check-label(for='has_banner') Has Banner
+										.form-check.form-check-custom.form-check-solid.form-check-sm.col-md-4.mt-4
+											input#has_gallery.form-check-input(type='checkbox' value='true' name='has_gallery' checked=(contentType ? contentType.has_gallery : false))
+											label.form-check-label(for='has_gallery') Has Gallery
+										.form-check.form-check-custom.form-check-solid.form-check-sm.col-md-4.mt-4
+											input#has_form.form-check-input(type='checkbox' value='true' name='has_form' checked=(contentType ? contentType.has_form : false))
+											label.form-check-label(for='has_form') Has Form
+										.form-check.form-check-custom.form-check-solid.form-check-sm.col-md-4.mt-4
+											input#has_api_endpoint.form-check-input(type='checkbox' value='true' name='has_api_endpoint' checked=(contentType ? contentType.has_api_endpoint : false))
+											label.form-check-label(for='has_api_endpoint') Has API Endpoint
+										.form-check.form-check-custom.form-check-solid.form-check-sm.col-md-4.mt-4
+											input#hide_title.form-check-input(type='checkbox' value='true' name='hide_title' checked=(contentType ? contentType.hide_title : false))
+											label.form-check-label(for='hide_title') Hide Title
+										.form-check.form-check-custom.form-check-solid.form-check-sm.col-md-4.mt-4
+											input#hide_body.form-check-input(type='checkbox' value='true' name='hide_body' checked=(contentType ? contentType.hide_body : false))
+											label.form-check-label(for='hide_body') Hide Body
+										.form-check.form-check-custom.form-check-solid.form-check-sm.col-md-4.mt-4
+											input#hide_excerpt.form-check-input(type='checkbox' value='true' name='hide_excerpt' checked=(contentType ? contentType.hide_excerpt : false))
+											label.form-check-label(for='hide_excerpt') Hide Excerpt
+										.form-check.form-check-custom.form-check-solid.form-check-sm.col-md-4.mt-4
+											input#hide_meta.form-check-input(type='checkbox' value='true' name='hide_meta' checked=(contentType ? contentType.hide_meta : false))
+											label.form-check-label(for='hide_meta') Hide Meta
+											
 							.card-footer.d-flex.justify-content-end.py-6.px-9
 								button#kt_account_profile_details_submit.btn.btn-primary.form-submit-btn(type='submit') 
 									span.preloader.d-none
