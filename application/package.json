@@ -2,7 +2,7 @@
     "name": "@ioticsme/cms",
     "version": "1.0.0",
     "description": "Iotics - CMS",
-    "main": "app.js",
+    "main": "index.js",
     "scripts": {
         "dev": "nodemon app.js",
         "start": "node app.js",
