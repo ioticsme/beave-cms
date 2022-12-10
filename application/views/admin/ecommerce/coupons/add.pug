@@ -1,0 +1,312 @@
+extends ../../layouts/master.pug
+
+block csslib
+	link(href='/cms-static/admin/assets/plugins/custom/datatables/datatables.bundle.css' rel='stylesheet' type='text/css')
+
+block jslib
+	// begin::Vendors Javascript(used by this page)
+	script(src='/cms-static/admin/assets/plugins/custom/datatables/datatables.bundle.js')
+	script(src='/cms-static/admin/assets/plugins/custom/formrepeater/formrepeater.bundle.js')
+	// end::Vendors Javascript
+	// begin::Custom Javascript(used by this page)
+	script(src='/cms-static/admin/assets/js/custom/apps/ecommerce/catalog/save-product.js')
+	script(src='/cms-static/admin/assets/js/widgets.bundle.js')
+	script(src='/cms-static/admin/assets/js/custom/widgets.js')
+	script(src='/cms-static/admin/assets/js/custom/apps/chat/chat.js')
+	script(src='/cms-static/admin/assets/js/custom/utilities/modals/upgrade-plan.js')
+	script(src='/cms-static/admin/assets/js/custom/utilities/modals/create-app.js')
+	script(src='/cms-static/admin/assets/js/custom/utilities/modals/users-search.js')
+
+	// CKEditor Build Bundles
+	script(src='/cms-static/admin/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js')
+
+	// Form Submission Script
+	script(src='/cms-static/common/js/form-data-json.min.js')
+	script(src='/cms-static/common/js/es-form.js')
+
+
+block customScript
+	script.
+		document.querySelectorAll('.kt_daterangepicker input').forEach((picker)=>{
+			$(`#${picker.id}`).flatpickr({
+				altInput: !0,
+				altFormat: 'd F, Y',
+				dateFormat: 'Y-m-dTH:i:00.000\\Z',
+			})
+		}) 
+		const coupon_radios = document.querySelectorAll(
+			'input[name="coupon_type"]'
+		),
+		discount_value = document.getElementById(
+			'kt_discount_val'
+		)
+		minimum_order_per_card = document.getElementById(
+			'kt_min_order_per_card'
+		)
+		minimum_order = document.getElementById(
+			'kt_min_order'
+		)
+		maximum_discount = document.getElementById(
+			'kt_max_discount'
+		)
+		free_product = document.getElementById(
+			'kt_free_product'
+		)
+		coupon_radios.forEach((radio) => {
+			radio.addEventListener('change', (e) => {
+				switch (e.target.value) {
+					case 'percentage':
+						discount_value.classList.remove('d-none')
+						maximum_discount.classList.remove('d-none')
+						minimum_order.classList.remove('d-none')
+						minimum_order_per_card.classList.add('d-none')
+						free_product.classList.add('d-none')
+						break
+					case 'fixed':
+						discount_value.classList.remove('d-none')
+						minimum_order.classList.remove('d-none')
+						maximum_discount.classList.add('d-none')
+						minimum_order_per_card.classList.add('d-none')
+						free_product.classList.add('d-none')
+						break
+					case 'bogo':
+						//- disc val no
+						//- max val no
+						minimum_order.classList.remove('d-none')
+						discount_value.classList.add('d-none')
+						maximum_discount.classList.add('d-none')
+						minimum_order_per_card.classList.add('d-none')
+						free_product.classList.add('d-none')
+						break
+					case 'free':
+						minimum_order_per_card.classList.remove('d-none')
+						discount_value.classList.add('d-none')
+						maximum_discount.classList.add('d-none')
+						minimum_order.classList.add('d-none')
+						free_product.classList.remove('d-none')
+						break
+					default:
+						maximum_discount.classList.remove('d-none')
+				}
+			})
+		})
+		const product = document.querySelectorAll(
+			'input[name="pro_type"]'
+		),
+		some = document.getElementById(
+			'outlet_list'
+		)
+		product.forEach((e) => {
+			e.addEventListener('change', (e) => {
+				switch (e.target.value) {
+					case 'some':
+						some.classList.remove('d-none')
+						break
+					case 'all_pro':
+						some.classList.add('d-none')
+						break
+					default:
+						some.classList.add('d-none')
+				}
+			})
+		})
+		const expiry = document.querySelectorAll(
+			'input[name="expiry"]'
+		),
+		end = document.getElementById(
+			'expiry'
+		)
+		expiry.forEach((e) => {
+			e.addEventListener('change', (e) => {
+				switch (e.target.value) {
+					case 'yes':
+						end.classList.remove('d-none')
+						break
+					case 'no':
+						end.classList.add('d-none')
+						break
+					default:
+						end.classList.add('d-none')
+				}
+			})
+		})
+
+block content
+	.d-flex.flex-column.flex-column-fluid
+		#kt_app_toolbar.app-toolbar.py-3.py-lg-6
+			#kt_app_toolbar_container.app-container.container-xxl.d-flex.flex-stack
+				.page-title.d-flex.flex-column.justify-content-center.flex-wrap.me-3
+					h1.page-heading.d-flex.text-dark.fw-bold.fs-3.flex-column.justify-content-center.my-0
+						| Coupon
+						| Form
+					ul.breadcrumb.breadcrumb-separatorless.fw-semibold.fs-7.my-0.pt-1
+						li.breadcrumb-item.text-muted
+							a.text-muted.text-hover-primary(href='/admin/dashboard') Home
+						li.breadcrumb-item
+							span.bullet.bg-gray-400.w-5px.h-2px
+						li.breadcrumb-item.text-muted eCommerce
+						li.breadcrumb-item
+							span.bullet.bg-gray-400.w-5px.h-2px
+						li.breadcrumb-item.text-muted 
+							a.text-muted.text-hover-primary(href='/admin/ecommerce/coupons') Coupons
+		#kt_app_content.app-content.flex-column-fluid
+			#kt_app_content_container.app-container.container-xxl
+				form#kt_ecommerce_add_product_form.es-form.form.d-flex.flex-column.flex-lg-row(action=`/admin/ecommerce/coupons/save` data-redirect-url=`/admin/ecommerce/coupons`  method='post')
+					.d-flex.flex-column.flex-row-fluid.gap-7.gap-lg-10
+						.tab-content
+							#kt_ecommerce_add_product_general.tab-pane.fade.show.active(role='tab-panel')
+								.d-flex.flex-column.gap-7.gap-lg-10
+									.card.card-flush.py-4
+										.card-header
+											.card-title
+												h2.fw-bold General
+											.card-toolbar
+												button.btn.btn-sm.btn-success.form-submit-btn(type='submit')
+													span.label Save
+													span.preloader.d-none Saving...
+										.card-body.pt-0
+											input.form-control.mb-2(type='text' name='is_bulk'  value=`${isBulk}` hidden)
+											.mb-10.fv-row.col-md-6
+												label.required.form-label Name
+												input.form-control.mb-2(type='text' name='name' placeholder='Coupon Name' value='')
+												.fv-plugins-message-container.invalid-feedback(id=`field-error-name`)
+											.mb-10.fv-row.col-md-6
+												if(isBulk)
+													label.required.form-label Coupon quantity
+													input.form-control.mb-2(type='number' name='quantity' placeholder='Coupon quantity' value='0')
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-quantity`)
+												else 
+													label.required.form-label Coupon code
+													input.form-control.mb-2(type='text' name='code' placeholder='Coupon Code' value='')
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-code`)
+
+											.fv-row.mb-10
+												label.fs-6.fw-semibold.mb-1
+													| Discount Type
+													i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' title='Select a discount type that will be applied to this product')
+												.row.row-cols-1.row-cols-sm-2.row-cols-md-4.row-cols-lg-4.row-cols-xl-5.g-9(data-kt-buttons='true' data-kt-buttons-target="[data-kt-button='true']")
+													.col.d-flex.text-start.p-6
+														span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+															input.form-check-input(type='radio' name='coupon_type' id="percentage" value='percentage' checked='checked')
+														span.ms-5
+															label.form-label(for="percentage") Percentage
+													.col.d-flex.text-start.p-6
+														span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+															input.form-check-input(type='radio' id="fixed" name='coupon_type' value='fixed')
+														span.ms-5
+															label.form-label(for="fixed") Fixed Price
+													.col.d-flex.text-start.p-6
+														span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+															input.form-check-input(type='radio' id="bogo" name='coupon_type' value='bogo')
+														span.ms-5
+															label.form-label(for="bogo") Buy 1 Get 1
+													.col.d-flex.text-start.p-6
+														span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+															input.form-check-input(type='radio' id="free" name='coupon_type' value='free')
+														span.ms-5
+															label.form-label(for="free") Free product
+											//- #kt_ecommerce_add_product_discount.mb-10.fv-row 
+											#kt_discount_val.mb-10.fv-row.col-md-6
+												label.required.form-label Discount Value
+												input.form-control.mb-2(type='number' name='discount_value' placeholder='Discount Value' value="0")
+												.fv-plugins-message-container.invalid-feedback(id=`field-error-discount_value`)
+											.row.mb-10
+												#kt_min_order.col-md-6
+													label.required.form-label Min order 
+														span.text-uppercase (#{brand.country_currency_symbol})
+													input.form-control.mb-2(type='number' name="minimum_order" placeholder="Minimum order value" value='0')
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-minimum_order` )
+												#kt_min_order_per_card.col-md-6.d-none
+													label.required.form-label Min order per card 
+														span.text-uppercase (#{brand.country_currency_symbol})
+													input.form-control.mb-2(type='number' name="minimum_order_per_card" placeholder="Minimum order value" value='0')
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-minimum_order_per_card` )
+												#kt_free_product.col-md-6.d-none
+													label.required.form-label Free Product
+													select.form-select.mb-2(name='free_product' data-control='select2' data-hide-search='true' data-placeholder='Select a product')
+														option
+														if(freeProducts && freeProducts.length)
+															each item in freeProducts
+																option(value=`${item.id}`) #{item.name.en}
+														else 
+															option No product found
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-free_product` )
+												#kt_max_discount.fv-row.w-100.flex-md-root
+													label.required.form-label Max discount 
+														span.text-uppercase (#{brand.country_currency_symbol})
+													input.form-control.mb-2(type='number' name="maximum_discount" value='0' placeholder="Maximum amount of discount")
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-maximum_discount` )
+											.fv-row.mb-10
+												label.fs-6.fw-semibold.mb-1
+													| User Segmentation
+													i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' title='Select users to avail the discount')
+												.row.row-cols-1.row-cols-sm-2.row-cols-md-4.row-cols-lg-4.row-cols-xl-4.g-9(data-kt-buttons='true' data-kt-buttons-target="[data-kt-button='true']")
+													.col.d-flex.text-start.p-6
+														span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+															input.form-check-input(type='radio' name='user_type' id="all" value='all' checked='checked')
+														span.ms-5
+															label.form-label(for="all") All Users
+													.col.d-flex.text-start.p-6
+														span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+															input.form-check-input(type='radio' id="new" name='user_type' value='new')
+														span.ms-5
+															label.form-label(for="new") New Users
+											.row.mb-10
+												.col-md-6
+													label.required.form-label Use limit for a user
+													input.form-control.mb-2(type='number' name="user_level_limit" placeholder="User level limit" value='0')
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-user_level_limit` )
+												.col-md-6
+													label.required.form-label Total Uses
+													input.form-control.mb-2(type='number' name="no_of_uses_total" placeholder="Total Uses" value='0')
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-no_of_uses_total` )
+											.fv-row.mb-10
+												label.fs-6.fw-semibold.mb-1
+													| Availability
+													i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' title='Select users to avail the discount')
+												.row.row-cols-1.row-cols-sm-2.row-cols-md-4.row-cols-lg-4.row-cols-xl-4.g-9(data-kt-buttons='true' data-kt-buttons-target="[data-kt-button='true']")
+													.col.d-flex.text-start.p-6
+														span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+															input.form-check-input(type='radio' name='expiry' id="no" value='no' checked='checked')
+														span.ms-5
+															label.form-label(for="no") Never expires 
+													.col.d-flex.text-start.p-6
+														span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+															input.form-check-input(type='radio' id="yes" name='expiry' value='yes')
+														span.ms-5
+															label.form-label(for="yes") Expires
+											.row.mb-10.kt_daterangepicker
+												.col-md-6
+													label.required.form-label Start Date											
+													input.form-control.mb-2(id=`kt_daterangepicker_start` name=`start_date` placeholder=`Start Date` value=new Date())
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-start_date`)
+												#expiry.fv-row.w-100.flex-md-root.d-none
+													label.required.form-label End Date											
+													input.form-control.mb-2(id=`kt_daterangepicker_end` name=`end_date` placeholder=`End Date` value="")
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-end_date`)
+											.fv-row.mb-10
+												label.fs-6.fw-semibold.mb-1
+													| Available Products
+													i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' title='Select users to avail the discount')
+												.row.row-cols-1.row-cols-sm-2.row-cols-md-4.row-cols-lg-4.row-cols-xl-4.g-9(data-kt-buttons='true' data-kt-buttons-target="[data-kt-button='true']")
+													.col.d-flex.text-start.p-6
+														span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+															input.form-check-input(type='radio' name='pro_type' id="all_pro" value='all' checked='checked')
+														span.ms-5
+															label.form-label(for="all_pro") All Products
+													.col.d-flex.text-start.p-6
+														span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+															input.form-check-input(type='radio' id="some" name='pro_type' value='some')
+														span.ms-5
+															label.form-label(for="some") Some Products
+											.row.mb-10
+												#outlet_list.col-md-6.d-none
+													label.form-label Products
+													select.form-select.mb-2(name='products' data-control='select2' data-hide-search='true' multiple='multiple' data-placeholder='Select an option')
+														option
+														if(semnoxProducts && semnoxProducts.length)
+															each item in semnoxProducts
+																option(value=JSON.stringify({id:item.ProductId,name:item.ProductName})) #{item.ProductName}
+														else 
+															option No products found
+													.fv-plugins-message-container.invalid-feedback(id=`field-error-products`)
