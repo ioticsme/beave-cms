@@ -9,3 +9,4 @@ uploads/
 test/
 log/
 .DS_Store
+*.log
