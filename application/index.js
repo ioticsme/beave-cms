@@ -17,12 +17,6 @@ const app = express()
 const rateLimit = require('express-rate-limit')
 const { format } = require('date-fns')
 
-global.globalModuleConfig = {
-    has_ecommerce: process.env.HAS_ECOMMERCE == 'true' ? true : false,
-    has_semnox: process.env.HAS_SEMNOX == 'true' ? true : false,
-    has_pam: process.env.HAS_PAM == 'true' ? true : false,
-    has_cms: process.env.HAS_CMS == 'true' ? true : false,
-}
 // BEGIN::Service Providers
 const {
     baseConfig,
@@ -111,6 +105,20 @@ mongoose
 
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:')) //TODO::Send slack notification
+
+global.globalModuleConfig = {}
+const Config = require('./model/Config')
+Config.findOne().select('-order_no -created_at -updated_at -__v -_id').then((config) => {
+    if (config) {
+        globalModuleConfig = config
+    } else {
+        Config.create({
+            order_no: 1000
+        }).then((config) => {
+            globalModuleConfig = config
+        })
+    }
+})
 
 app.get('/health', async (req, res) => {
     const appKey =
