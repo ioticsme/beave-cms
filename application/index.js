@@ -108,17 +108,23 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:')) //TODO:
 
 global.globalModuleConfig = {}
 const Config = require('./model/Config')
-Config.findOne().select('-order_no -created_at -updated_at -__v -_id').then((config) => {
-    if (config) {
-        globalModuleConfig = config
-    } else {
-        Config.create({
-            order_no: 1000
-        }).then((config) => {
-            globalModuleConfig = config
-        })
-    }
-})
+Config.findOne()
+    .select('-order_no -created_at -updated_at -__v -_id')
+    .then(async (data) => {
+        let config = data
+        if (!data) {
+            config = await Config.create({
+                order_no: 1000,
+            })
+        }
+        globalModuleConfig = {
+            has_cms: config.has_cms || false,
+            has_ecommerce: config.has_ecommerce || false,
+            has_semnox: config.has_semnox || false,
+            has_pam: config.has_pam || false,
+            has_booknow: config.has_booknow || false,
+        }
+    })
 
 app.get('/health', async (req, res) => {
     const appKey =
