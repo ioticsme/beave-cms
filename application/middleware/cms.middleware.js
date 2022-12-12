@@ -110,6 +110,20 @@ const checkSuperAdmin = (req, res, next) => {
     next()
 }
 
+const checkHasCMS = (req, res, next) => {
+    if (!globalModuleConfig.has_ecommerce) {
+        return res.render(`admin/error-500`)
+    }
+    next()
+}
+
+const checkHasEcom = (req, res, next) => {
+    if (!globalModuleConfig.has_ecommerce) {
+        return res.render(`admin/error-500`)
+    }
+    next()
+}
+
 module.exports = {
     baseConfig,
     authCheck,
@@ -118,4 +132,6 @@ module.exports = {
     mainNavGenerator,
     allBrands,
     checkSuperAdmin,
+    checkHasCMS,
+    checkHasEcom,
 }

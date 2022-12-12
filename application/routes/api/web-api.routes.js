@@ -15,6 +15,10 @@ const userController = require('../../controller/api/user.controller')
 
 // Middleware
 const {
+    checkHasCMS,
+    checkHasEcom,
+} = require('../../middleware/global.middleware')
+const {
     BrandWithCountryCheck,
     webDefaultHeader,
     UserAuthCheck,
@@ -49,20 +53,25 @@ router.group('/', (router) => {
     //     ) // Mainly using for NextJs Static file generations
     //     router.get('/:contentType/:slug', contentTypeController.detail)
     // })
-    if (globalModuleConfig.has_cms) {
-        // const cmsPackageAPIRoutes = require('../../node_modules/@ioticsme/cms/routes/api.routes')
-        // router.use('/cms', cmsPackageAPIRoutes)
-        // Content
-        router.group('/cms', (router) => {
-            router.get('/home', pageController.homePage)
-            router.get('/:contentType', contentTypeController.list)
-            router.get(
-                '/:contentType/static-path',
-                contentTypeController.generateStaticPath
-            ) // Mainly using for NextJs Static file generations
-            router.get('/:contentType/:slug', contentTypeController.detail)
-        })
-    }
+    // if (globalModuleConfig.has_cms) {
+    // const cmsPackageAPIRoutes = require('../../node_modules/@ioticsme/cms/routes/api.routes')
+    // router.use('/cms', cmsPackageAPIRoutes)
+    // Content
+    router.group('/cms', (router) => {
+        router.get('/home', [checkHasCMS], pageController.homePage)
+        router.get('/:contentType', [checkHasCMS], contentTypeController.list)
+        router.get(
+            '/:contentType/static-path',
+            [checkHasCMS],
+            contentTypeController.generateStaticPath
+        ) // Mainly using for NextJs Static file generations
+        router.get(
+            '/:contentType/:slug',
+            [checkHasCMS],
+            contentTypeController.detail
+        )
+    })
+    // }
 
     // catalog
     router.group('/catalog', (router) => {

@@ -16,9 +16,16 @@ const logRoutes = require('./log.routes')
 const userRoutes = require('./user.routes')
 // END:: Route Groups
 
-// BEGIN::Admin Auth Check Middleware
-const { authCheck, checkSuperAdmin } = require('../../middleware/cms.middleware')
-// END::Admin Auth Check Middleware
+// BEGIN::Admin Middleware
+const {
+    checkHasEcom,
+    checkHasCMS,
+} = require('../../middleware/global.middleware')
+const {
+    authCheck,
+    checkSuperAdmin,
+} = require('../../middleware/cms.middleware')
+// END::Admin Middleware
 
 // BEGIN:: Routes
 router.use('/auth', authRoutes)
@@ -27,14 +34,10 @@ router.get('/', (req, res) => {
 })
 router.use('/dashboard', [authCheck], dashboardRoutes)
 
-if (globalModuleConfig.has_ecommerce) {
-    router.use('/ecommerce', [authCheck], ecommerceRoutes)
-}
+router.use('/ecommerce', [authCheck, checkHasEcom], ecommerceRoutes)
 
-// router.use('/cms', cmsRoutes)
-if (globalModuleConfig.has_cms) {
-    router.use('/cms', [authCheck], cmsRoutes)
-}
+router.use('/cms', [authCheck, checkHasCMS], cmsRoutes)
+
 router.use('/settings', [authCheck], settingsRoutes)
 router.use('/custom-forms', [authCheck], customFormsRoutes)
 router.use('/log', [authCheck], logRoutes)

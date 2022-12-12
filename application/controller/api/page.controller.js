@@ -1,9 +1,9 @@
 const collect = require('collect.js')
-// const Content = require('../../node_modules/@ioticsme/cms/model/Content')
-// const Banner = require('../../node_modules/@ioticsme/cms/model/Banner')
+const Content = require('../../model/Content')
+const Banner = require('../../model/Banner')
 const Product = require('../../model/Product')
 const Brand = require('../../model/Brand')
-// const Gallery = require('../../node_modules/@ioticsme/cms/model/Gallery')
+const Gallery = require('../../model/Gallery')
 
 const ProductResource = require('../../resources/api/product.resource')
 
@@ -150,6 +150,7 @@ const homePage = async (req, res) => {
 
         return res.status(200).json(home)
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ error: `Something went wrong` })
     }
 }

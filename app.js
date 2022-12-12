@@ -8,9 +8,9 @@ app.use(express.static('public'))
 
 app.use(application)
 
-app.get('/admin/test/test', async(req, res) => {
-    return res.send('test')
-})
+// app.get('/admin/test/test', async(req, res) => {
+//     return res.send('test')
+// })
 
 const port = process.env.PORT || 8080
 

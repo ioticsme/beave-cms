@@ -8,10 +8,7 @@ const Product = require('../../model/Product')
 const Country = require('../../model/Country')
 const { formatInTimeZone } = require('date-fns-tz')
 const { uploadMedia } = require('../../helper/Operations.helper')
-const {
-    getProducts,
-    getProductPriceController,
-} = require('../../helper/Semnox.helper')
+const { getProductPriceController } = require('../../helper/Semnox.helper')
 const { getPamMemberships } = require('../../helper/PAM.helper')
 
 let session

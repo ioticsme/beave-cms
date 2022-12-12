@@ -42,12 +42,13 @@ const BrandWithCountryCheck = async (req, res, next) => {
             },
         ])
 
-        if (brand?.length) {
-            if (brand[0]?.domains?.maintenance_mode) {
-                return res
-                    .status(503)
-                    .json({ error: 'Application on Maintenance Mode' })
-            }
+        if (!brand?.length) {
+            return res.status(400).json({ error: 'Invalid Brand' })
+        }
+        if (brand[0]?.domains?.maintenance_mode) {
+            return res
+                .status(503)
+                .json({ error: 'Application on Maintenance Mode' })
         }
         const brandSettings = await Settings.findOne({
             brand: brand[0]?._id,
@@ -194,25 +195,28 @@ const getNav = async (req, res, next) => {
                         'nav_items.active': true,
                     }).select('-country -brand -created_at -updated_at -__v')
 
-                    const navCollection = collect(nav)
-                    const groupedNav = navCollection.groupBy('nav_position')
-                    groupedNav.all()
-                    // const liveData = groupedNav.items
-                    const liveData =
-                        groupedNav
-                            .map((navItem, positionKey) => {
-                                // console.log(positionKey)
-                                // console.log(navItem.items[0].nav_items)
-                                return navItem?.items[0]?.nav_items
-                            })
-                            .all() || []
+                    let liveData = []
+                    if (nav) {
+                        const navCollection = collect(nav)
+                        const groupedNav = navCollection.groupBy('nav_position')
+                        groupedNav.all()
+                        // const liveData = groupedNav.items
+                        liveData =
+                            groupedNav
+                                .map((navItem, positionKey) => {
+                                    // console.log(positionKey)
+                                    // console.log(navItem.items[0].nav_items)
+                                    return navItem?.items[0]?.nav_items
+                                })
+                                .all() || []
 
-                    if (process.env.CACHE_LOCAL_DATA == 'true') {
-                        setCache(
-                            cache_key,
-                            JSON.stringify(liveData),
-                            parseInt(3600)
-                        )
+                        if (process.env.CACHE_LOCAL_DATA == 'true') {
+                            setCache(
+                                cache_key,
+                                JSON.stringify(liveData),
+                                parseInt(3600)
+                            )
+                        }
                     }
                     return {
                         data: liveData,
