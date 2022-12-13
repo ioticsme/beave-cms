@@ -83,7 +83,7 @@ const productList = async (req, res) => {
                 .sort('position')
                 .populate('category')
                 .populate('country')
-            res.status(200).json(products)
+            return res.status(200).json(products)
             // res.status(200).json(ProductResource.collection(products))
         }
     } catch (error) {

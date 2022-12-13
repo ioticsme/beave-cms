@@ -131,11 +131,14 @@ const UserAuthCheck = async (req, res, next) => {
                         }).select(
                             '-brand -country -__v -created_at -updated_at -author'
                         )
-                        setCache(
-                            cache_key,
-                            JSON.stringify(liveData),
-                            parseInt(3600)
-                        )
+                        if (liveData?.length) {
+                            setCache(
+                                cache_key,
+                                JSON.stringify(liveData),
+                                parseInt(3600)
+                            )
+                        }
+
                         return {
                             data: liveData,
                             is_redis: false,
@@ -210,7 +213,10 @@ const getNav = async (req, res, next) => {
                                 })
                                 .all() || []
 
-                        if (process.env.CACHE_LOCAL_DATA == 'true') {
+                        if (
+                            process.env.CACHE_LOCAL_DATA == 'true' &&
+                            liveData?.length
+                        ) {
                             setCache(
                                 cache_key,
                                 JSON.stringify(liveData),

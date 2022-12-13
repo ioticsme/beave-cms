@@ -2,22 +2,17 @@ const express = require('express')
 const router = express.Router()
 require('express-group-routes')
 const authController = require('../../controller/api/auth.controller')
-const testController = require('../../controller/api/test.controller')
 const generalController = require('../../controller/api/general.controller')
 const pageController = require('../../controller/api/page.controller')
 const contentTypeController = require('../../controller/api/contentType.controller')
 const catalogController = require('../../controller/api/catalog.controller')
 const formController = require('../../controller/api/form.controller')
 const customFormController = require('../../controller/api/customForm.controller')
-const cartController = require('../../controller/api/cart.controller')
 const checkoutController = require('../../controller/api/checkout.controller')
 const userController = require('../../controller/api/user.controller')
 
 // Middleware
-const {
-    checkHasCMS,
-    checkHasEcom,
-} = require('../../middleware/global.middleware')
+const { checkHasCMS } = require('../../middleware/global.middleware')
 const {
     BrandWithCountryCheck,
     webDefaultHeader,
@@ -26,6 +21,11 @@ const {
 } = require('../../middleware/api.middleware')
 const { getNav } = require('../../middleware/api.middleware')
 // const { app } = require('firebase-admin')
+
+// BEGIN::Route Files
+const cmsRoutes = require('./_cms.routes')
+const ecommerceRoutes = require('./_ecommerce.routes')
+// END::Route Files
 
 router.use(BrandWithCountryCheck)
 router.use(webDefaultHeader)
@@ -36,42 +36,15 @@ router.group('/', (router) => {
         res.redirect('/health')
     })
 
-    router.group('/test', (router) => {
-        // router.get('/brand', testController.brandList)
-        // router.get('/country', testController.countryList)
-        router.get('/test', testController.test)
-        router.get('/pdf', testController.pdfGenerate)
-    })
-
-    // Content
-    // router.group('/cms', (router) => {
-    //     router.get('/home', pageController.homePage)
-    //     router.get('/:contentType', contentTypeController.list)
-    //     router.get(
-    //         '/:contentType/static-path',
-    //         contentTypeController.generateStaticPath
-    //     ) // Mainly using for NextJs Static file generations
-    //     router.get('/:contentType/:slug', contentTypeController.detail)
+    // router.group('/test', (router) => {
+    //     // router.get('/brand', testController.brandList)
+    //     // router.get('/country', testController.countryList)
+    //     router.get('/test', testController.test)
+    //     router.get('/pdf', testController.pdfGenerate)
     // })
-    // if (globalModuleConfig.has_cms) {
-    // const cmsPackageAPIRoutes = require('../../node_modules/@ioticsme/cms/routes/api.routes')
-    // router.use('/cms', cmsPackageAPIRoutes)
-    // Content
-    router.group('/cms', (router) => {
-        router.get('/home', [checkHasCMS], pageController.homePage)
-        router.get('/:contentType', [checkHasCMS], contentTypeController.list)
-        router.get(
-            '/:contentType/static-path',
-            [checkHasCMS],
-            contentTypeController.generateStaticPath
-        ) // Mainly using for NextJs Static file generations
-        router.get(
-            '/:contentType/:slug',
-            [checkHasCMS],
-            contentTypeController.detail
-        )
-    })
-    // }
+
+    // CMS Related Routes
+    router.use('/cms', [checkHasCMS], cmsRoutes)
 
     // catalog
     router.group('/catalog', (router) => {
@@ -114,55 +87,21 @@ router.group('/', (router) => {
     })
 })
 
-router.use(UserAuthCheck)
 // user
 router.group('/user', (router) => {
-    router.get('/logout', authController.logout)
-    router.group('/orders', (router) => {
-        router.get('/', userController.orderHistory)
-        router.get('/:id', userController.orderDetail)
-    })
+    router.get('/logout', [UserAuthCheck], authController.logout)
     // Account
     router.group('/account', (router) => {
-        router.get('/', userController.detail)
-        router.post('/edit', userController.editUser)
-        router.post('/change-password', userController.changePassword)
+        router.get('/', [UserAuthCheck], userController.detail)
+        router.post('/edit', [UserAuthCheck], userController.editUser)
+        router.post(
+            '/change-password',
+            [UserAuthCheck],
+            userController.changePassword
+        )
     })
-    // Middleware to check whether the application on maitenance or not
-    router.use(ecommerceModeCheck)
-    // cart
-    router.group('/cart', (router) => {
-        router.get('/', cartController.list)
-        router.post('/add', cartController.add)
-        router.post('/update', cartController.updateQty)
-        router.post('/delete', cartController.remove)
-    })
-
-    router.group('/checkout', (router) => {
-        router.post('/', checkoutController.checkoutProcess)
-        router.post('/apply-coupon', checkoutController.applyCoupon)
-        router.post('/payment-auth', checkoutController.paymentAuth)
-        router.post('/payment', checkoutController.paymentProcess) //THIS ROUTE IS NOT INCLUDED IN AUTH PROTECTION. SEE api.middleware.js
-        router.post('/order-push', checkoutController.orderFinish)
-        // router.post('/add', cartController.add)
-        // router.post('/delete', cartController.remove)
-    })
-
-    router.group('/card', (router) => {
-        router.get('/list', userController.listCard)
-        router.post('/add', userController.addCard)
-        router.post('/remove', userController.unlinkCard)
-    })
-
-    router.group('/pam', (router) => {
-        router.get('/parent', userController.pamGetParent)
-        // router.get('/renewable-memberships/:id', userController.pamGetParent)
-    })
-
-    router.group('/payment-cards', (router) => {
-        router.get('/', userController.listPaymentCard)
-        router.post('/', userController.deletePaymentCards)
-    })
+    // Ecommerce related routes
+    router.use('/', [ecommerceModeCheck, UserAuthCheck], ecommerceRoutes)
 })
 
 module.exports = router

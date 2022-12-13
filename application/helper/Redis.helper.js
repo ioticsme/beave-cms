@@ -1,10 +1,11 @@
 require('dotenv').config()
-const { createClient } = require('redis')
+const redis = require('redis')
+const asyncRedis = require('async-redis')
 const { sendAdminNotification } = require('./Slack.helper')
 
 const redisConnect = async () => {
     try {
-        const client = createClient({
+        const client = asyncRedis.createClient({
             legacyMode: true,
             url: process.env.REDIS_URL || 'redis://localhost:6379',
         })
@@ -19,7 +20,7 @@ const redisConnect = async () => {
             console.log('✅ Connect redis success !')
         })
 
-        await client.connect()
+        // await client.connect()
 
         return client
     } catch (error) {
@@ -29,9 +30,9 @@ const redisConnect = async () => {
 }
 
 const getCache = async (key) => {
-    const client = await redisConnect()
     // await client.connect()
     try {
+        const client = await redisConnect()
         return await client.get(key)
     } catch (error) {
         console.log('Redis Client Error', error)
@@ -40,14 +41,13 @@ const getCache = async (key) => {
 }
 
 const setCache = async (key, data, expiry = 300) => {
-    const client = await redisConnect()
     // await client.connect()
     try {
+        const client = await redisConnect()
         // console.log(data)
-        return await client.set(key, data, {
-            EX: expiry,
-            NX: true,
-        }) // Response will be 'OK'
+        await client.set(key, data, 'EX', expiry) // Response will be 'OK'
+        // client.expire(key, expiry)
+        return 'OK'
     } catch (error) {
         console.log('Redis Client Error', error)
         return error
@@ -55,9 +55,9 @@ const setCache = async (key, data, expiry = 300) => {
 }
 
 const removeCache = async (keys) => {
-    const client = await redisConnect()
     // await client.connect()
     try {
+        const client = await redisConnect()
         return await client.del(keys)
     } catch (error) {
         console.log('Redis Client Error', error)
@@ -66,9 +66,9 @@ const removeCache = async (keys) => {
 }
 
 const clearCacheAll = async () => {
-    const client = await redisConnect()
     // await client.connect()
     try {
+        const client = await redisConnect()
         const keys_to_remove = []
         for await (const key of client.scanIterator({
             MATCH: 'semnox-*',
@@ -88,9 +88,9 @@ const clearCacheAll = async () => {
 }
 
 const flushCache = async () => {
-    const client = await redisConnect()
     // await client.connect()
     try {
+        const client = await redisConnect()
         return await client.flushAll()
     } catch (error) {
         console.log('Redis Client Error', error)

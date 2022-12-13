@@ -16,6 +16,7 @@ const UserSchema = new Schema(
         email: {
             type: String,
             required: true,
+            lowercase: true,
         },
         mobile: {
             type: String,
@@ -106,7 +107,7 @@ const UserSchema = new Schema(
                 saved: {
                     type: Boolean,
                     default: false,
-                }
+                },
             }),
         ],
         social_auth_response: {

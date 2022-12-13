@@ -124,7 +124,7 @@ const getProducts = async (selectedBrand) => {
             } else {
                 const liveData = await getLiveProducts()
                 // console.log(liveData)
-                if (liveData.length) {
+                if (liveData?.length) {
                     setCache(
                         cache_key,
                         JSON.stringify(liveData),
@@ -184,7 +184,7 @@ const getProductPriceController = async (selectedBrand) => {
             } else {
                 const liveData = await getLiveProducts()
                 // console.log(liveData)
-                if (liveData.length) {
+                if (liveData?.length) {
                     setCache(
                         cache_key,
                         JSON.stringify(liveData),

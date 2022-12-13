@@ -106,10 +106,15 @@ const list = async (req, res) => {
                             }
                         }
                     }
-                    const liveDataCollection =
-                        ContentResource.collection(liveContent)
+                    const liveDataCollection = await ContentResource.collection(
+                        liveContent
+                    )
 
-                    if (process.env.CACHE_LOCAL_DATA == 'true') {
+                    if (
+                        process.env.CACHE_LOCAL_DATA == 'true' &&
+                        liveContent?.length
+                    ) {
+                        // console.log(JSON.stringify(liveDataCollection))
                         setCache(
                             cache_key,
                             JSON.stringify(liveDataCollection),
@@ -244,7 +249,7 @@ const detail = async (req, res) => {
                         liveDataCollection.meta = newGlobalMeta
                     }
 
-                    if (process.env.CACHE_LOCAL_DATA == 'true') {
+                    if (process.env.CACHE_LOCAL_DATA == 'true' && liveData) {
                         setCache(
                             cache_key,
                             JSON.stringify({

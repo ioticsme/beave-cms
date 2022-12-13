@@ -114,7 +114,7 @@ const loginSubmit = async (req, res) => {
                     epoch: Date.now(),
                     step: 20000,
                 }
-                const otp = authenticator.generate(user.mobile) 
+                const otp = authenticator.generate(user.mobile)
                 let smsSettings = req.brand.settings?.notification_settings?.sms
                 SMS.sendOTP(otp, user.mobile, req.brand.name.en, smsSettings)
             } else {
@@ -131,7 +131,8 @@ const loginSubmit = async (req, res) => {
                         expiresIn:
                             req.source == 'app'
                                 ? `${
-                                      process.env.MOBILE_USER_TOKEN_EXPIRY || '15days'
+                                      process.env.MOBILE_USER_TOKEN_EXPIRY ||
+                                      '15days'
                                   }`
                                 : `${
                                       process.env.WEB_USER_TOKEN_EXPIRY || '24h'
@@ -140,16 +141,18 @@ const loginSubmit = async (req, res) => {
                 )
 
                 await removeCache([`user-${req.source}-auth-${user._id}`])
-                setCache(
-                    `user-${req.source}-auth-${user._id}`,
-                    token,
-                    60 *
+                if (token) {
+                    setCache(
+                        `user-${req.source}-auth-${user._id}`,
+                        token,
                         60 *
-                        24 *
-                        (req.source == 'app'
-                            ? process.env.MOBILE_USER_TOKEN_EXPIRY || 15
-                            : 1)
-                )
+                            60 *
+                            24 *
+                            (req.source == 'app'
+                                ? process.env.MOBILE_USER_TOKEN_EXPIRY || 15
+                                : 1)
+                    )
+                }
             }
 
             user.failed_attempt.login = 0
@@ -455,7 +458,9 @@ const otpVerification = async (req, res) => {
             )
 
             await removeCache([`user-web-auth-${user._id}`])
-            setCache(`user-web-auth-${user._id}`, token, 60 * 60 * 24)
+            if (token) {
+                setCache(`user-web-auth-${user._id}`, token, 60 * 60 * 24)
+            }
 
             return res.status(200).json({
                 user: new UserResource(update).exec(),

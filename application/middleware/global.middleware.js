@@ -7,7 +7,7 @@ const checkHasCMS = (req, res, next) => {
         if(req.headers['content-type'] == 'application/json') {
             return res.status(404).json(`Not found`)
         }
-        return res.render(`admin/error-500`)
+        return res.render(`admin/error-404`)
     }
     next()
 }
@@ -17,7 +17,7 @@ const checkHasEcom = (req, res, next) => {
         if(req.headers['content-type'] == 'application/json') {
             return res.status(404).json(`Not found`)
         }
-        return res.render(`admin/error-500`)
+        return res.render(`admin/error-404`)
     }
     next()
 }

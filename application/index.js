@@ -45,7 +45,10 @@ app.use('/cms-static', express.static(path.join(__dirname, './public')))
 
 //Configure redis client
 
-var client = redis.createClient({ legacyMode: true })
+var client = redis.createClient({
+    url: `${process.env.REDIS_URL}`,
+    legacyMode: true,
+})
 
 ;(async () => {
     client.on('error', (err) => {
@@ -56,10 +59,12 @@ var client = redis.createClient({ legacyMode: true })
 
 const sessionConfig = {
     store: new redisStore({
-        host: 'localhost',
-        port: 6379,
+        // url: `${process.env.REDIS_URL}`,
+        // legacyMode: true,
+        // host: 'localhost',
+        // port: 6379,
         client: client,
-        ttl: 260,
+        // ttl: 260,
     }),
     secret: `${process.env.APP_KEY}`,
     saveUninitialized: false,
