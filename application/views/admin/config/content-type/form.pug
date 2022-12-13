@@ -52,15 +52,15 @@ block content
 			#kt_app_toolbar_container.app-container.container-xxl.d-flex.flex-stack
 				.page-title.d-flex.flex-column.justify-content-center.flex-wrap.me-3
 					h1.page-heading.d-flex.text-dark.fw-bold.fs-3.flex-column.justify-content-center.my-0
-						| #{country ? 'Edit' : 'Add'} Content Type
+						| #{contentType ? 'Edit' : 'Add'} Content Type
 					ul.breadcrumb.breadcrumb-separatorless.fw-semibold.fs-7.my-0.pt-1
 						li.breadcrumb-item.text-muted
 							a.text-muted.text-hover-primary(href='/admin/dashboard') Dashboard
 						li.breadcrumb-item
 							span.bullet.bg-gray-400.w-5px.h-2px
 						li.breadcrumb-item.text-muted Content Type 
-							span.bullet.bg-gray-400.w-5px.h-2px
-						li.breadcrumb-item.text-muted #{country ? 'Edit' : 'New'}
+							span.bullet.bg-gray-400.w-5px.h-2px.ms-1
+						li.breadcrumb-item.text-muted #{contentType ? 'Edit' : 'New'}
 		#kt_app_content.app-content.flex-column-fluid
 			#kt_app_content_container.app-container.container-xxl
 				.card.mb-5.mb-xl-10
@@ -98,6 +98,13 @@ block content
 									.col-lg-8.fv-row
 										textarea.form-control.form-control-lg.form-control-solid(type='text' name='admin_icon' placeholder='Admin Icon' ) #{contentType ? contentType.admin_icon : ''}
 										.fv-plugins-message-container.invalid-feedback(id=`field-error-admin_icon`)
+								.row.mb-6
+									label.col-lg-4.col-form-label.required.fw-semibold.fs-6 Attachable type
+									.col-lg-8.fv-row
+										select.form-select.form-select-lg.form-select-solid(data-control='select2' data-close-on-select='false' name='attachable_type' data-placeholder='Select a type' data-allow-clear='true' multiple='multiple')
+											each ct in contentTypes
+												option(value=`${ct.slug}` selected=contentType && contentType.allowed_type && contentType.allowed_type.length && contentType.allowed_type.find((at)=>at==ct.slug) ) #{ct.title}
+										.fv-plugins-message-container.invalid-feedback(id=`field-error-attachable_type`)
 								.row.mb-6#form-holder
 									span.col-lg-4.col-form-label.required.fw-semibold.fs-6 Custom Fields
 									if isEdit
@@ -118,13 +125,13 @@ block content
 														input.form-control.form-control-lg.form-control-solid(type='text' name='validation[]' placeholder='Validation' value=`${cf.validation || ''}`)
 														.fv-plugins-message-container.invalid-feedback(id=`field-error-validation[]`)
 													.mt-2.col-md-6
-														select.form-select.mb-2(name="bilingual[]" data-placeholder='Select a role' )
+														select.form-select.form-select-lg.form-select-solid.mb-2(name="bilingual[]" data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select language type' )
 															//- TODO::edit selection list item
 															option(value="" ) Select language type
 															option(value="true" selected=cf && cf.bilingual == true) Bilingual
 															option(value="false" selected=cf && cf.bilingual == false) English Only
 													.mt-2.col-md-6
-														select.form-select.mb-2(name="field_type[]" data-placeholder='Select a type' value=admin && admin.role)
+														select.form-select.form-select-lg.form-select-solid.mb-2(name="field_type[]" data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select field type' )
 															option(value='') Select Field Type
 															option(value='text' selected=cf.field_type=='text') Text
 															option(value='wysiwig' selected=cf.field_type=='wysiwig') WYSIWYG
@@ -142,7 +149,7 @@ block content
 													.mt-2.col-md-6
 														textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_value[]' placeholder='Dropdown option value seperated by comma(,)' ) #{optionValues}
 														.fv-plugins-message-container.invalid-feedback(id=`field-error-option_value[]`)
-									.col-lg-12.fv-row.cf-card.row
+									.col-lg-12.fv-row.cf-card.row.mt-3
 										h5.text-center Custom Field
 										.col-md-6
 											input.form-control.form-control-lg.form-control-solid(type='text' name='field_label[]' placeholder='Field Label' )
@@ -157,13 +164,13 @@ block content
 											input.form-control.form-control-lg.form-control-solid(type='text' name='validation[]' placeholder='Validation' )
 											.fv-plugins-message-container.invalid-feedback(id=`field-error-validation[]`)
 										.mt-2.col-md-6
-											select.form-select.mb-2(name="bilingual[]" data-placeholder='Select a role' value=admin && admin.role)
+											select.form-select.form-select-lg.form-select-solid.mb-2(name="bilingual[]" data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select language type' )
 												//- TODO::edit selection list item
 												option(value="" ) Select language type
 												option(value="true" selected=contentType && contentType.bilingual == true) Bilingual
 												option(value="false" selected=contentType && contentType.bilingual == false) English Only
 										.mt-2.col-md-6
-											select.form-select.mb-2(name="field_type[]" data-placeholder='Select a type' value=admin && admin.role)
+											select.form-select.form-select-lg.form-select-solid.mb-2(name="field_type[]" data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select field type' )
 												//- TODO::edit selection list item
 												option(value='') Select Field Type
 												option(value='text' ) Text
@@ -214,7 +221,7 @@ block content
 										.form-check.form-check-custom.form-check-solid.form-check-sm.col-md-4.mt-4
 											input#hide_meta.form-check-input(type='checkbox' value='true' name='hide_meta' checked=(contentType ? contentType.hide_meta : false))
 											label.form-check-label(for='hide_meta') Hide Meta
-											
+
 							.card-footer.d-flex.justify-content-end.py-6.px-9
 								button#kt_account_profile_details_submit.btn.btn-primary.form-submit-btn(type='submit') 
 									span.preloader.d-none
