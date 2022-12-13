@@ -45,7 +45,60 @@ block customScript
 				})
 
 		}
-
+		function removeFunction(event) {
+			let parentId = event.target.parentElement.parentElement.id
+			Swal.fire({
+				text: 'Are you sure you want to delete ?',
+				icon: 'warning',
+				showCancelButton: !0,
+				buttonsStyling: !1,
+				confirmButtonText: 'Yes, delete!',
+				cancelButtonText: 'No, cancel',
+				customClass: {
+					confirmButton: 'btn fw-bold btn-danger',
+					cancelButton: 'btn fw-bold btn-active-light-primary',
+				},
+			}).then((e) => {
+				if (e.value) {
+					if( parentId=='cf-card-0'){
+						Swal.fire({
+							text: "This is the last element! Can't delete",
+							icon: "warning",
+							buttonsStyling: false,
+							confirmButtonText: "Ok, got it!",
+							customClass: {
+								confirmButton: "btn btn-primary"
+							}
+						})
+					}else{
+						const parentElement = document.getElementById('form-holder')
+						const childElement = document.getElementById(parentId)
+						parentElement.removeChild(childElement)
+					}
+				}
+			})
+		}
+		function removeFunctionForEdit(event) {
+			let parentId = event.target.parentElement.parentElement.id
+			Swal.fire({
+				text: 'Are you sure you want to delete ?',
+				icon: 'warning',
+				showCancelButton: !0,
+				buttonsStyling: !1,
+				confirmButtonText: 'Yes, delete!',
+				cancelButtonText: 'No, cancel',
+				customClass: {
+					confirmButton: 'btn fw-bold btn-danger',
+					cancelButton: 'btn fw-bold btn-active-light-primary',
+				},
+			}).then((e) => {
+				if (e.value) {
+					const parentElement = document.getElementById('form-holder-edit')
+					const childElement = document.getElementById(parentId)
+					parentElement.removeChild(childElement)
+				}
+			})
+		}
 block content
 	.d-flex.flex-column.flex-column-fluid
 		#kt_app_toolbar.app-toolbar.py-3.py-lg-6
@@ -105,13 +158,14 @@ block content
 											each ct in contentTypes
 												option(value=`${ct.slug}` selected=contentType && contentType.allowed_type && contentType.allowed_type.length && contentType.allowed_type.find((at)=>at==ct.slug) ) #{ct.title}
 										.fv-plugins-message-container.invalid-feedback(id=`field-error-attachable_type`)
-								.row.mb-6#form-holder
+								.row.mb-6#form-holder-edit
 									span.col-lg-4.col-form-label.required.fw-semibold.fs-6 Custom Fields
 									if isEdit
 										if(contentType && contentType.custom_fields && contentType.custom_fields.length)
-											each cf in contentType.custom_fields
-												.col-lg-12.fv-row.cf-card.row
-													h5.text-center Custom Field
+											each cf,i in contentType.custom_fields
+												.col-lg-12.fv-row.cf-card-edit.row(id=`cf-card-edit-${i}`)
+													.row.justify-content-center
+														h5.text-center Custom Field
 													.col-md-6
 														input.form-control.form-control-lg.form-control-solid(type='text' name='field_label[]' placeholder='Field Label' value=`${cf.field_label || ''}`)
 														.fv-plugins-message-container.invalid-feedback(id=`field-error-field_label[]`)
@@ -149,7 +203,10 @@ block content
 													.mt-2.col-md-6
 														textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_value[]' placeholder='Dropdown option value seperated by comma(,)' ) #{optionValues}
 														.fv-plugins-message-container.invalid-feedback(id=`field-error-option_value[]`)
-									.col-lg-12.fv-row.cf-card.row.mt-3
+													.mt-5.mb-3.d-flex.justify-content-center
+														.btn.btn-danger(onClick='removeFunctionForEdit(event)') Delete
+								.row.mb-6#form-holder
+									.col-lg-12.fv-row.cf-card.row.mt-3#cf-card-0
 										h5.text-center Custom Field
 										.col-md-6
 											input.form-control.form-control-lg.form-control-solid(type='text' name='field_label[]' placeholder='Field Label' )
@@ -187,6 +244,8 @@ block content
 										.mt-2.col-md-6
 											textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_value[]' placeholder='Dropdown option value seperated by comma(,)' )
 											.fv-plugins-message-container.invalid-feedback(id=`field-error-option_value[]`)
+										.mt-5.mb-3.d-flex.justify-content-center#btn-remove-child
+											.btn.btn-danger(onClick='removeFunction(event)') Delete
 								.mt-3.text-center
 									.btn.btn-primary(onClick='cloneChild()') 
 										span Add more
