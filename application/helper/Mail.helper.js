@@ -23,7 +23,7 @@ const sendEmail = async (
         url: mg_settings.host,
     })
 
-    // console.log(attachment)
+    // console.log(mg.domains.domainTemplates.list())
 
     let attachment
     if (filePath) {

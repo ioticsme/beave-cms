@@ -8,7 +8,7 @@ app.use(express.static('public'))
 
 app.use(application)
 
-// app.get('/admin/test/test', async(req, res) => {
+// app.get('/admin/config/content-types', async(req, res) => {
 //     return res.send('test')
 // })
 

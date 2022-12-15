@@ -280,16 +280,24 @@ block content
 																	//- a.symbol.symbol-50px(href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html')
 																		span.symbol-label(style='background-image:url(/admin/assets/media/stock/ecommerce/1.gif);')
 																	.ms-5
-																		.fw-bold.text-gray-600.text-hover-primary(href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html') #{item.name ? item.name.en : `Product ${i+1}`}
+																		.fw-bold.text-gray-600.text-hover-primary(href='../../demo1/dist/apps/ecommerce/catalog/edit-product.html')
+																			| #{item.name ? item.name.en : `Product ${i+1}`}
+																			if item.is_bogo_item
+																				br
+																				span.badge.badge-light-warning BOGO
+																			
 																		//- .fs-7.text-muted Delivery Date: 05/07/2022
-															if globalModuleConfig.has_semnox
+															if moduleConfig.has_semnox == 'true'
 																td #{item.semnox ? item.semnox.name : "Semnox name"}
 																	br
 																	span.badge.badge-light-success #{item.card.card_name} | #{item.card.card_number}
 															td.text-end #{item.qty}
 															td.text-end
-																span.text-uppercase  #{brand.country_currency_symbol} #{item.sales_price > 0 ? item.sales_price : Number(item.actual_price).toFixed(2)}
-															td.text-end.text-uppercase  #{brand.country_currency_symbol} #{(Number(item.qty) * Number(item.actual_price)).toFixed(2)}
+																if !item.is_bogo_item
+																	span.text-uppercase  #{brand.country_currency_symbol} #{item.sales_price > 0 ? item.sales_price : Number(item.actual_price).toFixed(2)}
+															td.text-end.text-uppercase
+																if !item.is_bogo_item
+																	#{brand.country_currency_symbol} #{(Number(item.qty) * Number(item.actual_price)).toFixed(2)}
 													if order.has_free_toy
 														tr
 															td

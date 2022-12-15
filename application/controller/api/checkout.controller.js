@@ -301,7 +301,11 @@ const applyCoupon = async (req, res) => {
             },
             start_date: { $lte: zoneTimeNow },
             $or: [{ end_date: null }, { end_date: { $gte: zoneTimeNow } }],
-            $expr: { $gt: ['$no_of_uses_total', '$total_usage_count'] },
+            $or: [
+                { no_of_uses_total: 0 },
+                { $expr: { $gt: ['$no_of_uses_total', '$total_usage_count'] } },
+            ],
+            // $expr: { $gt: ['$no_of_uses_total', '$total_usage_count'] },
             // expiry: false,
             brand: req.brand._id,
             published: true,
@@ -322,9 +326,15 @@ const applyCoupon = async (req, res) => {
             country: req.country,
             order_status: 'pending',
             isDeleted: false,
-        })
+        }) //TODO::Add condition to pull published product item only
             .populate('country')
             .select('-__v -updated_at -created_at -deletedAt -isDeleted')
+
+        if (order.discount?.applied_coupon) {
+            return res
+                .status(400)
+                .json({ error: 'Coupon is already applied for this order' })
+        }
 
         if (!order?.items?.length) {
             return res.status(400).json({ error: 'Your cart is empty' })
@@ -404,15 +414,17 @@ const applyCoupon = async (req, res) => {
         // console.log(collect(order.items).pluck('id').toArray())
         // console.log(collect(coupon.products).pluck('id').toArray())
         // If the Some Products Segmentation: check the user added atleast one item from this list to cart and apply discount only for that
+        let applicable_cart_products = []
         if (coupon.products?.length) {
-            // console.log(collect(coupon.products).whereIn('id', collect(available_cart).pluck('product.id').toArray()).count())
-            // return res.json(collect(coupon.products).whereIn('id', collect(available_cart).pluck('product.id').toArray()).all())
-            // return res.json(collect(available_cart).whereIn('product.id', collect(available_cart).pluck('_id').toArray()))
-            if (
-                !collect(coupon.products)
-                    .whereIn('id', collect(order.items).pluck('id').toArray())
-                    .count()
-            ) {
+            applicable_cart_products = order.items.map((item) => {
+                const itemFound = collect(coupon.products)
+                    .where('id', item.product_id.toString())
+                    .first()
+                if (itemFound) {
+                    return itemFound['id']
+                }
+            })
+            if (!applicable_cart_products.length) {
                 return res.status(422).json({
                     details: [
                         {
@@ -436,6 +448,7 @@ const applyCoupon = async (req, res) => {
     */
         order.discount.applied_coupon = req.body.code
         order.discount.coupon = coupon
+        let bogo_items
         if (
             coupon.coupon_type == 'percentage' ||
             coupon.coupon_type == 'fixed'
@@ -461,11 +474,162 @@ const applyCoupon = async (req, res) => {
         } else if (coupon.coupon_type == 'free') {
             order.items[0].has_free_product = true
             order.items[0].free_product = coupon.free_product
+        } else if (coupon.coupon_type == 'bogo') {
+            if (applicable_cart_products.length) {
+                console.log(applicable_cart_products)
+                bogo_items = await collect(order.items)
+                    .where('is_bogo_item', false)
+                    .toArray()
+                    .map((item) => {
+                        if (
+                            applicable_cart_products.includes(
+                                item.product_id.toString()
+                            )
+                        ) {
+                            return {
+                                ...item._doc,
+                                _id: undefined,
+                                is_bogo_item: true,
+                            }
+                        }
+                    })
+            } else {
+                bogo_items = await collect(order.items)
+                    .where('is_bogo_item', false)
+                    .toArray()
+                    .map((item) => {
+                        return {
+                            ...item._doc,
+                            _id: undefined,
+                            is_bogo_item: true,
+                        }
+                    })
+            }
         }
 
+        coupon.total_usage_count = coupon.total_usage_count + 1
+        await coupon.save()
+
         await order.save()
-        res.status(200).json(new OrderResource(order).exec())
+        if (bogo_items.length) {
+            await Order.updateOne(
+                { _id: order._id },
+                { $push: { items: { $each: bogo_items } } }
+            )
+        }
+        const updated_order = await Order.findOne({
+            _id: order._id,
+        })
+        res.status(200).json(new OrderResource(updated_order).exec())
     } catch (error) {
+        console.log(error)
+        return res.status(500).json({ error: `Something went wrong` })
+    }
+}
+
+const removeAppliedCoupon = async (req, res) => {
+    const schema = Joi.object({
+        // code: Joi.string().required().min(2).max(10),
+        order_id: Joi.string().required().hex().length(24),
+    })
+
+    const validationResult = schema.validate(req.body, { abortEarly: false })
+
+    if (validationResult.error) {
+        return res.status(422).json({
+            details: validationResult.error.details,
+        })
+    }
+
+    try {
+        const reqOrder = await Order.findOne({
+            _id: req.body.order_id,
+            user: req.authPublicUser._id,
+            brand: req.brand,
+            country: req.country,
+            order_status: 'pending',
+            isDeleted: false,
+        })
+
+        if (!reqOrder) {
+            return res.status(404).json('Order not found')
+        }
+
+        const removing_code = reqOrder.discount?.applied_coupon || false
+
+        const available_cart_items = await Cart.find({
+            user: req.authPublicUser._id,
+        })
+            .populate(
+                'product',
+                '-__v -description -terms_and_conditions -category -image -isDeleted -deletedAt -created_at -updated_at'
+            )
+            .populate('card', 'card_name card_number')
+            .select(' -created_at -updated_at -isDeleted -deletedAt -__v')
+
+        if (!available_cart_items?.length) {
+            return res.status(204).json('No cart Items.')
+        }
+
+        // Checking minimum cart value
+        const totalCartSum = available_cart_items.reduce((lastRes, item) => {
+            return (
+                lastRes +
+                item.qty *
+                    (item.product.sales_price > 0
+                        ? item.product.sales_price
+                        : item.product.actual_price)
+            )
+        }, 0)
+
+        const free_toy = await freeToyCalculation(req, totalCartSum)
+        let order
+        const inclusiveVat = await getVatAmount(totalCartSum, req.brand)
+
+        reqOrder.has_free_toy = free_toy?.eligible || false
+        reqOrder.free_toy_qty = free_toy?.qty || 0
+        reqOrder.free_toy = free_toy?.item || undefined
+        reqOrder.discount = {
+            amount: 0,
+            code: undefined,
+        }
+        reqOrder.amount = parseFloat(totalCartSum)
+        reqOrder.amount_to_pay = parseFloat(totalCartSum)
+        reqOrder.vat.percentage = parseFloat(
+            req.brand.settings?.ecommerce_settings?.vat_percentage
+        )
+        reqOrder.vat.incl = parseFloat(inclusiveVat)
+
+        reqOrder.items.pull
+        await reqOrder.save()
+
+        await Order.updateOne(
+            { _id: reqOrder._id },
+            { $pull: { items: { is_bogo_item: true } } }
+        )
+
+        await Coupon.updateOne(
+            {
+                code: {
+                    $elemMatch: {
+                        code: removing_code,
+                    },
+                },
+                brand: req.brand._id,
+                published: true,
+                isDeleted: false,
+                country: req.country._id,
+            },
+            { $inc: { total_usage_count: -1 } }
+        )
+
+        const updated_order = await Order.findOne({
+            _id: reqOrder._id,
+        })
+
+        return res.status(200).json(new OrderResource(updated_order).exec())
+    } catch (error) {
+        console.log(error)
         return res.status(500).json({ error: `Something went wrong` })
     }
 }
@@ -1262,6 +1426,7 @@ const deleteOldPendingCheckouts = async (user) => {
 module.exports = {
     checkoutProcess,
     applyCoupon,
+    removeAppliedCoupon,
     paymentAuth,
     paymentProcess,
     orderFinish,

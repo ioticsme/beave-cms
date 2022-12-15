@@ -304,9 +304,9 @@ block content
 													label.form-label Products
 													select.form-select.mb-2(name='products' data-control='select2' data-hide-search='true' multiple='multiple' data-placeholder='Select an option')
 														option
-														if(semnoxProducts && semnoxProducts.length)
-															each item in semnoxProducts
-																option(value=JSON.stringify({id:item.ProductId,name:item.ProductName})) #{item.ProductName}
+														if(allProducts && allProducts.length)
+															each item in allProducts
+																option(value=item.id) #{item.name.en}
 														else 
 															option No products found
 													.fv-plugins-message-container.invalid-feedback(id=`field-error-products`)

@@ -20,6 +20,7 @@ router.group('/', (router) => {
     router.group('/checkout', (router) => {
         router.post('/', checkoutController.checkoutProcess)
         router.post('/apply-coupon', checkoutController.applyCoupon)
+        router.post('/remove-coupon', checkoutController.removeAppliedCoupon)
         router.post('/payment-auth', checkoutController.paymentAuth)
         router.post('/payment', checkoutController.paymentProcess) //THIS ROUTE IS NOT INCLUDED IN AUTH PROTECTION. SEE api.middleware.js
         router.post('/order-push', checkoutController.orderFinish)

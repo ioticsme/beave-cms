@@ -334,9 +334,9 @@ block content
 												#outlet_list.col-md-6.d-none
 													label.form-label Products
 													select.form-select.mb-2(name='products' data-control='select2' data-hide-search='true' multiple='multiple' data-placeholder='Select an option')
-														if(semnoxProducts && semnoxProducts.length)
-															each item,i in semnoxProducts
-																option(value=JSON.stringify({id:item.ProductId,name:item.ProductName}) selected=coupon.products.find((pro)=>pro.id==item.ProductId)) #{item.ProductName} 
+														if(allProducts && allProducts.length)
+															each item in allProducts
+																option(value=item.id selected=coupon.products.includes(item.id)) #{item.name.en}
 														else 
 															option No products found
 													.fv-plugins-message-container.invalid-feedback(id=`field-error-products`)

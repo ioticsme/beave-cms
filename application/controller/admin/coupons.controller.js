@@ -34,9 +34,15 @@ const add = async (req, res) => {
             country: req.authUser.selected_brand.country,
             product_type: 'free_product',
         })
+        const allProducts = await Product.find({
+            brand: req.authUser.selected_brand,
+            country: req.authUser.selected_brand.country,
+            product_type: 'regular',
+        })
         res.render(`admin/ecommerce/coupons/add`, {
             isBulk,
-            freeProducts: freeProducts,
+            freeProducts,
+            allProducts,
             brand: session.selected_brand,
         })
     } catch (error) {
@@ -52,18 +58,25 @@ const edit = async (req, res) => {
             brand: session.selected_brand._id,
             country: session.selected_brand.country,
         })
+        // return res.json(coupon)
         let isBulk = false
         const freeProducts = await Product.find({
             brand: req.authUser.selected_brand,
             country: req.authUser.selected_brand.country,
             product_type: 'free_product',
         })
+        const allProducts = await Product.find({
+            brand: req.authUser.selected_brand,
+            country: req.authUser.selected_brand.country,
+            product_type: 'regular',
+        })
         if (coupon?.is_group) {
             isBulk = true
         }
         res.render(`admin/ecommerce/coupons/edit`, {
             coupon,
-            freeProducts: freeProducts,
+            freeProducts,
+            allProducts,
             isBulk,
             brand: session.selected_brand,
         })
@@ -143,14 +156,14 @@ const couponSave = async (req, res) => {
             isBulk = true
         }
         // Parsing stringified semnox products to JSON
-        let newProducts = []
-        if (body.pro_type == 'some') {
-            if (body.products?.length) {
-                body.products.forEach((pro) => {
-                    newProducts.push(JSON.parse(pro))
-                })
-            }
-        }
+        // let newProducts = []
+        // if (body.pro_type == 'some') {
+        //     if (body.products?.length) {
+        //         body.products.forEach((pro) => {
+        //             newProducts.push(JSON.parse(pro))
+        //         })
+        //     }
+        // }
         // data to insert
         let data = {
             name: body.name,
@@ -183,10 +196,11 @@ const couponSave = async (req, res) => {
             user_level_limit: body.user_level_limit || 0,
             no_of_uses_total: body.no_of_uses_total,
             free_product:
-                body.coupon_type === 'free'
-                    ? body.free_product
-                    : null,
-            products: body.pro_type === 'all' ? [] : newProducts,
+                body.coupon_type === 'free' ? body.free_product : null,
+            products:
+                body.pro_type === 'some' && body.products.length
+                    ? body.products
+                    : [],
             author: session.admin_id,
             brand: session.selected_brand._id,
             country: session.selected_brand.country,
@@ -211,11 +225,13 @@ const couponSave = async (req, res) => {
             // Function to generate coupon code
             const generateCode = () => {
                 // Generate code
-                let code = randomstring.generate({
-                    length: 8,
-                    charset: 'alphabetic',
-                    capitalization: 'uppercase',
-                }).toUpperCase()
+                let code = randomstring
+                    .generate({
+                        length: 8,
+                        charset: 'alphabetic',
+                        capitalization: 'uppercase',
+                    })
+                    .toUpperCase()
 
                 // Checking generated code is exist in DB
                 const checkDbExist = (cpn) => {

@@ -98,6 +98,39 @@ const flushCache = async () => {
     }
 }
 
+// // BEGIN:: REDIS PUB/SUB server to server messaging
+// const Redis = require('ioredis')
+// const pubRedis = new Redis(`${process.env.REDIS_URL}`)
+// const subRedis = new Redis(`${process.env.REDIS_URL}`)
+
+// setInterval(() => {
+//     const message = { foo: Math.random() }
+//     // Publish to my-channel-1 or my-channel-2 randomly.
+//     const channel = `my-channel-${1 + Math.round(Math.random())}`
+
+//     // Message can be either a string or a buffer
+//     pubRedis.publish(channel, JSON.stringify(message))
+//     // console.log('Published %s to %s', message, channel)
+// }, 2000)
+
+// subRedis.subscribe('my-channel-1', 'my-channel-2', (err, count) => {
+//     if (err) {
+//         // Just like other commands, subscribe() can fail for some reasons,
+//         // ex network issues.
+//         console.error('Failed to subscribe: %s', err.message)
+//     } else {
+//         // `count` represents the number of channels this client are currently subscribed to.
+//         console.log(
+//             `Subscribed successfully! This client is currently subscribed to ${count} channels.`
+//         )
+//     }
+// })
+
+// subRedis.on('message', (channel, message) => {
+//     console.log(`Received ${message} from ${channel}`)
+// })
+// // END:: REDIS PUB/SUB server to server messaging
+
 module.exports = {
     getCache,
     setCache,
