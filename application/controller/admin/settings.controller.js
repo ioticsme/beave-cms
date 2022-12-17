@@ -8,6 +8,7 @@ var session = require('express-session')
 const Settings = require('../../model/Settings')
 const Redis = require('../../helper/Redis.helper')
 const { uploadMedia } = require('../../helper/Operations.helper')
+const Admin = require('../../model/Admin')
 
 const switchBrand = async (req, res) => {
     try {
@@ -147,11 +148,7 @@ const changeLogo = async (req, res) => {
                     'base64'
                 )
                 let fieldLang = req.files[i].fieldname.split('.')[1]
-                const media = await uploadMedia(
-                    base64,
-                    'Logos',
-                    file.filename
-                ) //file.originalname
+                const media = await uploadMedia(base64, 'Logos', file.filename) //file.originalname
                 // Deleting the image saved to uploads/
                 fs.unlinkSync(`uploads/${file.filename}`)
                 if (media && media._id) {
@@ -522,11 +519,7 @@ const seoSave = async (req, res) => {
                     'base64'
                 )
                 let fieldLang = req.files[i].fieldname.split('.')[1]
-                const media = await uploadMedia(
-                    base64,
-                    'SEO',
-                    file.filename
-                ) //file.originalname
+                const media = await uploadMedia(base64, 'SEO', file.filename) //file.originalname
                 // Deleting the image saved to uploads/
                 fs.unlinkSync(`uploads/${file.filename}`)
                 if (media && media._id) {
@@ -857,6 +850,38 @@ const saveNoticationSettings = async (req, res) => {
     }
 }
 
+const saveAdminFBWebToken = async (req, res) => {
+    // console.log(req.body.token)
+    // console.log(req.authUser)
+    try {
+        const schema = Joi.object({
+            token: Joi.string().required(),
+        })
+
+        const validationResult = schema.validate(req.body, {
+            abortEarly: false,
+        })
+
+        if (validationResult.error) {
+            return res.status(422).json(validationResult.error)
+        }
+        // Update settings
+        await Admin.findOneAndUpdate(
+            {
+                _id: req.authUser.admin_id,
+            },
+            {
+                $push: {
+                    firebase_tokens: req.body.token,
+                },
+            }
+        )
+        return res.status(200).json({ message: 'Token Saved' })
+    } catch (error) {
+        return res.status(400).json({ error: 'Something went wrong' })
+    }
+}
+
 module.exports = {
     switchBrand,
     generalList,
@@ -880,4 +905,5 @@ module.exports = {
     notificationList,
     editNotificationSettings,
     saveNoticationSettings,
+    saveAdminFBWebToken,
 }

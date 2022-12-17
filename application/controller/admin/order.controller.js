@@ -67,10 +67,12 @@ const orders = async (req, res) => {
                 // $text: {
                 //     $search: req.query?.search?.value?.toLowerCase(),
                 // },
-                order_no: {
-                    $regex: `.*${req.query?.search?.value?.toLowerCase()}.*`,
-                    $options: 'i',
-                },
+                general: {
+                    order_no: {
+                        $regex: `.*${req.query?.search?.value?.toLowerCase()}.*`,
+                        $options: 'i',
+                    },
+                }
             }
         }
         // if status field is active

@@ -1,0 +1,30 @@
+if partialType == 'mainList'
+	tr
+		//- td
+		//- 	.form-check.form-check-sm.form-check-custom.form-check-solid
+		//- 	input.form-check-input(type='checkbox' value='1')
+		td
+			a.text-gray-800.text-hover-primary.mb-1 #{config_key}
+		td
+			if fieldType=='String' || fieldType=='Number'
+				input.form-control.form-control-lg.form-control-solid(type='text' name=`${key}[${config_key}]` placeholder=`` value=eval(`configs.${key}.${config_key}`))
+			else if fieldType=='Boolean'
+				.form-check.form-switch.form-check-custom.form-check-success.form-check-solid
+					input#kt_flexSwitchCustomDefault_1_1.form-check-input(type='checkbox' name=`${key}[${config_key}]` value='true' checked=eval(`configs.${key}.${config_key}`))
+			.fv-plugins-message-container.invalid-feedback(id=`field-error-${key}_${config_key}`)
+			if configs.schema.path(`${key}.${config_key}`) && configs.schema.path(`${key}.${config_key}`).options
+				br
+				span.badge.badge-light-danger #{configs.schema.path(`${key}.${config_key}`).options.Comment}
+//- else if partialType == 'subList'
+//- 	tr
+//- 		//- td
+//- 		//- 	.form-check.form-check-sm.form-check-custom.form-check-solid
+//- 		//- 	input.form-check-input(type='checkbox' value='1')
+//- 		td #{subKey}
+//- 		td
+//- 			if subFieldType=='String' || subFieldType=='Number'
+//- 				input.form-control.form-control-lg.form-control-solid(type='text' name=`${key}[${config_key}]` placeholder=`${config_key}` value=`${config_val}`)
+//- 			else if subFieldType=='Boolean'
+//- 				.form-check.form-switch.form-check-custom.form-check-success.form-check-solid
+//- 					input#kt_flexSwitchCustomDefault_1_1.form-check-input(type='checkbox' name=`${key}[${subKey}]` value=1 checked=subVal)
+//- 			.fv-plugins-message-container.invalid-feedback(id=`field-error-${key}_${subKey}`)

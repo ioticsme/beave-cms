@@ -118,15 +118,30 @@ Config.findOne()
     .then(async (data) => {
         let config = data
         if (!data) {
-            config = await Config.create({
-                order_no: 1000,
-            })
+            try {
+                config = await Config.create({
+                    order_no: 1000,
+                    general: {
+                        client_name: 'Iotics',
+                    },
+                })
+            } catch (error) {
+                if (error.name === 'ValidationError') {
+                    let errors = {}
+
+                    Object.keys(error.errors).forEach((key) => {
+                        errors[key] = error.errors[key].message
+                    })
+
+                    console.log(errors)
+                }
+            }
         }
         globalModuleConfig = {
-            has_cms: config.has_cms || false,
-            has_ecommerce: config.has_ecommerce || false,
-            has_semnox: config.has_semnox || false,
-            has_pam: config.has_pam || false,
+            has_cms: config.general?.has_cms || false,
+            has_ecommerce: config.general?.has_ecommerce || false,
+            has_semnox: config.general?.has_semnox || false,
+            has_pam: config.general?.has_pam || false,
             has_booknow: config.has_booknow || false,
         }
     })

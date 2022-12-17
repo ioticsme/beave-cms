@@ -9,6 +9,7 @@ const upload = multer({ dest: 'uploads/' })
 router.group('/', (router) => {
     // Switch brand
     router.get('/switch-brand', settingsController.switchBrand)
+    router.post('/save-fbcm-token', settingsController.saveAdminFBWebToken)
     // General
     router.group('/general', (router) => {
         router.get('/', settingsController.generalList)

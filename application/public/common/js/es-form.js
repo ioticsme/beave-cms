@@ -8,50 +8,111 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 
     function showErrors(result, formId) {
+        console.log(result)
+        // if (result._original) {
+        //     console.log('from joi')
+        // } else {
+        //     console.log('from mongo')
+        // }
         if (result.details) {
-            // Looping through each validation error response
-            for (const index in result.details) {
-                // console.log(result.details[index].path)
-                let field_key = result.details[index].path[0]
-                let field_error_message_id = result.details[index].path[0]
-                if (result.details[index].path.length > 1) {
-                    result.details[index].path.forEach((key, index) => {
-                        if (index != 0) {
-                            field_key = `${field_key}[${key}]`
-                            field_error_message_id = `${field_error_message_id}_${key}`
-                        }
-                    })
-                }
+            // If response is from Joi validation
+            if (result._original) {
+                // Looping through each validation error response
+                for (const index in result.details) {
+                    // console.log(result.details[index].path)
+                    let field_key = result.details[index].path[0]
+                    let field_error_message_id = result.details[index].path[0]
+                    if (result.details[index].path.length > 1) {
+                        result.details[index].path.forEach((key, index) => {
+                            if (index != 0) {
+                                field_key = `${field_key}[${key}]`
+                                field_error_message_id = `${field_error_message_id}_${key}`
+                            }
+                        })
+                    }
 
-                // console.log(field_key)
-                console.log(field_error_message_id)
+                    // console.log(field_key)
+                    // console.log(field_error_message_id)
 
-                if (
-                    document.querySelector(`#${formId} [name="${field_key}"]`)
-                ) {
-                    document
-                        .querySelector(`#${formId} [name="${field_key}"`)
-                        .classList.add('is-invalid')
-                }
+                    if (
+                        document.querySelector(
+                            `#${formId} [name="${field_key}"]`
+                        )
+                    ) {
+                        document
+                            .querySelector(`#${formId} [name="${field_key}"`)
+                            .classList.add('is-invalid')
+                    }
 
-                if (
-                    document.querySelector(
-                        `#${formId} [id="field-error-${field_error_message_id}"]`
-                    )
-                ) {
-                    document
-                        .querySelector(
+                    if (
+                        document.querySelector(
                             `#${formId} [id="field-error-${field_error_message_id}"]`
                         )
-                        .classList.add('d-inline')
-                    document
-                        .querySelector(
+                    ) {
+                        document
+                            .querySelector(
+                                `#${formId} [id="field-error-${field_error_message_id}"]`
+                            )
+                            .classList.add('d-inline')
+                        document
+                            .querySelector(
+                                `#${formId} [id="field-error-${field_error_message_id}"]`
+                            )
+                            .classList.remove('d-none')
+                        document.querySelector(
+                            `#${formId} [id="field-error-${field_error_message_id}"]`
+                        ).innerHTML = result.details[index].message
+                    }
+                }
+            }
+            // if response from mongoose validation
+            else {
+                for (const index in result.details) {
+                    // console.log(result.details[index].properties.path)
+                    const errorFieldPath = result.details[index].properties.path.split('.')
+                    let field_key = errorFieldPath[0]
+                    let field_error_message_id = errorFieldPath[0]
+                    if (errorFieldPath.length > 1) {
+                        errorFieldPath.forEach((key, index) => {
+                            if (index != 0) {
+                                field_key = `${field_key}[${key}]`
+                                field_error_message_id = `${field_error_message_id}_${key}`
+                            }
+                        })
+                    }
+
+                    // console.log(field_key)
+                    // console.log(field_error_message_id)
+
+                    if (
+                        document.querySelector(
+                            `#${formId} [name="${field_key}"]`
+                        )
+                    ) {
+                        document
+                            .querySelector(`#${formId} [name="${field_key}"`)
+                            .classList.add('is-invalid')
+                    }
+
+                    if (
+                        document.querySelector(
                             `#${formId} [id="field-error-${field_error_message_id}"]`
                         )
-                        .classList.remove('d-none')
-                    document.querySelector(
-                        `#${formId} [id="field-error-${field_error_message_id}"]`
-                    ).innerHTML = result.details[index].message
+                    ) {
+                        document
+                            .querySelector(
+                                `#${formId} [id="field-error-${field_error_message_id}"]`
+                            )
+                            .classList.add('d-inline')
+                        document
+                            .querySelector(
+                                `#${formId} [id="field-error-${field_error_message_id}"]`
+                            )
+                            .classList.remove('d-none')
+                        document.querySelector(
+                            `#${formId} [id="field-error-${field_error_message_id}"]`
+                        ).innerHTML = result.details[index].properties.message
+                    }
                 }
             }
         }
@@ -186,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
                 } else if (resStatus == 422) {
-                    console.log(data.details)
+                    // console.log(data.details)
                     // Swal.fire({
                     //     text: 'You must fill out the form before moving forward',
                     //     icon: 'error',

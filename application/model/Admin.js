@@ -30,6 +30,7 @@ const AdminSchema = new mongoose.Schema(
                 ref: 'Country',
             },
         },
+        firebase_tokens: [{ type: String }],
         active: {
             type: Boolean,
             default: true,
