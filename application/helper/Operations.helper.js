@@ -17,6 +17,8 @@ const { sendOrderSms } = require('./SMS.helper')
 const readFile = utils.promisify(fs.readFile)
 // END:FOR PDF Generation
 
+const projectRootDir = require('path').resolve('./')
+
 // SDK initialization
 const imagekit = new ImageKit({
     publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
@@ -38,7 +40,9 @@ const imageURL = imagekit.url({
 // Upload function internally uses the ImageKit.io javascript SDK
 const uploadMedia = async (media, folder, new_name) => {
     let nodeEnv = process.env.NODE_ENV
-    let baseFolder = `${process.env.IMAGEKIT_FOLDER}/${nodeEnv.charAt(0).toUpperCase() + nodeEnv.slice(1)}`
+    let baseFolder = `${process.env.IMAGEKIT_FOLDER}/${
+        nodeEnv.charAt(0).toUpperCase() + nodeEnv.slice(1)
+    }`
     const uploaded = imagekit
         .upload({
             folder: `${baseFolder}/${folder}`,
@@ -177,6 +181,46 @@ const fileLogger = async (message, service, type, level = 'info') => {
     })
 }
 
+const createFcmSwJS = (credentials) => {
+    const wrapper_public_dir = `${projectRootDir}/public`
+    if (!fs.existsSync(wrapper_public_dir)) {
+        fs.mkdirSync(wrapper_public_dir)
+    }
+    var writeStream = fs.createWriteStream(
+        `${wrapper_public_dir}/firebase-messaging-sw.js`
+    )
+    writeStream.write(
+        `importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js')
+        importScripts('https://www.gstatic.com/firebasejs/8.2.0/firebase-messaging.js')
+        
+        const firebaseConfig = {
+            apiKey: '${credentials.apiKey}',
+            authDomain: '${credentials.authDomain}',
+            projectId: '${credentials.projectId}',
+            storageBucket: '${credentials.storageBucket}',
+            messagingSenderId: '${credentials.messagingSenderId}',
+            appId: '${credentials.appId}',
+        }
+        
+        firebase.initializeApp(firebaseConfig)
+        const messaging = firebase.messaging()
+        messaging.onBackgroundMessage(function (payload) {
+            console.log(
+                '[firebase-messaging-sw.js] Received background message ',
+                payload
+            )
+            // Customize notification here
+            const notificationTitle = 'Title'
+            const notificationOptions = {
+                body: payload,
+                icon: '/firebase-logo.png',
+            }
+            self.registration.showNotification(notificationTitle, notificationOptions)
+        });`
+    )
+    writeStream.end()
+}
+
 module.exports = {
     uploadMedia,
     // generatePdfInvoice,
@@ -185,4 +229,5 @@ module.exports = {
     differenceInPercentage,
     fileLogger,
     getVatAmount,
+    createFcmSwJS,
 }

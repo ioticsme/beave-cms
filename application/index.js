@@ -17,6 +17,8 @@ const app = express()
 const rateLimit = require('express-rate-limit')
 const { format } = require('date-fns')
 
+const { createFcmSwJS } = require('./helper/Operations.helper')
+
 // BEGIN::Service Providers
 const {
     baseConfig,
@@ -42,6 +44,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // Assets folder
 app.use('/cms-static', express.static(path.join(__dirname, './public')))
+app.use('/wrapper-static', express.static(path.join(__dirname, '../public')))
 
 //Configure redis client
 
@@ -136,6 +139,16 @@ Config.findOne()
                     console.log(errors)
                 }
             }
+        } else {
+            // BEGIN:: Generating firebase-messaging-sw.js
+            try {
+                if(data.general.push_notification && data.firebase?.admin_web) {
+                    createFcmSwJS(data.firebase)
+                }
+            } catch (err) {
+                console.error(err)
+            }
+            // END:: Generating firebase-messaging-sw.js
         }
         globalModuleConfig = {
             has_cms: config.general?.has_cms || false,
@@ -143,6 +156,7 @@ Config.findOne()
             has_semnox: config.general?.has_semnox || false,
             has_pam: config.general?.has_pam || false,
             has_booknow: config.has_booknow || false,
+            firebaseConfig: config.firebase || false,
         }
     })
 

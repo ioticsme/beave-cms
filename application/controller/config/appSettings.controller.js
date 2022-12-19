@@ -4,6 +4,7 @@ const Joi = require('joi')
 const bcrypt = require('bcrypt')
 
 const Config = require('../../model/Config')
+const { createFcmSwJS } = require('../../helper/Operations.helper')
 
 const list = async (req, res) => {
     const configs = await Config.findOne().select(
@@ -16,7 +17,7 @@ const list = async (req, res) => {
     // configs.schema.path(`${key}.${mixkey}`)?.instance || 'Mixed'
     // console.log(configs.schema.path('imagekit.public_key').instance)
     // const sd = await Config.schema.obj
-    // for(const p in sd) {    
+    // for(const p in sd) {
     //     console.log(configs.schema.path(p)?.instance || 'Mixed')
     // }
     return res.render('admin/config/app-settings/listing', {
@@ -67,6 +68,13 @@ const save = async (req, res) => {
             has_booknow: config.general?.has_booknow || false,
         }
 
+        if (config?.general?.push_notification && config?.firebase?.admin_web) {
+            createFcmSwJS(config.firebase)
+            globalModuleConfig.firebase = config.firebase || false
+        } else {
+            globalModuleConfig.firebase = false
+        }
+
         // await Config.updateOne(
         //     {
         //         _id: configRow.id,
@@ -76,10 +84,12 @@ const save = async (req, res) => {
 
         return res.status(200).json('done')
     } catch (e) {
-        console.log(e.errors)
-        return res.status(422).json({
-            details: e.errors,
-        })
+        // console.log(e)
+        if (e.errors) {
+            return res.status(422).json({
+                details: e.errors,
+            })
+        }
         return res.status(404).json({ error: 'Something went wrong' })
     }
 }
