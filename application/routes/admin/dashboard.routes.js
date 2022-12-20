@@ -3,7 +3,7 @@ require('express-group-routes')
 const router = express.Router()
 const dashboardController = require('../../controller/admin/dashboard.controller')
 // Services
-const { getData } = require('../../library/gAnalytics')
+const { getData } = require('../../helper/gAnalytics')
 const {
     format,
     addDays,
