@@ -49,6 +49,8 @@ const save = async (req, res) => {
             hide_body: Joi.boolean().optional(),
             hide_meta: Joi.boolean().optional(),
             in_use: Joi.boolean().optional(),
+            repeater_group_label: Joi.array().optional(),
+            repeater_group_name: Joi.array().optional(),
             field_label: Joi.array().optional(),
             field_name: Joi.array().optional(),
             placeholder: Joi.array().optional(),
@@ -70,17 +72,17 @@ const save = async (req, res) => {
             return
         }
 
-        let custom_fields = []
+        let customFields = []
+        let repeaterGroups = []
         for (let i = 0; i < req.body.field_name.length; i++) {
-            if (req.body.field_name?.[i]) {
+            if (req.body.field_name?.[i]?.length) {
                 let obj = {
                     field_label: req.body.field_label?.[i],
                     field_name: req.body.field_name?.[i],
                     placeholder: req.body.placeholder?.[i],
                     validation: req.body.validation?.[i].split(','),
-                    bilingual: req.body.bilingual?.[i],
+                    bilingual: req.body.bilingual?.[i] || false,
                     field_type: req.body.field_type?.[i],
-                    options: {},
                 }
                 let options = []
                 for (
@@ -91,12 +93,33 @@ const save = async (req, res) => {
                     if (req.body.option_value?.[i]?.split(',')?.[j]) {
                         options.push({
                             label: req.body.option_label?.[i]?.split(',')?.[j],
-                            value: req.body.option_value?.[i]?.split(',')?.[j],
+                            value: req.body.option_value[i].split(',')[j],
                         })
                     }
                 }
-                obj.options = options
-                custom_fields.push(obj)
+                if (options.length) {
+                    obj.options = options
+                }
+                if (req.body.repeater_group_name[i]?.length) {
+                    let index = repeaterGroups.findIndex(
+                        (group) =>
+                            group.name === req.body.repeater_group_name?.[i]
+                    )
+                    if (index > -1) {
+                        let dataToInsert = repeaterGroups[index]
+                        dataToInsert?.fields.push(obj)
+                        repeaterGroups.splice(index, 1)
+                        repeaterGroups.push(dataToInsert)
+                    } else {
+                        repeaterGroups.push({
+                            label: req.body.repeater_group_label[i],
+                            name: req.body.repeater_group_name[i],
+                            fields: [obj],
+                        })
+                    }
+                } else {
+                    customFields.push(obj)
+                }
             }
         }
 
@@ -115,7 +138,8 @@ const save = async (req, res) => {
             hide_excerpt: req.body.hide_excerpt || false,
             hide_meta: req.body.hide_meta || false,
             in_use: req.body.in_use || false,
-            custom_fields,
+            custom_fields: customFields,
+            repeater_groups: repeaterGroups,
             allowed_type: req.body.attachable_type?.length
                 ? req.body.attachable_type
                 : null,
@@ -133,6 +157,25 @@ const save = async (req, res) => {
 
         return res.status(200).json({ message: 'Content Type added' })
     } catch (error) {
+        console.log(error)
+        return res.status(500).json({ error: 'Something went wrong' })
+    }
+}
+
+const deleteItem = async (req, res) => {
+    try {
+        const { id } = req.body
+        // If id not found
+        if (!id) {
+            return res.status(404).json({ error: 'Id not found' })
+        }
+
+        //soft delete item
+        await ContentType.deleteOne({ _id: id })
+        return res.status(200).json({
+            message: `Content Type Deleted`,
+        })
+    } catch (error) {
         return res.status(500).json({ error: 'Something went wrong' })
     }
 }
@@ -142,4 +185,5 @@ module.exports = {
     add,
     edit,
     save,
+    deleteItem,
 }

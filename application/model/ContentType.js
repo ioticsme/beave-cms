@@ -54,6 +54,42 @@ const ContentTypeSchema = new mongoose.Schema(
                 ],
             },
         ],
+        repeater_groups: [
+            {
+                name: String,
+                label: String,
+                fields: [
+                    {
+                        field_label: String,
+                        field_name: String,
+                        field_type: String, // TextInput, TextArea, Radio, Checkbox, Dropdown, File, Wysiwyg
+                        placeholder: String,
+                        bilingual: {
+                            type: Boolean,
+                            default: true,
+                        },
+                        options: [
+                            {
+                                label: String,
+                                value: String,
+                            },
+                        ],
+                        addValidation: String,
+                        editValidation: String,
+                        validation: [
+                            {
+                                type: String,
+                            },
+                        ],
+                        info: [
+                            {
+                                type: String,
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
         allowed_type: [{ type: String }],
         template_name: {
             type: String,

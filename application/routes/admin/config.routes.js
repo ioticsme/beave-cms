@@ -44,6 +44,7 @@ router.group('/', (router) => {
         router.get('/add', contentTypeController.add)
         router.get('/edit/:id', contentTypeController.edit)
         router.post('/save', contentTypeController.save)
+        router.post('/delete', contentTypeController.deleteItem)
     })
 
     router.group('/app-settings', (router) => {
