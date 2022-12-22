@@ -585,7 +585,10 @@ const save = async (req, res) => {
             Redis.removeCache([cache_key])
             return res
                 .status(201)
-                .json({ message: 'Content updated successfully' })
+                .json({
+                    message: 'Content updated successfully',
+                    redirect_to: `/admin/cms/${type.slug}/detail/${req.body._id}`,
+                })
         } else {
             data.slug = slugify(body.title.en.toLowerCase())
             // Create content
@@ -598,6 +601,7 @@ const save = async (req, res) => {
 
             return res.status(200).json({
                 message: 'Content added successfully',
+                redirect_to: `/admin/cms/${type.slug}/detail/${save._id}`,
             })
         }
     } catch (error) {

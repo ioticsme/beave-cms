@@ -224,7 +224,7 @@ const dashboard = async (req, res) => {
 const analyticsDashboard = async (req, res) => {
     // try {
     // const metrics = req.query.metrics ?? 'users,pageViews'
-    const metrics = 'users,pageViews,organicSearches'
+    const metrics = 'users,pageViews,organicSearches,goalConversionRateAll,firstTimePurchaserConversionRate'
     const startDate =
         req.query.startDate || format(startOfMonth(new Date()), 'yyyy-MM-dd')
     const endDate =

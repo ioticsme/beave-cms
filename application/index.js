@@ -99,6 +99,8 @@ app.set('views', path.join(__dirname, '/views'))
 app.set('view engine', 'pug')
 
 // DB Connection
+const Config = require('./model/Config')
+global.globalModuleConfig = {}
 let dbSuccess = 'Fail'
 mongoose
     .connect(process.env.DB_CONNECTION, {
@@ -109,56 +111,56 @@ mongoose
     .then(() => {
         dbSuccess = 'Success'
         console.log('DB Connected')
+        Config.findOne()
+            .select('-order_no -created_at -updated_at -__v -_id')
+            .then(async (data) => {
+                let config = data
+                if (!data) {
+                    try {
+                        config = await Config.create({
+                            order_no: 1000,
+                            general: {
+                                client_name: 'Iotics',
+                            },
+                        })
+                    } catch (error) {
+                        if (error.name === 'ValidationError') {
+                            let errors = {}
+
+                            Object.keys(error.errors).forEach((key) => {
+                                errors[key] = error.errors[key].message
+                            })
+
+                            console.log(errors)
+                        }
+                    }
+                } else {
+                    // BEGIN:: Generating firebase-messaging-sw.js
+                    try {
+                        if (
+                            data.general.push_notification &&
+                            data.firebase?.admin_web
+                        ) {
+                            await createFcmSwJS(data.firebase)
+                        }
+                    } catch (err) {
+                        console.error(err)
+                    }
+                    // END:: Generating firebase-messaging-sw.js
+                }
+                globalModuleConfig = {
+                    has_cms: config.general?.has_cms || false,
+                    has_ecommerce: config.general?.has_ecommerce || false,
+                    has_semnox: config.general?.has_semnox || false,
+                    has_pam: config.general?.has_pam || false,
+                    has_booknow: config.has_booknow || false,
+                    firebaseConfig: config.firebase || false,
+                }
+            })
     })
 
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:')) //TODO::Send slack notification
-
-global.globalModuleConfig = {}
-const Config = require('./model/Config')
-Config.findOne()
-    .select('-order_no -created_at -updated_at -__v -_id')
-    .then(async (data) => {
-        let config = data
-        if (!data) {
-            try {
-                config = await Config.create({
-                    order_no: 1000,
-                    general: {
-                        client_name: 'Iotics',
-                    },
-                })
-            } catch (error) {
-                if (error.name === 'ValidationError') {
-                    let errors = {}
-
-                    Object.keys(error.errors).forEach((key) => {
-                        errors[key] = error.errors[key].message
-                    })
-
-                    console.log(errors)
-                }
-            }
-        } else {
-            // BEGIN:: Generating firebase-messaging-sw.js
-            try {
-                if(data.general.push_notification && data.firebase?.admin_web) {
-                    createFcmSwJS(data.firebase)
-                }
-            } catch (err) {
-                console.error(err)
-            }
-            // END:: Generating firebase-messaging-sw.js
-        }
-        globalModuleConfig = {
-            has_cms: config.general?.has_cms || false,
-            has_ecommerce: config.general?.has_ecommerce || false,
-            has_semnox: config.general?.has_semnox || false,
-            has_pam: config.general?.has_pam || false,
-            has_booknow: config.has_booknow || false,
-            firebaseConfig: config.firebase || false,
-        }
-    })
 
 app.get('/health', async (req, res) => {
     const appKey =

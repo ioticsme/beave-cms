@@ -181,7 +181,7 @@ const fileLogger = async (message, service, type, level = 'info') => {
     })
 }
 
-const createFcmSwJS = (credentials) => {
+const createFcmSwJS = async(credentials) => {
     const wrapper_public_dir = `${projectRootDir}/public`
     if (!fs.existsSync(wrapper_public_dir)) {
         fs.mkdirSync(wrapper_public_dir)

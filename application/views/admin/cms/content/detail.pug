@@ -33,6 +33,7 @@ block content
                             span.bullet.bg-gray-400.w-5px.h-2px
                         li.breadcrumb-item.text-muted #{contentDetail.content.en.title}
                 .d-flex.align-items-center.gap-2.gap-lg-3
+                    a.btn.btn-sm.fw-bold.btn-success(href=`../${reqContentType.slug}/add`) Add New #{reqContentType.title}
                     a.btn.btn-sm.fw-bold.btn-primary(href=`../${reqContentType.slug}/edit/${contentDetail._id}`) Edit #{reqContentType.title}
         #kt_app_content.app-content.flex-column-fluid
             #kt_app_content_container.app-container.container-xxl

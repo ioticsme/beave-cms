@@ -568,7 +568,7 @@ const unlinkCard = async (req, res) => {
 
         const cards = await UserCard.find({
             user: req.authPublicUser._id,
-            _id: req.body.card_id,
+            // _id: req.body.card_id,
         })
 
         card_collection = CardResource.collection(cards)
