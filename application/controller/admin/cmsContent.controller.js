@@ -79,15 +79,23 @@ const add = async (req, res) => {
         const has_common_custom_fields = collect(req.contentType.custom_fields)
             .where('bilingual', false)
             .count()
+        let has_common_repeater_group = 0
+        req.contentType.repeater_groups.map((group) => {
+            if (group.fields.find((field) => field.bilingual == false)) {
+                has_common_repeater_group += 1
+            }
+        })
         res.render(`admin/cms/content/add`, {
             reqContentType: req.contentType,
             has_common_custom_fields: has_common_custom_fields ? true : false,
+            has_common_repeater_group: has_common_repeater_group ? true : false,
             allowed_content,
             banners,
             gallery,
         })
     } catch (error) {
-        return res.render(`admin/error-404`)
+        console.log(error);
+        return res.render(`admin/error-500`)
     }
 }
 
@@ -583,12 +591,10 @@ const save = async (req, res) => {
             // Update content
             const update = await Content.updateOne({ _id: body._id }, data)
             Redis.removeCache([cache_key])
-            return res
-                .status(201)
-                .json({
-                    message: 'Content updated successfully',
-                    redirect_to: `/admin/cms/${type.slug}/detail/${req.body._id}`,
-                })
+            return res.status(201).json({
+                message: 'Content updated successfully',
+                redirect_to: `/admin/cms/${type.slug}/detail/${req.body._id}`,
+            })
         } else {
             data.slug = slugify(body.title.en.toLowerCase())
             // Create content
