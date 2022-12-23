@@ -21,7 +21,6 @@ block jslib
 	script(src='/cms-static/admin/assets/js/custom/utilities/modals/offer-a-deal/finance.js')
 	script(src='/cms-static/admin/assets/js/custom/utilities/modals/offer-a-deal/complete.js')
 	script(src='/cms-static/admin/assets/js/custom/utilities/modals/offer-a-deal/main.js')
-	script(src='/cms-static/admin/assets/plugins/custom/formrepeater/formrepeater.bundle.js')
 	// end::Custom Javascript
 
 	script(src='/cms-static/common/js/form-data-json.min.js')
@@ -120,33 +119,6 @@ block customScript
 				}
 			})
 		}
-		$('#kt_docs_repeater_nested').repeater({
-			repeaters: [{
-				selector: '.inner-repeater',
-				show: function () {
-					console.log(this)
-					$(this).slideDown();
-				},
-
-				hide: function (deleteElement) {
-					$(this).slideUp(deleteElement);
-				}
-			}],
-
-			show: function () {
-				$(this).slideDown();
-				// Re-init select2
-				$(this).find('[data-kt-repeate="select2"]').select2();
-			},
-
-			hide: function (deleteElement) {
-				$(this).slideUp(deleteElement);
-			},
-			ready: function(){
-				// Init select2
-				$('[data-kt-repeate="select2"]').select2();
-			}
-		});
 block content
 	.d-flex.flex-column.flex-column-fluid
 		#kt_app_toolbar.app-toolbar.py-3.py-lg-6
@@ -209,13 +181,9 @@ block content
 											each ct in contentTypes
 												option(value=`${ct.slug}` selected=contentType && contentType.allowed_type && contentType.allowed_type.length && contentType.allowed_type.find((at)=>at==ct.slug) ) #{ct.title}
 										.fv-plugins-message-container.invalid-feedback(id=`field-error-attachable_type`)
-								.ribbon.ribbon-start.ribbon-clip.mt-5.mb-5
-									.ribbon-label
-										| Custom Fields
-										span.ribbon-inner.bg-success
 								.row.mb-6#form-holder-edit
+									span.col-lg-4.col-form-label.required.fw-semibold.fs-6 Custom Fields
 									if isEdit
-										span.col-lg-4.col-form-label.required.fw-semibold.fs-6 Custom Fields
 										if(contentType && contentType.custom_fields && contentType.custom_fields.length)
 											each cf,i in contentType.custom_fields
 												.col-lg-12.fv-row.cf-card-edit.row(id=`cf-card-edit-${i}`)
@@ -240,13 +208,13 @@ block content
 														input.form-control.form-control-lg.form-control-solid(type='text' name='validation[]' placeholder='Validation' value=`${cf.validation || ''}`)
 														.fv-plugins-message-container.invalid-feedback(id=`field-error-validation[]`)
 													.mt-2.col-md-6
-														select.form-select.form-select-lg.form-select-solid.mb-2(name="bilingual[]" data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select language type' )
+														select.form-select.form-select-lg.form-select-solid.mb-2(name="bilingual[]"  data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select language type' )
 															//- TODO::edit selection list item
 															option(value="" ) Select language type
 															option(value="true" selected=cf && cf.bilingual == true) Bilingual
 															option(value="false" selected=cf && cf.bilingual == false) English Only
 													.mt-2.col-md-6
-														select.form-select.form-select-lg.form-select-solid.mb-2(name="field_type[]" data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select field type' )
+														select.form-select.form-select-lg.form-select-solid.mb-2(name="field_type[]"  data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select field type' )
 															option(value='') Select Field Type
 															option(value='text' selected=cf.field_type=='text') Text
 															option(value='wysiwig' selected=cf.field_type=='wysiwig') WYSIWYG
@@ -267,6 +235,7 @@ block content
 													.mt-5.mb-3.d-flex.justify-content-center
 														.btn.btn-danger(onClick='removeFunctionForEdit(event)') Delete
 								.row.mb-6#form-holder-group-edit
+									span.col-lg-4.col-form-label.required.fw-semibold.fs-6 Custom Fields
 									if isEdit
 										if(contentType && contentType.repeater_groups && contentType.repeater_groups.length)
 											each rg,i in contentType.repeater_groups
@@ -293,13 +262,13 @@ block content
 															input.form-control.form-control-lg.form-control-solid(type='text' name='validation[]' placeholder='Validation' value=`${cf.validation || ''}`)
 															.fv-plugins-message-container.invalid-feedback(id=`field-error-validation[]`)
 														.mt-2.col-md-6
-															select.form-select.form-select-lg.form-select-solid.mb-2(name="bilingual[]" data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select language type' )
+															select.form-select.form-select-lg.form-select-solid.mb-2(name="bilingual[]"  data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select language type' )
 																//- TODO::edit selection list item
 																option(value="" ) Select language type
 																option(value="true" selected=cf && cf.bilingual == true) Bilingual
 																option(value="false" selected=cf && cf.bilingual == false) English Only
 														.mt-2.col-md-6
-															select.form-select.form-select-lg.form-select-solid.mb-2(name="field_type[]" data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select field type' )
+															select.form-select.form-select-lg.form-select-solid.mb-2(name="field_type[]"  data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select field type' )
 																option(value='') Select Field Type
 																option(value='text' selected=cf.field_type=='text') Text
 																option(value='wysiwig' selected=cf.field_type=='wysiwig') WYSIWYG
@@ -319,140 +288,58 @@ block content
 															.fv-plugins-message-container.invalid-feedback(id=`field-error-option_value[]`)
 														.mt-5.mb-3.d-flex.justify-content-center
 															.btn.btn-danger(onClick='removeFunctionForGroupEdit(event)') Delete
-								//- .row.mb-6#form-holder
-								//- 	.col-lg-12.fv-row.cf-card.row.mt-3#cf-card-0
-								//- 		h5.text-center Custom Field
-								//- 		.mt-2.col-md-6
-								//- 			input.form-control.form-control-lg.form-control-solid(type='text' name='repeater_group_label[]' placeholder='Repeater Group Label' )
-								//- 			.fv-plugins-message-container.invalid-feedback(id=`field-error-repeater_group_label[]`)
-								//- 		.mt-2.col-md-6
-								//- 			input.form-control.form-control-lg.form-control-solid(type='text' name='repeater_group_name[]' placeholder='Repeater Group Name' )
-								//- 			.fv-plugins-message-container.invalid-feedback(id=`field-error-repeater_group_name[]`)
-								//- 		.mt-2.col-md-6
-								//- 			input.form-control.form-control-lg.form-control-solid(type='text' name='field_label[]' placeholder='Field Label' )
-								//- 			.fv-plugins-message-container.invalid-feedback(id=`field-error-field_label[]`)
-								//- 		.mt-2.col-md-6
-								//- 			input.form-control.form-control-lg.form-control-solid(type='text' name='field_name[]' placeholder='Field Name' )
-								//- 			.fv-plugins-message-container.invalid-feedback(id=`field-error-field_name[]`)
-								//- 		.mt-2.col-md-6
-								//- 			input.form-control.form-control-lg.form-control-solid(type='text' name='placeholder[]' placeholder='Placeholder' )
-								//- 			.fv-plugins-message-container.invalid-feedback(id=`field-error-placeholder[]`)
-								//- 		.mt-2.col-md-6
-								//- 			input.form-control.form-control-lg.form-control-solid(type='text' name='validation[]' placeholder='Validation' )
-								//- 			.fv-plugins-message-container.invalid-feedback(id=`field-error-validation[]`)
-								//- 		.mt-2.col-md-6
-								//- 			//- select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2(name="bilingual[]" data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select language type' )
-								//- 			select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2(name="bilingual[]" placeholder='Select language type' )
-								//- 				//- TODO::edit selection list item
-								//- 				option(value="" ) Select language type
-								//- 				option(value="true" selected=contentType && contentType.bilingual == true) Bilingual
-								//- 				option(value="false" selected=contentType && contentType.bilingual == false) English Only
-								//- 		.mt-2.col-md-6
-								//- 			//- select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2(name="field_type[]" data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select field type' )
-								//- 			select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2(name="field_type[]" placeholder='Select field type' )
-								//- 				//- TODO::edit selection list item
-								//- 				option(value='') Select Field Type
-								//- 				option(value='text' ) Text
-								//- 				option(value='wysiwig' ) WYSIWYG
-								//- 				option(value='textarea' ) Textarea
-								//- 				option(value='date' ) Date
-								//- 				option(value='dropdown' ) Dropdown
-								//- 				option(value='radio' ) Radio
-								//- 				option(value='checkbox' ) Checkbox
-								//- 				option(value='file' ) File
-								//- 		.mt-2.col-md-6
-								//- 			textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_label[]' placeholder='Dropdown option label seperated by comma(,)' )
-								//- 			.fv-plugins-message-container.invalid-feedback(id=`field-error-option_label[]`)
-								//- 		.mt-2.col-md-6
-								//- 			textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_value[]' placeholder='Dropdown option value seperated by comma(,)' )
-								//- 			.fv-plugins-message-container.invalid-feedback(id=`field-error-option_value[]`)
-								//- 		.mt-5.mb-3.d-flex.justify-content-center#btn-remove-child
-								//- 			.btn.btn-danger(onClick='removeFunction(event)') Delete
-								//- .mt-3.text-center
-								//- 	.btn.btn-primary(onClick='cloneChild()') 
-								//- 		span Add more
-								h5
-								// begin::Repeater
-								#kt_docs_repeater_nested
-									// begin::Form group
-									.form-group
-										div(data-repeater-list='kt_docs_repeater_nested_outer')
-											div(data-repeater-item='')
-												.form-group.row.mb-5
-													.col-md-6
-														label.form-label Row Name:
-														input.form-control.mb-2.mb-md-0(type='text' name="name" placeholder='Enter full name')
-													.col-md-6
-														.form-check.form-check-custom.form-check-solid.mt-2.mt-md-11
-															input#form_checkbox.form-check-input(type='checkbox' name="group_repeater" value='true')
-															label.form-check-label(for='form_checkbox')
-																| Is Repeater Group
-												.row
-													.inner-repeater
-														.mb-5(data-repeater-list='kt_docs_repeater_nested_inner')
-															div(data-repeater-item='')
-																label.form-label Field:
-																//- .input-group.pb-3
-																.row
-																	//- input.form-control(type='text' name="number" placeholder='Enter contact number')
-																	.mt-2.col-md-6
-																		input.form-control.form-control-lg.form-control-solid(type='text' name='field_label[]' placeholder='Field Label' )
-																		.fv-plugins-message-container.invalid-feedback(id=`field-error-field_label[]`)
-																	.mt-2.col-md-6
-																		input.form-control.form-control-lg.form-control-solid(type='text' name='field_name[]' placeholder='Field Name' )
-																		.fv-plugins-message-container.invalid-feedback(id=`field-error-field_name[]`)
-																	.mt-2.col-md-6
-																		input.form-control.form-control-lg.form-control-solid(type='text' name='placeholder[]' placeholder='Placeholder' )
-																		.fv-plugins-message-container.invalid-feedback(id=`field-error-placeholder[]`)
-																	.mt-2.col-md-6
-																		input.form-control.form-control-lg.form-control-solid(type='text' name='validation[]' placeholder='Validation' )
-																		.fv-plugins-message-container.invalid-feedback(id=`field-error-validation[]`)
-																	.mt-2.col-md-6
-																		select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2(name="bilingual[]" data-kt-repeater='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select language type' )
-																			//- select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2(name="bilingual[]" placeholder='Select language type' )
-																			//- TODO::edit selection list item
-																			option(value="" ) Select language type
-																			option(value="true" selected=contentType && contentType.bilingual == true) Bilingual
-																			option(value="false" selected=contentType && contentType.bilingual == false) English Only
-																	.mt-2.col-md-6
-																		select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2(name="field_type[]" data-kt-repeater='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select field type' )
-																			//- select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2(name="field_type[]" placeholder='Select field type' )
-																			//- TODO::edit selection list item
-																			option(value='') Select Field Type
-																			option(value='text' ) Text
-																			option(value='wysiwig' ) WYSIWYG
-																			option(value='textarea' ) Textarea
-																			option(value='date' ) Date
-																			option(value='dropdown' ) Dropdown
-																			option(value='radio' ) Radio
-																			option(value='checkbox' ) Checkbox
-																			option(value='file' ) File
-																	.mt-2.col-md-6
-																		textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_label[]' placeholder='Dropdown option label seperated by comma(,)' )
-																		.fv-plugins-message-container.invalid-feedback(id=`field-error-option_label[]`)
-																	.mt-2.col-md-6
-																		textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_value[]' placeholder='Dropdown option value seperated by comma(,)' )
-																		.fv-plugins-message-container.invalid-feedback(id=`field-error-option_value[]`)
-																	//- button.border.border-secondary.btn.btn-icon.btn-light-danger(data-repeater-delete='' type='button')
-																	//- i.la.la-trash-o.fs-3
-																	button.border.border-secondary.btn-sm.btn.btn-light-danger(data-repeater-delete='' type='button')
-																		i.la.la-trash-o.fs-3
-																		| Delete field
-														button.btn.btn-sm.btn-light-primary(data-repeater-create='' type='button')
-															i.la.la-plus
-															|  Add New Field
-													.col-md-4
-														a.btn.btn-sm.btn-light-danger.mt-3.mt-md-9(href='javascript:;' data-repeater-delete='')
-															i.la.la-trash-o.fs-3
-															| Delete Row
-									.form-group.mt-2
-										a.btn.btn-light-primary(href='javascript:;' data-repeater-create='')
-											i.la.la-plus
-											| Add Row
-									// end::Form group
-
-
-
+								.row.mb-6#form-holder
+									.col-lg-12.fv-row.cf-card.row.mt-3#cf-card-0
+										h5.text-center Custom Field
+										.mt-2.col-md-6
+											input.form-control.form-control-lg.form-control-solid(type='text' name='repeater_group_label[]' placeholder='Repeater Group Label' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-repeater_group_label[]`)
+										.mt-2.col-md-6
+											input.form-control.form-control-lg.form-control-solid(type='text' name='repeater_group_name[]' placeholder='Repeater Group Name' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-repeater_group_name[]`)
+										.mt-2.col-md-6
+											input.form-control.form-control-lg.form-control-solid(type='text' name='field_label[]' placeholder='Field Label' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-field_label[]`)
+										.mt-2.col-md-6
+											input.form-control.form-control-lg.form-control-solid(type='text' name='field_name[]' placeholder='Field Name' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-field_name[]`)
+										.mt-2.col-md-6
+											input.form-control.form-control-lg.form-control-solid(type='text' name='placeholder[]' placeholder='Placeholder' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-placeholder[]`)
+										.mt-2.col-md-6
+											input.form-control.form-control-lg.form-control-solid(type='text' name='validation[]' placeholder='Validation' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-validation[]`)
+										.mt-2.col-md-6
+											//- select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2(name="bilingual[]"  data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select language type' )
+											select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2(name="bilingual[]"  placeholder='Select language type' )
+												//- TODO::edit selection list item
+												option(value="" ) Select language type
+												option(value="true" selected=contentType && contentType.bilingual == true) Bilingual
+												option(value="false" selected=contentType && contentType.bilingual == false) English Only
+										.mt-2.col-md-6
+											//- select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2(name="field_type[]"  data-control='select2' data-close-on-select='true' data-allow-clear="true" data-placeholder='Select field type' )
+											select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2(name="field_type[]"  placeholder='Select field type' )
+												//- TODO::edit selection list item
+												option(value='') Select Field Type
+												option(value='text' ) Text
+												option(value='wysiwig' ) WYSIWYG
+												option(value='textarea' ) Textarea
+												option(value='date' ) Date
+												option(value='dropdown' ) Dropdown
+												option(value='radio' ) Radio
+												option(value='checkbox' ) Checkbox
+												option(value='file' ) File
+										.mt-2.col-md-6
+											textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_label[]' placeholder='Dropdown option label seperated by comma(,)' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-option_label[]`)
+										.mt-2.col-md-6
+											textarea.form-control.form-control-lg.form-control-solid(type='text' name='option_value[]' placeholder='Dropdown option value seperated by comma(,)' )
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-option_value[]`)
+										.mt-5.mb-3.d-flex.justify-content-center#btn-remove-child
+											.btn.btn-danger(onClick='removeFunction(event)') Delete
+								.mt-3.text-center
+									.btn.btn-primary(onClick='cloneChild()') 
+										span Add more
 								.row.mb-6
 									span.col-lg-4.col-form-label.required.fw-semibold.fs-6 Features Checklist
 									small Please include the following in your content type.
