@@ -39,9 +39,9 @@ var KTSubscriptionsList = (function () {
                                   .then(function () {
                                       e.row($(n)).remove().draw()
                                   })
-                                  .then(function () {
-                                      i()
-                                  })
+                                //   .then(function () {
+                                //       i()
+                                //   })
                             : 'cancel' === t.dismiss &&
                               Swal.fire({
                                   text: o + ' was not deleted.',
@@ -77,57 +77,57 @@ var KTSubscriptionsList = (function () {
                     }, 50)
                 })
             })
-                // a.addEventListener('click', function () {
-                //     Swal.fire({
-                //         text: 'Are you sure you want to delete selected customers?',
-                //         icon: 'warning',
-                //         showCancelButton: !0,
-                //         buttonsStyling: !1,
-                //         confirmButtonText: 'Yes, delete!',
-                //         cancelButtonText: 'No, cancel',
-                //         customClass: {
-                //             confirmButton: 'btn fw-bold btn-danger',
-                //             cancelButton:
-                //                 'btn fw-bold btn-active-light-primary',
-                //         },
-                //     }).then(function (n) {
-                //         n.value
-                //             ? Swal.fire({
-                //                   text: 'You have deleted all selected customers!.',
-                //                   icon: 'success',
-                //                   buttonsStyling: !1,
-                //                   confirmButtonText: 'Ok, got it!',
-                //                   customClass: {
-                //                       confirmButton: 'btn fw-bold btn-primary',
-                //                   },
-                //               })
-                //                   .then(function () {
-                //                       r.forEach((t) => {
-                //                           t.checked &&
-                //                               e
-                //                                   .row($(t.closest('tbody tr')))
-                //                                   .remove()
-                //                                   .draw()
-                //                       })
-                //                       t.querySelectorAll(
-                //                           '[type="checkbox"]'
-                //                       )[0].checked = !1
-                //                   })
-                //                   .then(function () {
-                //                       i(), l()
-                //                   })
-                //             : 'cancel' === n.dismiss &&
-                //               Swal.fire({
-                //                   text: 'Selected customers was not deleted.',
-                //                   icon: 'error',
-                //                   buttonsStyling: !1,
-                //                   confirmButtonText: 'Ok, got it!',
-                //                   customClass: {
-                //                       confirmButton: 'btn fw-bold btn-primary',
-                //                   },
-                //               })
-                //     })
-                // })
+            // a.addEventListener('click', function () {
+            //     Swal.fire({
+            //         text: 'Are you sure you want to delete selected customers?',
+            //         icon: 'warning',
+            //         showCancelButton: !0,
+            //         buttonsStyling: !1,
+            //         confirmButtonText: 'Yes, delete!',
+            //         cancelButtonText: 'No, cancel',
+            //         customClass: {
+            //             confirmButton: 'btn fw-bold btn-danger',
+            //             cancelButton:
+            //                 'btn fw-bold btn-active-light-primary',
+            //         },
+            //     }).then(function (n) {
+            //         n.value
+            //             ? Swal.fire({
+            //                   text: 'You have deleted all selected customers!.',
+            //                   icon: 'success',
+            //                   buttonsStyling: !1,
+            //                   confirmButtonText: 'Ok, got it!',
+            //                   customClass: {
+            //                       confirmButton: 'btn fw-bold btn-primary',
+            //                   },
+            //               })
+            //                   .then(function () {
+            //                       r.forEach((t) => {
+            //                           t.checked &&
+            //                               e
+            //                                   .row($(t.closest('tbody tr')))
+            //                                   .remove()
+            //                                   .draw()
+            //                       })
+            //                       t.querySelectorAll(
+            //                           '[type="checkbox"]'
+            //                       )[0].checked = !1
+            //                   })
+            //                   .then(function () {
+            //                       i(), l()
+            //                   })
+            //             : 'cancel' === n.dismiss &&
+            //               Swal.fire({
+            //                   text: 'Selected customers was not deleted.',
+            //                   icon: 'error',
+            //                   buttonsStyling: !1,
+            //                   confirmButtonText: 'Ok, got it!',
+            //                   customClass: {
+            //                       confirmButton: 'btn fw-bold btn-primary',
+            //                   },
+            //               })
+            //     })
+            // })
         }
     // const i = () => {
     //     const e = t.querySelectorAll('tbody [type="checkbox"]')

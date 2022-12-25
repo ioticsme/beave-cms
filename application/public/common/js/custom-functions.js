@@ -39,7 +39,7 @@ function deleteItem(element) {
                             customClass: {
                                 confirmButton: 'btn fw-bold btn-primary',
                             },
-                        }).then(() => {
+                        }).then((e) => {
                             location.reload()
                         })
                     } else {

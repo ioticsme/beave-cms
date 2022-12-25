@@ -162,6 +162,7 @@ const deleteContent = async (req, res) => {
         return res.status(404).json({ error: 'Something went wrong' })
     }
 }
+
 const changeStatus = async (req, res) => {
     try {
         const { status, id } = req.body
@@ -583,12 +584,10 @@ const save = async (req, res) => {
             // Update content
             const update = await Content.updateOne({ _id: body._id }, data)
             Redis.removeCache([cache_key])
-            return res
-                .status(201)
-                .json({
-                    message: 'Content updated successfully',
-                    redirect_to: `/admin/cms/${type.slug}/detail/${req.body._id}`,
-                })
+            return res.status(201).json({
+                message: 'Content updated successfully',
+                redirect_to: `/admin/cms/${type.slug}/detail/${req.body._id}`,
+            })
         } else {
             data.slug = slugify(body.title.en.toLowerCase())
             // Create content
