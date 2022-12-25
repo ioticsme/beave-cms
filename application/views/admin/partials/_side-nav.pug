@@ -51,7 +51,7 @@
                         //-             span.bullet.bullet-dot
                         //-         span.menu-title Analytics
                 hr
-            .menu-item.here.show.menu-accordion(data-kt-menu-trigger='click' class=`${activeNav.includes(`/admin/dashboard`) ? 'here show' : ''}`)
+            .menu-item.menu-accordion(data-kt-menu-trigger='click' class=`${activeNav.includes(`/admin/dashboard`) ? 'here show' : ''}`)
                 span.menu-link
                     span.menu-icon
                         span.svg-icon.svg-icon-2
@@ -67,12 +67,13 @@
                         a.menu-link(href='/admin/dashboard' class=`${activeNav == `/admin/dashboard` ? 'active' : ''}`)
                             span.menu-bullet
                                 span.bullet.bullet-dot
-                            span.menu-title eCommerce
-                    .menu-item
-                        a.menu-link(href='/admin/dashboard/analytics')
-                            span.menu-bullet
-                                span.bullet.bullet-dot
-                            span.menu-title Analytics
+                            span.menu-title GA
+                    if globalModuleConfig.has_ecommerce
+                        .menu-item
+                            a.menu-link(href='/admin/dashboard/ecommerce' class=`${activeNav == `/admin/dashboard/ecommerce` ? 'active' : ''}`)
+                                span.menu-bullet
+                                    span.bullet.bullet-dot
+                                span.menu-title eCommerce
             if globalModuleConfig.has_ecommerce
                 .menu-item.pt-5
                     .menu-content

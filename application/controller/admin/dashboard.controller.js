@@ -25,7 +25,7 @@ const Order = require('../../model/Order')
 const { differenceInPercentage } = require('../../helper/Operations.helper')
 const User = require('../../model/User')
 
-const dashboard = async (req, res) => {
+const ecommerceDashboard = async (req, res) => {
     try {
         let date_range_obj = {}
         if (req.query.dt) {
@@ -293,6 +293,6 @@ const analyticsDashboard = async (req, res) => {
 }
 
 module.exports = {
-    dashboard,
+    ecommerceDashboard,
     analyticsDashboard,
 }

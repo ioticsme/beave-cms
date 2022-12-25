@@ -14,8 +14,8 @@ const {
 } = require('date-fns')
 
 router.group('/', (router) => {
-    router.get('/', dashboardController.dashboard)
-    router.get('/analytics', dashboardController.analyticsDashboard)
+    router.get('/', dashboardController.analyticsDashboard)
+    router.get('/ecommerce', dashboardController.ecommerceDashboard)
 
     // router.get('/api', (req, res) => {
     //     const { metrics, startDate, endDate } = req.query
