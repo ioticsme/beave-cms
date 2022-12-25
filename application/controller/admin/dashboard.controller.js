@@ -19,7 +19,7 @@ const {
 } = require('date-fns')
 
 // Services
-const { getData } = require('../../helper/gAnalytics')
+const { getReports } = require('../../helper/gAnalytics')
 const { default: collect } = require('collect.js')
 const Order = require('../../model/Order')
 const { differenceInPercentage } = require('../../helper/Operations.helper')
@@ -224,56 +224,72 @@ const dashboard = async (req, res) => {
 const analyticsDashboard = async (req, res) => {
     // try {
     // const metrics = req.query.metrics ?? 'users,pageViews'
-    const metrics = 'users,pageViews,organicSearches,goalConversionRateAll,firstTimePurchaserConversionRate'
+    // const metrics = 'users,pageViews,organicSearches,goalConversionRateAll'
+
+    let date_range_obj = {}
+    if (req.query.dt) {
+        // console.log(req.query.dt)
+        date_ranges = req.query.dt.split(' - ')
+        // console.log(date_ranges)
+        const sd_timestamp = Date.parse(
+            date_ranges[0].split('/').reverse().join('-')
+        )
+        const ed_timestamp = Date.parse(
+            date_ranges[1].split('/').reverse().join('-')
+        )
+        date_range_obj.sdObj = format(new Date(sd_timestamp), 'yyyy-MM-dd')
+        date_range_obj.edObj = format(new Date(ed_timestamp), 'yyyy-MM-dd')
+    }
+
+    // console.log(date_range_obj)
+
     const startDate =
-        req.query.startDate || format(startOfMonth(new Date()), 'yyyy-MM-dd')
+        date_range_obj.sdObj || format(startOfMonth(new Date()), 'yyyy-MM-dd')
     const endDate =
-        req.query.startDate || format(endOfMonth(new Date()), 'yyyy-MM-dd')
+        date_range_obj.edObj || format(endOfMonth(new Date()), 'yyyy-MM-dd')
     // console.log(`Requested metrics: ${metrics}`)
-    console.log(`Requested start-date: ${startDate}`)
-    console.log(`Requested end-date: ${endDate}`)
+    // console.log(`Requested start-date: ${startDate}`)
+    // console.log(`Requested end-date: ${endDate}`)
 
-    let analyticsData
-    Promise.all(
-        getData(metrics ? metrics.split(',') : metrics, startDate, endDate)
-    )
-        .then((data) => {
-            // flatten list of objects into one object
-            console.log(data)
-            // const body = {}
-            // Object.values(data).forEach((value) => {
-            //     Object.keys(value).forEach((key) => {
-            //         body[key] = value[key]
-            //     })
-            // })
-
-            // const data = [body]
-            const collectedData = collect(data)
-            // console.log(collect(data).pluck('ga:users').toArray()[0])
-            analyticsData = {
-                user: collectedData.pluck('ga:users').toArray()[0],
-                pageViews: collectedData.pluck('ga:pageViews').toArray()[1],
-            }
-
-            console.log(analyticsData)
-            res.render(`admin/dashboards/web-analytics`, {
-                analyticsData,
+    try {
+        const analyticsData = await getReports(startDate, endDate)
+            .then((response) => {
+                // console.log(response.data[0].data.totals[0].values)
+                return response.data
             })
-            // res.send({ data: body })
-        })
-        .catch((err) => {
-            // console.log('Error:')
-            console.log(err)
-            return res.send({
-                status: 'Error getting a metric',
-                message: `${err}`,
+            .catch((error) => {
+                console.log(error)
             })
-            // console.log('Done')
+        // return res.json(analyticsData.reports[0].data.totals[0].values[0])
+        const topLineChartData = collect(analyticsData.reports[0].data.rows)
+            .pluck('metrics')
+            .map((item, key) => {
+                // console.log(key)
+                const day = collect(analyticsData.reports[0].data.rows)
+                    .pluck('dimensions')
+                    .flatten()
+                    .toArray()[key]
+                // return [parseInt(day), ...item[0].values.map(Number)]
+                return [key, ...item[0].values.map(Number)]
+            })
+
+        const test = [
+            [1, 2, 3],
+            [4, 5, 6],
+        ]
+        // return res.json({
+        //     topLineChartData,
+        //     test,
+        // })
+        // return res.json(analyticsData.reports)
+
+        return res.render(`admin/dashboards/web-analytics`, {
+            analyticsData: analyticsData,
+            topLineChartData: topLineChartData,
         })
-    // } catch (error) {
-    //     console.log(error)
-    //     return res.render(`admin/error-404`)
-    // }
+    } catch (error) {
+        return res.render(`admin/error-500`)
+    }
 }
 
 module.exports = {

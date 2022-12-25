@@ -1,63 +1,61 @@
+// Reference:: https://www.multiminds.eu/blog/2018/11/google-analytics-reporting-api/
+// Reference:: https://ga-dev-tools.web.app/ga4/dimensions-metrics-explorer/
+// Reference:: https://developers.google.com/analytics/devguides/reporting/core/v4/basics#reports
+
+const { google } = require('googleapis')
 // Config
 const clientEmail = process.env.CLIENT_EMAIL
 const privateKey = process.env.GA_PRIVATE_KEY.replace(new RegExp('\\\\n'), '\n')
-const scopes = ['https://www.googleapis.com/auth/analytics.readonly']
+const scopes = [
+    'https://www.googleapis.com/auth/analytics.readonly',
+    // 'https://analyticsreporting.googleapis.com/v4/reports:batchGet',
+]
 
 // API's
-const { google } = require('googleapis')
-
-const analytics = google.analytics('v3')
+const analytics = google.analyticsreporting('v4')
 const viewId = process.env.VIEW_ID
-const jwt = new google.auth.JWT({
-    email: clientEmail,
-    key: privateKey,
-    scopes,
-})
+let jwt = new google.auth.JWT(clientEmail, null, privateKey, scopes)
 
-async function getMetric(metric, startDate, endDate) {
-    await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](
-        Math.trunc(1000 * Math.random())
-    )
-
-    const result = await analytics.data.ga.get({
-        auth: jwt,
-        ids: `ga:${viewId}`,
-        'start-date': startDate,
-        'end-date': endDate,
-        metrics: metric,
+const metricsQuery = (startDate, endDate) => {
+    return (basic_report = {
+        reportRequests: [
+            {
+                viewId: viewId,
+                dateRanges: [{ startDate: startDate, endDate: endDate }],
+                metrics: [
+                    { expression: 'ga:users' },
+                    { expression: 'ga:sessions' },
+                    { expression: 'ga:pageviews' },
+                ],
+                dimensions: [{ name: 'ga:date' }],
+            },
+            {
+                viewId: viewId,
+                dateRanges: [{ startDate: startDate, endDate: endDate }],
+                dimensions: [{ name: 'ga:country' }],
+                orderBys: [
+                    {
+                        orderType: 'VALUE',
+                        sortOrder: 'DESCENDING',
+                        fieldName: 'ga:visits',
+                    },
+                ],
+            },
+        ],
     })
-
-    const res = {}
-    res[metric] = {
-        value: parseInt(result.data.totalsForAllResults[metric], 10),
-        start: startDate,
-        end: endDate,
-    }
-    return res
 }
 
-function parseMetric(metric) {
-    let cleanMetric = metric
-    if (!cleanMetric.startsWith('ga:')) {
-        cleanMetric = `ga:${cleanMetric}`
-    }
-    return cleanMetric
-}
+const getReports = async function (startDate, endDate) {
+    await jwt.authorize()
 
-// Metrics List : https://ga-dev-tools.web.app/dimensions-metrics-explorer/
-function getData(
-    metrics = ['ga:users'],
-    startDate = '30daysAgo',
-    endDate = 'today'
-) {
-    // ensure all metrics have ga:
-    const results = []
-    for (let i = 0; i < metrics.length; i += 1) {
-        const metric = parseMetric(metrics[i])
-        results.push(getMetric(metric, startDate, endDate))
+    const reports = metricsQuery(startDate, endDate)
+    let request = {
+        headers: { 'Content-Type': 'application/json' },
+        auth: jwt,
+        resource: reports,
     }
 
-    return results
+    return await analytics.reports.batchGet(request)
 }
 
-module.exports = { getData }
+module.exports = { getReports }
