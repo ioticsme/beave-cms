@@ -4,6 +4,7 @@ const { joiPasswordExtendCore } = require('joi-password')
 const joiPassword = Joi.extend(joiPasswordExtendCore)
 const { authenticator } = require('otplib')
 const bcrypt = require('bcrypt')
+const { OAuth2Client } = require('google-auth-library')
 const jwt = require('jsonwebtoken')
 const formData = require('form-data')
 const Mailgun = require('mailgun.js')
@@ -17,6 +18,7 @@ const Product = require('../../model/Product')
 const ProductResource = require('../../resources/api/product.resource')
 const { verifyCaptcha } = require('../../helper/Captcha.helper')
 const { getCache, setCache, removeCache } = require('../../helper/Redis.helper')
+const { getRequestIp } = require('../../helper/Operations.helper')
 const {
     parseISO,
     addMinutes,
@@ -140,6 +142,16 @@ const loginSubmit = async (req, res) => {
                     }
                 )
 
+                const ip = await getRequestIp(req)
+
+                user.log.last_login = {
+                    brand: req.brand.code,
+                    country: req.country.code,
+                    lang: req.language,
+                    ip: ip,
+                    user_agent: req.user_agent_data,
+                }
+
                 await removeCache([`user-${req.source}-auth-${user._id}`])
                 if (token) {
                     setCache(
@@ -176,6 +188,140 @@ const loginSubmit = async (req, res) => {
             })
         }
     } catch (error) {
+        return res.status(500).json({
+            error: 'Something went wrong',
+        })
+    }
+}
+
+const socialLoginSubmit = async (req, res) => {
+    const schema = Joi.object({
+        provider: Joi.string().required().valid('facebook', 'google'),
+    })
+
+    const validationResult = schema.validate(req.body, { abortEarly: false })
+
+    if (validationResult.error) {
+        return res.status(422).json({
+            details: validationResult.error.details,
+        })
+    }
+
+    const bearerToken = req.headers?.authorization?.split(' ')[1]
+
+    if (!bearerToken) {
+        return res.status(401).json({
+            error: 'Unauthorized',
+        })
+    }
+    // console.log(bearerToken)
+    const CLIENT_ID_GOOGLE = process.env.GOOGLE_CLIENT_ID
+
+    try {
+        const client = new OAuth2Client(CLIENT_ID_GOOGLE)
+
+        const socialAuthData = await client.verifyIdToken({
+            idToken: bearerToken,
+            audience: CLIENT_ID_GOOGLE,
+        })
+
+        if (!socialAuthData?.payload) {
+            return res.status(401).json({
+                error: 'Unauthorized',
+            })
+        }
+
+        // return res.json(socialAuthData)
+
+        let user = await User.findOne({
+            // email: { $regex: req.body.email, $options: 'i' },
+            email: socialAuthData.payload.email,
+            active: true,
+            // isDeleted: false,
+        })
+
+        const ip = await getRequestIp(req)
+
+        if (!user) {
+            // New User Create
+            const saltRounds = 10
+            const salt = bcrypt.genSaltSync(saltRounds)
+
+            const user = await User.create({
+                first_name: socialAuthData.payload.given_name,
+                last_name: socialAuthData.payload.family_name,
+                email: socialAuthData.payload.email,
+                email_verified: socialAuthData.payload.email_verified,
+                mobile: mobile,
+                consent_marketing:
+                    req.body.consent_marketing == 'true' || false,
+                password: bcrypt.hashSync(socialAuthData.payload.nbf, salt),
+                provider: req.body.provider,
+                provider_user_id: socialAuthData.envelope.kid,
+                profile_image_url: socialAuthData.payload.picture,
+                log: {
+                    last_login: {
+                        brand: req.brand.code,
+                        country: req.country.code,
+                        lang: req.language,
+                        ip: ip,
+                        user_agent: req.user_agent_data,
+                    },
+                },
+            })
+        }
+
+        user.first_name = socialAuthData.payload.given_name
+        user.last_name = socialAuthData.payload.family_name
+        user.email_verified = socialAuthData.payload.email_verified
+        user.provider = req.body.provider
+        user.provider_user_id = socialAuthData.envelope.kid
+        user.profile_image_url = socialAuthData.payload.picture
+
+        user.log.last_login = {
+            brand: req.brand.code,
+            country: req.country.code,
+            lang: req.language,
+            ip: ip,
+            user_agent: req.user_agent_data,
+        }
+
+        await user.save()
+
+        const token = jwt.sign(
+            {
+                data: {
+                    user: new UserResource(user).exec(),
+                    source: req.source,
+                },
+            },
+            process.env.APP_KEY,
+            {
+                expiresIn:
+                    req.source == 'app'
+                        ? `${process.env.MOBILE_USER_TOKEN_EXPIRY || '15days'}`
+                        : `${process.env.WEB_USER_TOKEN_EXPIRY || '24h'}`,
+            }
+        )
+
+        await removeCache([`user-${req.source}-auth-${user._id}`])
+        setCache(
+            `user-${req.source}-auth-${user._id}`,
+            token,
+            60 *
+                60 *
+                24 *
+                (req.source == 'app'
+                    ? process.env.MOBILE_USER_TOKEN_EXPIRY || 15
+                    : 1)
+        )
+
+        return res.status(200).json({
+            user: new UserResource(user).exec(),
+            token: token ? `Bearer ${token}` : undefined,
+        })
+    } catch (error) {
+        console.log(error)
         return res.status(500).json({
             error: 'Something went wrong',
         })
@@ -284,6 +430,8 @@ const signupSubmit = async (req, res) => {
         const saltRounds = 10
         const salt = bcrypt.genSaltSync(saltRounds)
 
+        const ip = await getRequestIp(req)
+
         const user = await User.create({
             first_name: req.body.first_name,
             last_name: req.body.last_name,
@@ -291,6 +439,15 @@ const signupSubmit = async (req, res) => {
             mobile: mobile,
             consent_marketing: req.body.consent_marketing == 'true' || false,
             password: bcrypt.hashSync(req.body.password, salt),
+            log: {
+                signup: {
+                    brand: req.brand.code,
+                    country: req.country.code,
+                    lang: req.language,
+                    ip: ip,
+                    user_agent: req.user_agent_data,
+                },
+            },
         })
 
         if (!user?._id) {
@@ -918,6 +1075,7 @@ const logout = async (req, res) => {
 
 module.exports = {
     loginSubmit,
+    socialLoginSubmit,
     signupSubmit,
     otpVerification,
     resendOTP,

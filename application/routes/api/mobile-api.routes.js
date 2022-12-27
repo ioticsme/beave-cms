@@ -18,15 +18,20 @@ const {
     mobileDefaultHeader,
     UserAuthCheck,
     ecommerceModeCheck,
+    userAgent,
 } = require('../../middleware/api.middleware')
 
 router.use(BrandWithCountryCheck)
 router.use(mobileDefaultHeader)
+router.use(userAgent)
 
 router.group('/v1', (router) => {
     // Auth
     router.group('/auth', (router) => {
-        router.post('/login', authController.loginSubmit)
+        router.group('/login', (router) => {
+            router.post('/', authController.loginSubmit)
+            router.post('/social', authController.socialLoginSubmit)
+        })
         router.post('/signup', authController.signupSubmit)
         router.post('/verify', authController.otpVerification)
         router.post('/resend-otp', authController.resendOTP)

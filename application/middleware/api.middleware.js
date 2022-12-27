@@ -1,6 +1,7 @@
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 const collect = require('collect.js')
+const useragent = require('express-useragent')
 const { getCache, setCache } = require('../helper/Redis.helper')
 const Brand = require('../model/Brand')
 const Country = require('../model/Country')
@@ -259,6 +260,20 @@ const getNav = async (req, res, next) => {
     next()
 }
 
+const userAgent = async (req, res, next) => {
+    var source = req.headers['user-agent']
+    var ua = useragent.parse(source)
+    req.user_agent_data = {
+        browser: ua.browser,
+        version: ua.version,
+        os: ua.os,
+        platform: ua.platform,
+        geoIp: ua.geoIp,
+        source: ua.source,
+    }
+    next()
+}
+
 module.exports = {
     BrandWithCountryCheck,
     webDefaultHeader,
@@ -266,4 +281,5 @@ module.exports = {
     UserAuthCheck,
     ecommerceModeCheck,
     getNav,
+    userAgent,
 }

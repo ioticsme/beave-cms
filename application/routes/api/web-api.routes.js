@@ -18,6 +18,7 @@ const {
     webDefaultHeader,
     UserAuthCheck,
     ecommerceModeCheck,
+    userAgent,
 } = require('../../middleware/api.middleware')
 const { getNav } = require('../../middleware/api.middleware')
 // const { app } = require('firebase-admin')
@@ -30,6 +31,7 @@ const ecommerceRoutes = require('./_ecommerce.routes')
 router.use(BrandWithCountryCheck)
 router.use(webDefaultHeader)
 router.use(getNav)
+router.use(userAgent)
 
 router.group('/', (router) => {
     router.get('/', (req, res) => {
@@ -62,7 +64,10 @@ router.group('/', (router) => {
 
     // Auth
     router.group('/auth', (router) => {
-        router.post('/login', authController.loginSubmit)
+        router.group('/login', (router) => {
+            router.post('/', authController.loginSubmit)
+            router.post('/social', authController.socialLoginSubmit)
+        })
         router.post('/signup', authController.signupSubmit)
         router.post('/verify', authController.otpVerification)
         router.post('/resend-otp', authController.resendOTP)
