@@ -34,9 +34,9 @@ const edit = async (req, res) => {
 
 const save = async (req, res) => {
     try {
-        console.log(req.body)
-        // console.log(req.body.kt_docs_repeater_nested_outer);
-        // console.log(req.body.kt_docs_repeater_nested_outer[0]);
+        console.log(req.body);
+        console.log(req.body.kt_docs_repeater_nested_outer);
+        console.log(req.body.kt_docs_repeater_nested_outer[0]);
         const schema = Joi.object({
             title: Joi.string().required().min(3).max(60),
             slug: Joi.string().required().min(3).max(60),
@@ -62,7 +62,6 @@ const save = async (req, res) => {
             field_type: Joi.array().optional(),
             option_label: Joi.array().optional(),
             option_value: Joi.array().optional(),
-            kt_docs_repeater_nested_outer: Joi.array().optional(),
             attachable_type: Joi.array(),
             id: Joi.optional(),
         })
@@ -78,41 +77,55 @@ const save = async (req, res) => {
 
         let customFields = []
         let repeaterGroups = []
-        req.body.kt_docs_repeater_nested_outer?.map((repeater) => {
-            console.log('repeater :>> ', repeater)
-            if (repeater?.group_repeater?.[0] == 'true') {
-            } else {
-                console.log('NO repeat')
-                repeater.kt_docs_repeater_nested_inner?.map((inner) => {
-                    let obj = {
-                        field_label: inner.field_label,
-                        field_name: inner.field_name,
-                        placeholder: inner.placeholder,
-                        validation: inner.validation.split(','),
-                        bilingual: inner.bilingual || false,
-                        field_type: inner.field_type,
+        for (let i = 0; i < req.body.field_name.length; i++) {
+            if (req.body.field_name?.[i]?.length) {
+                let obj = {
+                    field_label: req.body.field_label?.[i],
+                    field_name: req.body.field_name?.[i],
+                    placeholder: req.body.placeholder?.[i],
+                    validation: req.body.validation?.[i].split(','),
+                    bilingual: req.body.bilingual?.[i] || false,
+                    field_type: req.body.field_type?.[i],
+                }
+                let options = []
+                for (
+                    let j = 0;
+                    j < req.body.option_label?.[i]?.split(',').length;
+                    j++
+                ) {
+                    if (req.body.option_value?.[i]?.split(',')?.[j]) {
+                        options.push({
+                            label: req.body.option_label?.[i]?.split(',')?.[j],
+                            value: req.body.option_value[i].split(',')[j],
+                        })
                     }
-                    let options = []
-                    for (
-                        let j = 0;
-                        j < inner.option_label?.split(',').length;
-                        j++
-                    ) {
-                        if (inner.option_value?.split(',')?.[j]) {
-                            options.push({
-                                label: inner.option_label?.split(',')?.[j],
-                                value: inner.option_value.split(',')[j],
-                            })
-                        }
+                }
+                if (options.length) {
+                    obj.options = options
+                }
+                if (req.body.repeater_group_name[i]?.length) {
+                    let index = repeaterGroups.findIndex(
+                        (group) =>
+                            group.name === req.body.repeater_group_name?.[i]
+                    )
+                    if (index > -1) {
+                        let dataToInsert = repeaterGroups[index]
+                        dataToInsert?.fields.push(obj)
+                        repeaterGroups.splice(index, 1)
+                        repeaterGroups.push(dataToInsert)
+                    } else {
+                        repeaterGroups.push({
+                            label: req.body.repeater_group_label[i],
+                            name: req.body.repeater_group_name[i],
+                            fields: [obj],
+                        })
                     }
-                    if (options.length) {
-                        obj.options = options
-                    }
+                } else {
                     customFields.push(obj)
-                })
+                }
             }
-        })
-        console.log('custom_fields :>> ', customFields)
+        }
+
         let data = {
             title: req.body.title,
             slug: slugify(req.body.slug.toLowerCase()),
@@ -134,18 +147,18 @@ const save = async (req, res) => {
                 ? req.body.attachable_type
                 : null,
         }
-        // if (req.body.id) {
-        //     await ContentType.updateOne(
-        //         {
-        //             _id: req.body.id,
-        //         },
-        //         data
-        //     )
-        // } else {
-        //     await ContentType.create(data)
-        // }
+        if (req.body.id) {
+            await ContentType.updateOne(
+                {
+                    _id: req.body.id,
+                },
+                data
+            )
+        } else {
+            await ContentType.create(data)
+        }
 
-        // return res.status(200).json({ message: 'Content Type added' })
+        return res.status(200).json({ message: 'Content Type added' })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ error: 'Something went wrong' })
