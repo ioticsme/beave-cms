@@ -29,129 +29,10 @@ block jslib
 
 block customScript
 	script.
-		var childIndex = 0
-		function cloneChild() {
-			childIndex++
-			let p = document.querySelector(".cf-card")
-			let p_prime = p.cloneNode(true)
-			let newElement = document
-				.getElementById('form-holder')
-				.appendChild(p_prime)
-			newElement.setAttribute("id", "cf-card-" + childIndex) //setting ID for newly created card
-			//- document.querySelector(`#cf-card-${childIndex} .title`).textContent = `Custom Field ${childIndex + 1}`
-			document
-				.querySelectorAll(`#cf-card-${childIndex} .form-control`)
-				.forEach(function (element) {
-					element.value = null
-				})
-		}
-		function removeFunction(event) {
-			let parentId = event.target.parentElement.parentElement.id
-			Swal.fire({
-				text: 'Are you sure you want to delete ?',
-				icon: 'warning',
-				showCancelButton: !0,
-				buttonsStyling: !1,
-				confirmButtonText: 'Yes, delete!',
-				cancelButtonText: 'No, cancel',
-				customClass: {
-					confirmButton: 'btn fw-bold btn-danger',
-					cancelButton: 'btn fw-bold btn-active-light-primary',
-				},
-			}).then((e) => {
-				if (e.value) {
-					if( parentId=='cf-card-0'){
-						Swal.fire({
-							text: "This is the last element! Can't delete",
-							icon: "warning",
-							buttonsStyling: false,
-							confirmButtonText: "Ok, got it!",
-							customClass: {
-								confirmButton: "btn btn-primary"
-							}
-						})
-					}else{
-						const parentElement = document.getElementById('form-holder')
-						const childElement = document.getElementById(parentId)
-						parentElement.removeChild(childElement)
-					}
-				}
-			})
-		}
-		function removeFunctionForEdit(event) {
-			let parentId = event.target.parentElement.parentElement.id
-			Swal.fire({
-				text: 'Are you sure you want to delete ?',
-				icon: 'warning',
-				showCancelButton: !0,
-				buttonsStyling: !1,
-				confirmButtonText: 'Yes, delete!',
-				cancelButtonText: 'No, cancel',
-				customClass: {
-					confirmButton: 'btn fw-bold btn-danger',
-					cancelButton: 'btn fw-bold btn-active-light-primary',
-				},
-			}).then((e) => {
-				if (e.value) {
-					const parentElement = document.getElementById('form-holder-edit')
-					const childElement = document.getElementById(parentId)
-					parentElement.removeChild(childElement)
-				}
-			})
-		}
-		function removeFunctionForGroupEdit(event) {
-			let parentId = event.target.parentElement.parentElement.id
-			Swal.fire({
-				text: 'Are you sure you want to delete ?',
-				icon: 'warning',
-				showCancelButton: !0,
-				buttonsStyling: !1,
-				confirmButtonText: 'Yes, delete!',
-				cancelButtonText: 'No, cancel',
-				customClass: {
-					confirmButton: 'btn fw-bold btn-danger',
-					cancelButton: 'btn fw-bold btn-active-light-primary',
-				},
-			}).then((e) => {
-				if (e.value) {
-					const parentElement = document.getElementById('form-holder-group-edit')
-					const childElement = document.getElementById(parentId)
-					parentElement.removeChild(childElement)
-				}
-			})
-		}
-		$('#kt_docs_repeater_nested_edit').repeater({
-			repeaters: [{
-				selector: '.inner-repeater',
-				show: function () {
-					console.log(this)
-					$(this).slideDown();
-				},
-
-				hide: function (deleteElement) {
-					$(this).slideUp(deleteElement);
-				}
-			}],
-
-			show: function () {
-				$(this).slideDown();
-				// Re-init select2
-				$(this).find('[data-kt-repeate="select2"]').select2();
-			},
-
-			hide: function (deleteElement) {
-				$(this).slideUp(deleteElement);
-			},
-			ready: function(){
-				// Init select2
-				$('[data-kt-repeate="select2"]').select2();
-			}
-		});
 		$('#kt_docs_repeater_nested').repeater({
 			repeaters: [{
 				selector: '.inner-repeater',
 				show: function () {
-					console.log(this)
 					$(this).slideDown();
 				},
 
@@ -242,9 +123,9 @@ block content
 										span.ribbon-inner.bg-success
 								.row.mb-6#kt_docs_repeater_nested
 									if(contentType && contentType.custom_field_groups && contentType.custom_field_groups.length)
-										each cfg,i in contentType.custom_field_groups
-											.form-group.mt-10
-												div(data-repeater-list='kt_docs_repeater_nested_outer')
+										.form-group.mt-10
+											div(data-repeater-list='kt_docs_repeater_nested_outer')
+												each cfg,i in contentType.custom_field_groups
 													div(data-repeater-item='')
 														.form-group.row.mb-5.mt-2
 															.col-md-6
@@ -265,7 +146,7 @@ block content
 														.row
 															.inner-repeater
 																.mb-5(data-repeater-list='kt_docs_repeater_nested_inner')
-																	each cf,j in cfg.fields 
+																	each cf,j in cfg.fields
 																		div(data-repeater-item='')
 																			label.form-label Field:
 																			.row
@@ -305,22 +186,24 @@ block content
 																					.fv-plugins-message-container.invalid-feedback(id=`field-error-option_value`)
 																				//- button.border.border-secondary.btn.btn-icon.btn-light-danger(data-repeater-delete='' type='button')
 																				//- i.la.la-trash-o.fs-3
-																			.col-md-6.mb-3.mt-2
+																			.text-center.mb-3.mt-2
 																				button.btn-sm.btn.btn-light-danger(data-repeater-delete='' type='button')
 																					i.la.la-trash-o.fs-3
 																					| Delete field
-																button.btn.btn-sm.btn-light-primary(data-repeater-create='' type='button')
-																	i.la.la-plus
-																	|  Add Field
-															.col-md-4
+																.text-center
+																	button.btn.btn-sm.btn-light-primary(data-repeater-create='' type='button')
+																		i.la.la-plus
+																		|  Add Field
+															.text-center
 																a.btn.btn-sm.btn-light-danger.mt-3.mt-md-9(href='javascript:;' data-repeater-delete='')
 																	i.la.la-trash-o.fs-3
 																	| Delete Row
-											.form-group.mt-2
+											.form-group.mt-2.text-center
 												a.btn.btn-light-primary(href='javascript:;' data-repeater-create='')
 													i.la.la-plus
 													| Add Row			
 									else
+										//- Add Method
 										.form-group.mt-10
 											div(data-repeater-list='kt_docs_repeater_nested_outer')
 												div(data-repeater-item='')

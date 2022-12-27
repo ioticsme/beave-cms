@@ -75,26 +75,22 @@ const add = async (req, res) => {
             const grouped = collection.groupBy('type_slug')
             allowed_content = JSON.parse(JSON.stringify(grouped.items))
         }
-
-        const has_common_custom_fields = collect(req.contentType.custom_fields)
+        console.log(req.contentType.custom_field_groups)
+        const has_common_field_groups = collect(
+            req.contentType.custom_field_groups
+        )
             .where('bilingual', false)
             .count()
-        let has_common_repeater_group = 0
-        req.contentType.repeater_groups.map((group) => {
-            if (group.fields.find((field) => field.bilingual == false)) {
-                has_common_repeater_group += 1
-            }
-        })
+        console.log(has_common_field_groups)
         res.render(`admin/cms/content/add`, {
             reqContentType: req.contentType,
-            has_common_custom_fields: has_common_custom_fields ? true : false,
-            has_common_repeater_group: has_common_repeater_group ? true : false,
+            has_common_field_groups: has_common_field_groups ? true : false,
             allowed_content,
             banners,
             gallery,
         })
     } catch (error) {
-        console.log(error);
+        console.log(error)
         return res.render(`admin/error-500`)
     }
 }
@@ -206,6 +202,8 @@ const changeStatus = async (req, res) => {
 
 const save = async (req, res) => {
     try {
+        console.log(req.body)
+        console.log(req.body.repeater_field)
         session = req.authUser
         // BEGIN:: Generating default field validation rule for content type (title, description)
         let defaultValidationObj = {}
@@ -313,6 +311,7 @@ const save = async (req, res) => {
             published: Joi.string().required().valid('true', 'false'),
             in_home: Joi.string().required().valid('true', 'false'),
             position: Joi.number().required(),
+            repeater_field: Joi.array(),
             meta_title: Joi.object({
                 en: Joi.optional(),
                 ar: Joi.optional(),

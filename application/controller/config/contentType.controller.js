@@ -24,6 +24,7 @@ const edit = async (req, res) => {
     const contentType = await ContentType.findOne({
         _id: req.params.id,
     })
+    console.log('contentType :>> ', contentType)
     const contentTypes = await ContentType.find()
     return res.render('admin/config/content-type/form', {
         contentType,
@@ -34,6 +35,7 @@ const edit = async (req, res) => {
 
 const save = async (req, res) => {
     try {
+        console.log(req.body)
         const schema = Joi.object({
             title: Joi.string().required().min(3).max(60),
             slug: Joi.string().required().min(3).max(60),
@@ -105,8 +107,9 @@ const save = async (req, res) => {
             })
             customFieldGroups.push({
                 row_name: repeater.name,
-                repeater_group: repeater.repeater_group ? true : false,
-                bilingual: repeater.bilingual ? true : false,
+                repeater_group:
+                    repeater.repeater_group == 'true' ? true : false,
+                bilingual: repeater.bilingual == 'true' ? true : false,
                 fields: fields,
             })
         })

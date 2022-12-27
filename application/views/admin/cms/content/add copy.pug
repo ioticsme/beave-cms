@@ -23,7 +23,6 @@ block jslib
 	script(src='/cms-static/admin/assets/js/custom/utilities/modals/create-app.js')
 	script(src='/cms-static/admin/assets/js/custom/utilities/modals/new-card.js')
 	script(src='/cms-static/admin/assets/js/custom/utilities/modals/users-search.js')
-	script(src='/cms-static/admin/assets/plugins/custom/formrepeater/formrepeater.bundle.js')
 	// end::Custom Javascript
 
 	// CKEditor Build Bundles
@@ -54,24 +53,22 @@ block customScript
 				dateFormat: 'Y-m-dTH:i:00.000\\Z',
 			})
 		})
-		document.querySelectorAll('.group_repeater').forEach((group)=>{
-			console.log(group)
-			$(`#${group.id}`).repeater({
-				initEmpty: false,
-
-				defaultValues: {
-					'text-input': 'foo'
-				},
-
-				show: function () {
-					$(this).slideDown();
-				},
-
-				hide: function (deleteElement) {
-					$(this).slideUp(deleteElement);
-				}
-			});
-		})
+		var childIndex = 0
+		function cloneChild() {
+			//- childIndex++
+			//- let p = document.querySelector(".cf-card")
+			//- let p_prime = p.cloneNode(true)
+			//- let newElement = document
+			//- 	.getElementById('form-holder')
+			//- 	.appendChild(p_prime)
+			//- newElement.setAttribute("id", "cf-card-" + childIndex) //setting ID for newly created card
+			//- //- document.querySelector(`#cf-card-${childIndex} .title`).textContent = `Custom Field ${childIndex + 1}`
+			//- document
+			//- 	.querySelectorAll(`#cf-card-${childIndex} .form-control`)
+			//- 	.forEach(function (element) {
+			//- 		element.value = null
+			//- 	})
+		}
 
 block content
 	.d-flex.flex-column.flex-column-fluid
@@ -137,76 +134,72 @@ block content
 													.fv-plugins-message-container.invalid-feedback(id=`field-error-excerpt_${brandLanguage.prefix}`)
 
 											//- BEGIN::Custom Fields with Bilingual
-											each cfg, cfg_i in reqContentType.custom_field_groups
-												if cfg.repeater_group == true
-													h4 #{cfg.row_name}
-													if cfg.bilingual
-														.group_repeater(id=`kt_docs_repeater_${brandLanguage.prefix}`)
-															.form-group
-																div(data-repeater-list='repeater_field')
-																	div(data-repeater-item='')
-																		.form-group.row
-																			each cf in cfg.fields
-																				.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container
-																					if cf.field_type !='file'
-																						label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
-																							span.required #{cf.field_label} (#{brandLanguage.prefix})
-																					if cf.field_type === 'text'
-																						input.form-control.form-control-solid(type='text' placeholder=`Enter  ${cf.field_label}` name=`${cf.field_name}[${brandLanguage.prefix}]`)
-																						.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
-																					else if cf.field_type === 'wysiwyg'
-																						textarea.content_wysiwyg(name=`${cf.field_name}[${brandLanguage.prefix}]` id=`wysiwyg-cf-${brandLanguage.prefix}-${cf_i}`)
-																						.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
-																					else if cf.field_type === 'textarea'
-																						textarea.form-control.form-control-solid(rows='6' name=`${cf.field_name}[${brandLanguage.prefix}]` placeholder='' spellcheck='false')
-																						.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
-																					//- else if cf.field_type === 'file'
-																						if cf.info && cf.info.length
-																							.alert.bg-warning.d-flex.align-items-center.p-5
-																								span.svg-icon.svg-icon-2hx.svg-icon-primary.me-3
-																								.d-flex.flex-column
-																									each i in cf.info 
-																										span #{i}
-																						.col-md-4.col-lg-4
-																							include ../../partials/_image-input-form-field
-																						.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
-																					else if cf.field_type === 'date'
-																						.kt_daterangepicker
-																							input.form-control.mb-2(id=`kt_daterangepicker_${brandLanguage.prefix}-${cf_i}` name=`${cf.field_name}[${brandLanguage.prefix}]` placeholder=`${cf.placeholder}` value='')
-																							.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
-																					else if cf.field_type === 'radio'
-																						.row.row-cols-1.row-cols-md-3.row-cols-lg-1.row-cols-xl-3.g-9(data-kt-buttons='true' data-kt-buttons-target="[data-kt-button='true']")
-																							each option,i in cf.options 
-																								.col.d-flex.text-start.p-6
-																									span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-																										input.form-check-input(type='radio' name=`${cf.field_name}[${brandLanguage.prefix}]` id=`${option.value}-${i}` value=`${option.value}` checked=i==0)
-																									span.ms-5
-																										label.form-label(for=`${option.value}-${i}`) #{option.label}
-																							else 
-																								.col.d-flex.text-start.p-6
-																									span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-																										input.form-check-input(type='radio' name=`${cf.field_name}[${brandLanguage.prefix}]` id="percentage" value=`true` )
-																									span.ms-5
-																										label.form-label(for="percentage") 
-																							.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
-																					else if cf.field_type === 'dropdown'
-																						select.form-select(data-control='select2' name=`${cf.field_name}[${brandLanguage.prefix}]` data-placeholder='Select an option')
-																							option
-																							each dropdown, dd_i in cf.options
-																								option(value=`${dropdown.value}`) #{dropdown.label}
-																						.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
-																			.text-center
-																				a.btn.btn-sm.btn-light-danger.mt-3.mt-md-8(href='javascript:;' data-repeater-delete='')
-																					i.la.la-trash-o
-																					| Delete
-															.form-group.mt-5.text-center
-																a.btn.btn-light-primary(href='javascript:;' data-repeater-create='')
-																	i.la.la-plus
-																	| Add			
-												else
-													if cfg.bilingual
-														each cf in cfg.fields
-															.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container
+											each cf, cf_i in reqContentType.custom_fields
+												if cf.bilingual
+													.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container
+														// begin::Label
+														label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+															span.required #{cf.field_label} (#{brandLanguage.prefix})
+															i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
+														// end::Label
+														if cf.field_type === 'text'
+															input.form-control.form-control-solid(type='text' placeholder=`Enter  ${cf.field_label}` name=`${cf.field_name}[${brandLanguage.prefix}]`)
+															.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+														else if cf.field_type === 'wysiwyg'
+															textarea.content_wysiwyg(name=`${cf.field_name}[${brandLanguage.prefix}]` id=`wysiwyg-cf-${brandLanguage.prefix}-${cf_i}`)
+															.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+														else if cf.field_type === 'textarea'
+															textarea.form-control.form-control-solid(rows='6' name=`${cf.field_name}[${brandLanguage.prefix}]` placeholder='' spellcheck='false')
+															.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+														else if cf.field_type === 'file'
+															.alert.bg-warning.d-flex.align-items-center.p-5
+																span.svg-icon.svg-icon-2hx.svg-icon-primary.me-3
+																.d-flex.flex-column
+																	if cf.info && cf.info.length
+																		each i in cf.info 
+																			span #{i}
+															.col-md-4.col-lg-4
+																include ../../partials/_image-input-form-field
+															.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+														else if cf.field_type === 'date'
+															.kt_daterangepicker
+																input.form-control.mb-2(id=`kt_daterangepicker_${brandLanguage.prefix}-${cf_i}` name=`${cf.field_name}[${brandLanguage.prefix}]` placeholder=`${cf.placeholder}` value='')
+																.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+														else if cf.field_type === 'radio'
+															.row.row-cols-1.row-cols-md-3.row-cols-lg-1.row-cols-xl-3.g-9(data-kt-buttons='true' data-kt-buttons-target="[data-kt-button='true']")
+																each option,i in cf.options 
+																	.col.d-flex.text-start.p-6
+																		span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+																			input.form-check-input(type='radio' name=`${cf.field_name}[${brandLanguage.prefix}]` id=`${option.value}-${i}` value=`${option.value}` checked=i==0)
+																		span.ms-5
+																			label.form-label(for=`${option.value}-${i}`) #{option.label}
+																else 
+																	.col.d-flex.text-start.p-6
+																		span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+																			input.form-check-input(type='radio' name=`${cf.field_name}[${brandLanguage.prefix}]` id="percentage" value=`true` )
+																		span.ms-5
+																			label.form-label(for="percentage") 
+																.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+														else if cf.field_type === 'select'
+															select.form-select(data-control='select2' name=`${cf.field_name}[${brandLanguage.prefix}]` data-placeholder='Select an option')
+																option
+																each dropdown, dd_i in cf.values
+																	option(value=`${dropdown.value}`) #{dropdown.key[brandLanguage.prefix]}
+															.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+
+											//- END::Custom Fields with Bilingual
+
+											//- BEGIN::Repeater group Fields 
+											if  has_common_repeater_group
+												.ribbon.ribbon-start.ribbon-clip.mt-5.mb-5
+													.ribbon-label
+														| Repeater Group Fields
+														span.ribbon-inner.bg-success
+											.row.mb-8
+												each rg, rg_i in reqContentType.repeater_groups
+													each cf,cf_i in rg.fields
+														if cf.bilingual
+															.d-flex.flex-column.fv-row.fv-plugins-icon-container.mt-10
 																// begin::Label
 																label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
 																	span.required #{cf.field_label} (#{brandLanguage.prefix})
@@ -250,14 +243,66 @@ block content
 																				span.ms-5
 																					label.form-label(for="percentage") 
 																		.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
-																else if cf.field_type === 'dropdown'
+																else if cf.field_type === 'select'
 																	select.form-select(data-control='select2' name=`${cf.field_name}[${brandLanguage.prefix}]` data-placeholder='Select an option')
 																		option
-																		each dropdown, dd_i in cf.options
-																			option(value=`${dropdown.value}`) #{dropdown.label}
+																		each dropdown, dd_i in cf.values
+																			option(value=`${dropdown.value}`) #{dropdown.key[brandLanguage.prefix]}
 																	.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+														else 
+															.d-flex.flex-column.fv-row.fv-plugins-icon-container
+																// begin::Label
+																label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+																	span.required #{cf.field_label}
+																	i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
+																// end::Label
+																if cf.field_type === 'text'
+																	input.form-control.form-control-solid(type='text' placeholder=`Enter  ${cf.field_label}` name=`${cf.field_name}`)
+																	.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+																else if cf.field_type === 'wysiwyg'
+																	textarea.content_wysiwyg(name=`${cf.field_name}` id=`wysiwyg-cf-${cf_i}`)
+																	.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+																else if cf.field_type === 'textarea'
+																	textarea.form-control.form-control-solid(rows='6' name=`${cf.field_name}` placeholder='' spellcheck='false')
+																	.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+																else if cf.field_type === 'file'
+																	if cf.info && cf.info.length 
+																		.alert.bg-warning.d-flex.align-items-center.p-5
+																			span.svg-icon.svg-icon-2hx.svg-icon-primary.me-3
+																			.d-flex.flex-column
+																				each i in cf.info 
+																					span #{i}
+																	.col-md-4.col-lg-4
+																		include ../../partials/_image-input-form-field
+																	.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+																else if cf.field_type === 'date'
+																	.kt_daterangepicker
+																		input.form-control.mb-2(id=`kt_daterangepicker_${cf_i}` name=`${cf.field_name}` placeholder=`${cf.placeholder}` value='')
+																		.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+																else if cf.field_type === 'radio'
+																	.row.row-cols-1.row-cols-md-3.row-cols-lg-1.row-cols-xl-3.g-9(data-kt-buttons='true' data-kt-buttons-target="[data-kt-button='true']")
+																		each option,i in cf.options 
+																			.col.d-flex.text-start.p-6
+																				span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+																					input.form-check-input(type='radio' name=`${cf.field_name}` id=`${option.value}-${i}` value=`${option.value}` checked=i==0)
+																				span.ms-5
+																					label.form-label(for=`${option.value}-${i}`) #{option.label}
+																		else 
+																			.col.d-flex.text-start.p-6
+																				span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+																					input.form-check-input(type='radio' name=`${cf.field_name}` id="percentage" value=`true` )
+																				span.ms-5
+																					label.form-label(for="percentage") 
+																		.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+																else if cf.field_type === 'select'
+																	select.form-select(data-control='select2' name=`${cf.field_name}` data-placeholder='Select an option')
+																		option
+																		each dropdown, dd_i in cf.values
+																			option(value=`${dropdown.value}`) #{dropdown.key}
+																	.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
 
-											//- END::Custom Fields with Bilingual
+												//- END::Repeater group Fields 
+
 
 											if reqContentType.hide_meta == false
 												h3 Meta Fields
@@ -285,7 +330,7 @@ block content
 													// end::Label
 													textarea.form-control.form-control-solid(type='text' placeholder='Enter Meta Keywords (comma(,) seperated)' name=`meta_keywords[${brandLanguage.prefix}]`)
 													.fv-plugins-message-container.invalid-feedback(id=`field-error-meta_keywords_${brandLanguage.prefix}`)
-								if has_common_field_groups
+								if has_common_custom_fields
 									.ribbon.ribbon-start.ribbon-clip
 										.ribbon-label
 											| General Fields (No Bilingual)
@@ -293,124 +338,58 @@ block content
 								//- BEGIN::Custom Fields without Bilingual
 								.row.mt-5.pt-5
 									.col-12.mt-5
-										each cfg, cfg_i in reqContentType.custom_field_groups
-											if cfg.bilingual == false
-												if cfg.repeater_group == true
-													h4 #{cfg.row_name}
-													.group_repeater(id=`kt_docs_repeater_${cfg._id}_${cfg_i}`)
-														.form-group
-															div(data-repeater-list='repeater_field')
-																div(data-repeater-item='')
-																	.form-group.row
-																		each cf in cfg.fields
-																			.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container
-																				if cf.field_type !='file'
-																					label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
-																						span.required #{cf.field_label}
-																						i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
-																				if cf.field_type === 'text'
-																					input.form-control.form-control-solid(type='text' placeholder=`Enter  ${cf.field_label}` name=`${cf.field_name}`)
-																					.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-																				else if cf.field_type === 'wysiwyg'
-																					textarea.content_wysiwyg(name=`${cf.field_name}` id=`wysiwyg-cf-${cf_i}`)
-																					.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-																				else if cf.field_type === 'textarea'
-																					textarea.form-control.form-control-solid(rows='6' name=`${cf.field_name}` placeholder='' spellcheck='false')
-																					.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-																				//- else if cf.field_type === 'file'
-																					if cf.info && cf.info.length 
-																						.alert.bg-warning.d-flex.align-items-center.p-5
-																							span.svg-icon.svg-icon-2hx.svg-icon-primary.me-3
-																							.d-flex.flex-column
-																								each i in cf.info 
-																									span #{i}
-																					.col-md-4.col-lg-4
-																						include ../../partials/_image-input-form-field
-																					.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-																				else if cf.field_type === 'date'
-																					.kt_daterangepicker
-																						input.form-control.mb-2(id=`kt_daterangepicker_${cf_i}` name=`${cf.field_name}` placeholder=`${cf.placeholder}` value='')
-																						.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-																				else if cf.field_type === 'radio'
-																					.row.row-cols-1.row-cols-md-3.row-cols-lg-1.row-cols-xl-3.g-9(data-kt-buttons='true' data-kt-buttons-target="[data-kt-button='true']")
-																						each option,i in cf.options 
-																							.col.d-flex.text-start.p-6
-																								span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-																									input.form-check-input(type='radio' name=`${cf.field_name}` id=`${option.value}-${i}` value=`${option.value}` checked=i==0)
-																								span.ms-5
-																									label.form-label(for=`${option.value}-${i}`) #{option.label}
-																						else 
-																							.col.d-flex.text-start.p-6
-																								span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-																									input.form-check-input(type='radio' name=`${cf.field_name}` id="percentage" value=`true` )
-																								span.ms-5
-																									label.form-label(for="percentage") 
-																						.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-																				else if cf.field_type === 'dropdown'
-																					select.form-select(data-control='select' name=`${cf.field_name}` data-placeholder='Select an option')
-																						option(value='') Select an option
-																						each dropdown, dd_i in cf.options
-																							option(value=`${dropdown.value}`) #{dropdown.label}
-																					.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-																		.text-center
-																			a.btn.btn-sm.btn-light-danger.mt-3.mt-md-8(href='javascript:;' data-repeater-delete='')
-																				i.la.la-trash-o
-																				| Delete
-														.form-group.mt-5.text-center
-															a.btn.btn-light-primary(href='javascript:;' data-repeater-create='')
-																i.la.la-plus
-																| Add
-												else 
-													each cf in cfg.fields
-														.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container
-															if cf.field_type !='file'
-																label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
-																	span.required #{cf.field_label}
-																	i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
-															if cf.field_type === 'text'
-																input.form-control.form-control-solid(type='text' placeholder=`Enter  ${cf.field_label}` name=`${cf.field_name}`)
-																.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-															else if cf.field_type === 'wysiwyg'
-																textarea.content_wysiwyg(name=`${cf.field_name}` id=`wysiwyg-cf-${cf_i}`)
-																.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-															else if cf.field_type === 'textarea'
-																textarea.form-control.form-control-solid(rows='6' name=`${cf.field_name}` placeholder='' spellcheck='false')
-																.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-															//- else if cf.field_type === 'file'
+										each cf, cf_i in reqContentType.custom_fields
+											if cf.bilingual == false
+												.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container
+													// begin::Label
+													label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+														span.required #{cf.field_label}
+														i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
+													// end::Label
+													if cf.field_type === 'text'
+														input.form-control.form-control-solid(type='text' placeholder=`Enter  ${cf.field_label}` name=`${cf.field_name}`)
+														.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+													else if cf.field_type === 'wysiwyg'
+														textarea.content_wysiwyg(name=`${cf.field_name}` id=`wysiwyg-cf-${cf_i}`)
+														.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+													else if cf.field_type === 'textarea'
+														textarea.form-control.form-control-solid(rows='6' name=`${cf.field_name}` placeholder='' spellcheck='false')
+														.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+													else if cf.field_type === 'file'
+														.alert.bg-warning.d-flex.align-items-center.p-5
+															span.svg-icon.svg-icon-2hx.svg-icon-primary.me-3
+															.d-flex.flex-column
 																if cf.info && cf.info.length 
-																	.alert.bg-warning.d-flex.align-items-center.p-5
-																		span.svg-icon.svg-icon-2hx.svg-icon-primary.me-3
-																		.d-flex.flex-column
-																			each i in cf.info 
-																				span #{i}
-																.col-md-4.col-lg-4
-																	include ../../partials/_image-input-form-field
-																.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-															else if cf.field_type === 'date'
-																.kt_daterangepicker
-																	input.form-control.mb-2(id=`kt_daterangepicker_${cf_i}` name=`${cf.field_name}` placeholder=`${cf.placeholder}` value='')
-																	.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-															else if cf.field_type === 'radio'
-																.row.row-cols-1.row-cols-md-3.row-cols-lg-1.row-cols-xl-3.g-9(data-kt-buttons='true' data-kt-buttons-target="[data-kt-button='true']")
-																	each option,i in cf.options 
-																		.col.d-flex.text-start.p-6
-																			span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-																				input.form-check-input(type='radio' name=`${cf.field_name}` id=`${option.value}-${i}` value=`${option.value}` checked=i==0)
-																			span.ms-5
-																				label.form-label(for=`${option.value}-${i}`) #{option.label}
-																	else 
-																		.col.d-flex.text-start.p-6
-																			span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-																				input.form-check-input(type='radio' name=`${cf.field_name}` id="percentage" value=`true` )
-																			span.ms-5
-																				label.form-label(for="percentage") 
-																	.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-															else if cf.field_type === 'dropdown'
-																select.form-select(data-control='select2' name=`${cf.field_name}` data-placeholder='Select an option')
-																	option
-																	each dropdown, dd_i in cf.options
-																		option(value=`${dropdown.value}`) #{dropdown.label}
-																.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+																	each i in cf.info 
+																		span #{i}
+														.col-md-4.col-lg-4
+															include ../../partials/_image-input-form-field
+														.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+													else if cf.field_type === 'date'
+														.kt_daterangepicker
+															input.form-control.mb-2(id=`kt_daterangepicker_${cf_i}` name=`${cf.field_name}` placeholder=`${cf.placeholder}` value='')
+															.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+													else if cf.field_type === 'radio'
+														.row.row-cols-1.row-cols-md-3.row-cols-lg-1.row-cols-xl-3.g-9(data-kt-buttons='true' data-kt-buttons-target="[data-kt-button='true']")
+															each option,i in cf.options 
+																.col.d-flex.text-start.p-6
+																	span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+																		input.form-check-input(type='radio' name=`${cf.field_name}` id=`${option.value}-${i}` value=`${option.value}` checked=i==0)
+																	span.ms-5
+																		label.form-label(for=`${option.value}-${i}`) #{option.label}
+															else 
+																.col.d-flex.text-start.p-6
+																	span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+																		input.form-check-input(type='radio' name=`${cf.field_name}` id="percentage" value=`true` )
+																	span.ms-5
+																		label.form-label(for="percentage") 
+															.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
+													else if cf.field_type === 'select'
+														select.form-select(data-control='select2' name=`${cf.field_name}` data-placeholder='Select an option')
+															option
+															each dropdown, dd_i in cf.values
+																option(value=`${dropdown.value}`) #{dropdown.key}
+														.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
 
 								//- END::Custom Fields without Bilingual
 					.d-flex.flex-column.gap-7.gap-lg-10.w-100.w-lg-300px.mb-7.ms-lg-10
