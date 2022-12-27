@@ -203,6 +203,7 @@ const changeStatus = async (req, res) => {
 const save = async (req, res) => {
     try {
         console.log(req.body)
+        console.log(req.files)
         console.log(req.body.repeater_field)
         session = req.authUser
         // BEGIN:: Generating default field validation rule for content type (title, description)
