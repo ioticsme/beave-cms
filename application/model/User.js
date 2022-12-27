@@ -61,10 +61,6 @@ const UserSchema = new Schema(
         semnox_user_id: {
             type: String,
         },
-        domain: {
-            brand: { type: Schema.ObjectId, ref: 'Brand' },
-            country: { type: Schema.ObjectId, ref: 'Country' },
-        },
         social_auth: {
             type: Boolean,
             default: false,
@@ -110,8 +106,21 @@ const UserSchema = new Schema(
                 },
             }),
         ],
-        social_auth_response: {
-            type: Object,
+        log: {
+            last_login: {
+                brand: String,
+                country: String,
+                lang: String,
+                ip: String,
+                user_agent: {},
+            },
+            signup: {
+                brand: String,
+                country: String,
+                lang: String,
+                ip: String,
+                user_agent: {},
+            },
         },
         active: {
             type: Boolean,

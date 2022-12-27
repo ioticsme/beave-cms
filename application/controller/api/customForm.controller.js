@@ -10,7 +10,7 @@ const ContentResource = require('../../resources/api/content.resource')
 
 const customFormSubmit = async (req, res) => {
     try {
-        console.log(req.body)
+        // console.log(req.body)
         // Finding custom form with type
         let customForm = await CustomForm.findOne({
             type: req.body.type,
@@ -23,8 +23,11 @@ const customFormSubmit = async (req, res) => {
         }
         // Creating dynamic validation rules
         let cfValidationObj = {}
+        const joiStart = `Joi.`
         customForm?.custom_fields.forEach((element) => {
-            cfValidationObj[element.field_name] = eval(element.validation)
+            cfValidationObj[element.field_name] = eval(
+                joiStart + element.validation.replace(',', '.')
+            )
         })
 
         // BEGIN:: Validation rule
@@ -46,8 +49,9 @@ const customFormSubmit = async (req, res) => {
 
         // Verifying captcha with token
         if (
-            process.env.NODE_ENV == 'production' ||
-            process.env.NODE_ENV == 'staging'
+            customForm.has_captcha &&
+            (process.env.NODE_ENV == 'production' ||
+                process.env.NODE_ENV == 'staging')
         ) {
             const isVerified = await verifyCaptcha(req.body.token)
             if (!isVerified) {
@@ -92,29 +96,32 @@ const customFormSubmit = async (req, res) => {
         const brand_notification_settings =
             req.brand.settings?.notification_settings
 
-        let mg_settings = brand_notification_settings.mailgun
-        sendEmail(
-            mg_settings.from || 'noreply@funcity.ae',
-            req.body.email,
-            `Contact Form Submitted`,
-            'funcity-contact-form-confirmation',
-            {},
-            mg_settings
-        )
-        if (brand_notification_settings?.communication_channels?.email) {
-            sendEmail(
-                mg_settings.from || 'noreply@funcity.ae',
-                brand_notification_settings?.communication_channels?.email,
-                `Contact Form Submission From ${req.body.name}`,
-                'funcity-contact-form',
-                {
-                    name: req.body.name,
-                    email: req.body.email,
-                    mobile: req.body.mobile,
-                    message: req.body.message,
-                },
-                mg_settings
-            )
+        let mg_settings = brand_notification_settings?.mailgun
+        if (mg_settings) {
+            if (customForm.reply_email_template && req.body.email) {
+                sendEmail(
+                    mg_settings.from || 'noreply@funcity.ae',
+                    req.body.email,
+                    `${customForm.form_name} Form Submitted`,
+                    customForm.reply_email_template,
+                    {},
+                    mg_settings
+                )
+            }
+
+            if (
+                customForm.reply_email_template &&
+                customForm.recepient_emails
+            ) {
+                sendEmail(
+                    mg_settings.from || 'noreply@funcity.ae',
+                    customForm.recepient_emails.split(','),
+                    `${customForm.form_name} Form Submission`,
+                    customForm.reply_email_template,
+                    req.body,
+                    mg_settings
+                )
+            }
         }
 
         if (!save?._id) {

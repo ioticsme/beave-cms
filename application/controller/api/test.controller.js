@@ -5,6 +5,9 @@ const Country = require('../../model/Country')
 const Brand = require('../../model/Brand')
 const OrderResource = require('../../resources/api/order.resource')
 
+const formData = require('form-data')
+const Mailgun = require('mailgun.js')
+
 const {
     buyNewCard,
     getCard,
@@ -55,7 +58,9 @@ const test = async (req, res) => {
         'debug'
     )
 
-    const order = new OrderResource(await Order.findOne().populate('user')).exec()
+    const order = new OrderResource(
+        await Order.findOne().populate('user')
+    ).exec()
     console.log(order)
     await orderNotification(order)
 
@@ -124,6 +129,31 @@ const pdfGenerate = async (req, res) => {
     }
 }
 
+const mgTemplates = async (req, res) => {
+    try {
+        const DOMAIN = 'funcity.ae'
+        const mailgun = new Mailgun(formData)
+
+        const client = mailgun.client({
+            username: 'api',
+            key: 'key-1ecdad0b98be252b695688f81049a00c' || '',
+        })
+
+        // console.log(client)
+
+        const domainTemplates = await client.domains.domainTemplates.list(
+            DOMAIN,
+            {
+                limit: 30,
+            }
+        )
+        return res.json(domainTemplates)
+    } catch (error) {
+        console.error(error)
+        return res.json('error')
+    }
+}
+
 module.exports = {
     brandList,
     countryList,
@@ -132,4 +162,5 @@ module.exports = {
     semnoxCustomerDetail,
     semnoxSaveCustomer,
     pdfGenerate,
+    mgTemplates,
 }

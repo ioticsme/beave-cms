@@ -2,9 +2,12 @@ require('dotenv').config()
 const _ = require('lodash')
 const slugify = require('slugify')
 const Joi = require('joi')
+const formData = require('form-data')
+const Mailgun = require('mailgun.js')
 const CustomForm = require('../../model/CustomForm')
-// const ContentType = require('../../node_modules/@ioticsme/cms/model/ContentType')
+const ContentType = require('../../model/ContentType')
 const CustomFormData = require('../../model/CustomFormData')
+const { mailGunTemplates } = require('../../helper/Mailgun.helper')
 
 let session
 
@@ -33,13 +36,12 @@ const edit = async (req, res) => {
             country: session.selected_brand.country,
             isDeleted: false,
         })
-        const contents = await ContentType.find({
-            brand: session.selected_brand._id,
-            country: session.selected_brand.country,
-        })
+        const domainTemplates = await mailGunTemplates(
+            req.brand?.settings?.notification_settings?.mailgun
+        )
         res.render(`admin/custom-forms/edit`, {
             form,
-            contents,
+            domainTemplates,
         })
     } catch (error) {
         console.log(error)
@@ -50,13 +52,13 @@ const edit = async (req, res) => {
 const add = async (req, res) => {
     try {
         session = req.authUser
-        const contents = await ContentType.find({
-            brand: session.selected_brand._id,
-            country: session.selected_brand.country,
-        })
-        res.render(`admin/custom-forms/add`, { contents })
+        const domainTemplates = await mailGunTemplates(
+            req.brand?.settings?.notification_settings?.mailgun
+        )
+        res.render(`admin/custom-forms/add`, { domainTemplates })
     } catch (error) {
-        return res.render(`admin/error-404`)
+        console.log(error)
+        return res.render(`admin/error-500`)
     }
 }
 
@@ -68,8 +70,13 @@ const save = async (req, res) => {
             id: Joi.optional(),
             custom_fields: Joi.optional(),
             form_name: Joi.string().required(),
+            reply_email_template: Joi.string().optional().allow(null, ''),
+            has_captcha: Joi.boolean().optional().allow(null, ''),
+            recepient_emails: Joi.string().optional().allow(null, ''),
+            recepient_email_template: Joi.string().optional().allow(null, ''),
+            slack_url: Joi.string().optional().allow(null, ''),
             field_name: Joi.array().items(Joi.string()).required(),
-            field_type: Joi.array().items(Joi.optional()).optional(),
+            // field_type: Joi.array().items(Joi.optional()).optional(),
             field_validation: Joi.array().items(Joi.string()).required(),
         })
 
@@ -106,10 +113,13 @@ const save = async (req, res) => {
             if (req.body.field_name?.[i]) {
                 let obj = {
                     field_name: req.body.field_name?.[i],
-                    validation: req.body.field_validation?.[i],
-                    field_type: req.body.field_type?.[i]
-                        ? req.body.field_type?.[i]
-                        : null,
+                    validation: req.body.field_validation?.[i].replace(
+                        /\s+/g,
+                        ''
+                    ),
+                    // field_type: req.body.field_type?.[i]
+                    //     ? req.body.field_type?.[i]
+                    //     : null,
                 }
                 custom_fields.push(obj)
             }
@@ -119,6 +129,11 @@ const save = async (req, res) => {
         let data = {
             form_name: body.form_name,
             type: slugify(body.form_name.toLowerCase()),
+            reply_email_template: req.body.reply_email_template,
+            has_captcha: req.body.has_captcha || false,
+            recepient_emails: req.body.recepient_emails.replace(/\s+/g, ''),
+            recepient_email_template: req.body.recepient_email_template,
+            slack_url: req.body.slack_url,
             custom_fields,
             brand: session.selected_brand._id,
             country: session.selected_brand.country,
@@ -127,18 +142,20 @@ const save = async (req, res) => {
         if (isEdit) {
             // Update banner
             const update = await CustomForm.updateOne({ _id: body.id }, data)
-            return res
-                .status(201)
-                .json({ message: 'Custom Form updated successfully' })
+            return res.status(201).json({
+                message: 'Custom Form updated successfully',
+                redirect_to: '/admin/custom-forms',
+            })
         } else {
             // Create CustomForm
             const save = await CustomForm.create(data)
             if (!save?._id) {
                 return res.status(400).json({ error: 'Something went wrong' })
             }
-            return res
-                .status(200)
-                .json({ message: 'Custom Form added successfully' })
+            return res.status(200).json({
+                message: 'Custom Form added successfully',
+                redirect_to: '/admin/custom-forms',
+            })
         }
     } catch (error) {
         console.log(error)

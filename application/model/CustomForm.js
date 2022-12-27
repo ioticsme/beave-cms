@@ -12,15 +12,20 @@ const CustomFormSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        reply_email_template: String,
+        has_captcha: Boolean,
+        recepient_emails: String,
+        recepient_email_template: String,
+        slack_url: String,
         custom_fields: [
             {
                 field_name: {
                     type: String,
                     required: true,
                 },
-                field_type: {
-                    type: String,
-                },
+                // field_type: {
+                //     type: String,
+                // },
                 validation: {
                     type: String,
                 },

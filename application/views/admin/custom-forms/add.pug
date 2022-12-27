@@ -18,11 +18,11 @@ block jslib
 	script(src='/cms-static/admin/assets/js/widgets.bundle.js')
 	script(src='/cms-static/admin/assets/js/custom/widgets.js')
 	//- script(src='/cms-static/admin/assets/js/custom/apps/ecommerce/sales/save-order.js')
-	script(src='/cms-static/admin/assets/js/custom/apps/chat/chat.js')
-	script(src='/cms-static/admin/assets/js/custom/utilities/modals/upgrade-plan.js')
-	script(src='/cms-static/admin/assets/js/custom/utilities/modals/create-app.js')
-	script(src='/cms-static/admin/assets/js/custom/utilities/modals/new-card.js')
-	script(src='/cms-static/admin/assets/js/custom/utilities/modals/users-search.js')
+	//- script(src='/cms-static/admin/assets/js/custom/apps/chat/chat.js')
+	//- script(src='/cms-static/admin/assets/js/custom/utilities/modals/upgrade-plan.js')
+	//- script(src='/cms-static/admin/assets/js/custom/utilities/modals/create-app.js')
+	//- script(src='/cms-static/admin/assets/js/custom/utilities/modals/new-card.js')
+	//- script(src='/cms-static/admin/assets/js/custom/utilities/modals/users-search.js')
 	// end::Custom Javascript
 
 	// CKEditor Build Bundles
@@ -124,25 +124,55 @@ block content
 											span.label Save
 											span.preloader.d-none Saving...
 								.card-body.pt-0#form-holder
-									.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container.col-md-6
-										label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
-											span.required Form Name
-										input.form-control(type='text' placeholder='Enter Form Name' name=`form_name`)
-										.fv-plugins-message-container.invalid-feedback(id=`field-error-form_name`)
+									.row
+										.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container.col-md-4
+											label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+												span.required Form Name
+											input.form-control(type='text' placeholder='Enter Form Name' name=`form_name`)
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-form_name`)
+										.d-flex.flex-column.fv-row.fv-plugins-icon-container.col-md-4
+											label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+												span.required Auto Reply Email Template
+											select.cf.kt_field_type_select.form-select.mb-2(data-cf-control='select' data-hide-search='true' data-placeholder='Select a type' name="reply_email_template")
+												option(value="") Select an option
+												each item in domainTemplates.items 
+													option(value=`${item.name}`) #{item.name}  
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-reply_email_template`)
+										.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container.col-md-4.pt-10
+											<div class="form-check form-check-custom form-check-success form-check-solid">
+												input(class="form-check-input" type="checkbox" value=true checked)
+												<label class="form-check-label" for="">
+													| Google Captcha
+												</label>
+											</div>
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-has_captcha`)
+									h3 Notification
+									.row
+										.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container.col-md-6
+											label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+												span.required Email Form Data To:
+											input.form-control(type='text' placeholder='Enter Recepients Email Seperated with comma (,)' name=`recepient_emails`)
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-recepient_emails`)
+										.d-flex.flex-column.fv-row.fv-plugins-icon-container.col-md-6
+											label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+												span.required Email Template
+											select.cf.kt_field_type_select.form-select.mb-2(data-cf-control='select' data-hide-search='true' data-placeholder='Select a type' name="recepient_email_template")
+												option(value="") Select an option
+												each item in domainTemplates.items 
+													option(value=`${item.name}`) #{item.name}  
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-recepient_email_template`)
+										.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container.col-md-12
+											label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+												span.required Slack URL
+											input.form-control(type='text' placeholder='Slack Web Hook URL' name=`slack_url`)
+											.fv-plugins-message-container.invalid-feedback(id=`field-error-slack_url`)
+									h3 Fields
 									.row.cf-card.mt-2
 										.d-flex.flex-column.fv-row.fv-plugins-icon-container.col-md-6
 											label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
 												span.required Field Name
 											input.form-control.cf(type='text' placeholder='Enter field name' name=`field_name[]`)
 											.fv-plugins-message-container.invalid-feedback(id=`field-error-field_name_0`)
-										.d-flex.flex-column.fv-row.fv-plugins-icon-container.col-md-6
-											label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
-												span.required Field Type
-											select.cf.kt_field_type_select.form-select.mb-2(data-cf-control='select' data-hide-search='true' data-placeholder='Select a type' name="field_type[]")
-												option(value="") Select an option
-												each item in contents 
-													option(value=`${item.slug}`) #{item.title}  
-											.fv-plugins-message-container.invalid-feedback(id=`field-error-field_type_0`)
 										.d-flex.flex-column.fv-row.fv-plugins-icon-container.col-md-6
 											label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
 												span.required Field Validation
