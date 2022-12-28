@@ -295,6 +295,53 @@ const save = async (req, res) => {
             }
         })
         // END:: Generating custom field validation rule for content type
+        // BEGIN:: Generating custom field group validation rule for content type
+        let cgfValidationObj = {}
+        req.contentType.custom_field_groups.forEach((element) => {
+            if (element.bilingual) {
+                element.fields.forEach((field) => {
+                    const validationObject = {}
+                    const URLvalidationObject = {}
+                    if (element.field_type == 'file') {
+                        req.authUser.selected_brand.languages.forEach(
+                            (lang) => {
+                                _.assign(validationObject, {
+                                    [lang.prefix]: eval(
+                                        req.body.method == 'add'
+                                            ? field.addValidation ||
+                                                  'Joi.optional().allow(null,"")'
+                                            : field.editValidation ||
+                                                  'Joi.optional().allow(null,"")'
+                                    ),
+                                })
+                                _.assign(URLvalidationObject, {
+                                    [lang.prefix]: eval(`Joi.optional()`),
+                                })
+                            }
+                        )
+                        cfValidationObj[field.field_name] =
+                            Joi.object(validationObject)
+                        cfValidationObj[`${field.field_name}-url`] =
+                            Joi.object(URLvalidationObject)
+                    } else {
+                        req.authUser.selected_brand.languages.forEach(
+                            (lang) => {
+                                _.assign(validationObject, {
+                                    [lang.prefix]: eval(field.validation),
+                                })
+                            }
+                        )
+                        cfValidationObj[element.field_name] =
+                            Joi.object(validationObject)
+                    }
+                })
+            } else {
+                element.fields.forEach((field) => {
+                    cfValidationObj[field.field_name] = eval(field.validation)
+                })
+            }
+        })
+        // END:: Generating custom field group validation rule for content type
 
         // BEGIN:: Validation rule
         const schema = Joi.object({
@@ -302,6 +349,7 @@ const save = async (req, res) => {
             method: Joi.string().valid('add', 'edit'),
             ...defaultValidationObj,
             ...cfValidationObj,
+            ...cgfValidationObj,
             slug: Joi.object({
                 en: Joi.optional(),
                 ar: Joi.optional(),
