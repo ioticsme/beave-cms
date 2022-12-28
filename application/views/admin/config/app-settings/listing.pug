@@ -54,10 +54,11 @@ block content
 						.card-body.pt-0
 							ul.nav.nav-tabs.nav-line-tabs.mb-5.fs-6
 								each config_item,key in schema_fields.obj
-									-var fieldType = configs.schema.path(`${key}`)?.instance || 'Mixed'
-									if fieldType == 'Mixed'
-										li.nav-item
-											a.nav-link(class=(key=='general' ? 'active' : '') data-bs-toggle='tab' href=`#kt_tab_pane_${key}`) #{key.toUpperCase()}
+									if configs
+										-var fieldType = configs.schema.path(`${key}`)?.instance || 'Mixed'
+										if fieldType == 'Mixed'
+											li.nav-item
+												a.nav-link(class=(key=='general' ? 'active' : '') data-bs-toggle='tab' href=`#kt_tab_pane_${key}`) #{key.toUpperCase()}
 
 							#myTabContent.tab-content
 								each config_item, key in schema_fields.obj
