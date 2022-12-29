@@ -195,8 +195,11 @@ block content
 																				.d-flex.flex-column
 																					each i in cf.info 
 																						span #{i}
-																		.col-md-4.col-lg-4
-																			include ../../partials/_image-input-form-field
+																		.col-md-6.col-lg-6
+																			if(contentDetail && contentDetail.group_content[brandLanguage.prefix] && contentDetail.group_content[brandLanguage.prefix][cf.field_name] && contentDetail.group_content[brandLanguage.prefix][cf.field_name].media_url) 
+																				input(name=`${cf.field_name}-url[${brandLanguage.prefix}]` value=JSON.stringify(contentDetail.content[brandLanguage.prefix][cf.field_name])   hidden)
+																			else 
+																			input(type='file' class='form-control form-control-solid' name=`${cf.field_name}.${brandLanguage.prefix}` id=`image-input.${brandLanguage.prefix}` )
 																		
 																	else if cf.field_type === 'date'
 																		.kt_daterangepicker
@@ -258,8 +261,11 @@ block content
 																			.d-flex.flex-column
 																				each i in cf.info 
 																					span #{i}
-																	.col-md-4.col-lg-4
-																		include ../../partials/_image-input-form-field
+																	.col-md-6.col-lg-6
+																		if(contentDetail && contentDetail.group_content[brandLanguage.prefix] && contentDetail.group_content[brandLanguage.prefix][cf.field_name] && contentDetail.group_content[brandLanguage.prefix][cf.field_name].media_url) 
+																			input(name=`${cf.field_name}-url[${brandLanguage.prefix}]` value=JSON.stringify(contentDetail.content[brandLanguage.prefix][cf.field_name])   hidden)
+																		else 
+																		input(type='file' class='form-control form-control-solid' name=`${cf.field_name}.${brandLanguage.prefix}` id=`image-input.${brandLanguage.prefix}` )
 																	.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
 																else if cf.field_type === 'date'
 																	.kt_daterangepicker
@@ -328,13 +334,12 @@ block content
 												if cfg.repeater_group == true
 													h4 #{cfg.row_label}
 													.group_repeater(id=`kt_docs_repeater_${cfg._id}_${cfg_i}`)
-														.form-group.row(id=`form_repeater_child_${cfg._id}-${cfg_i}` class=`form-repeater-group-${cfg._id}`)
+														.form-group.row(id=`form_repeater_child_${cfg._id}-${cfg_i}` class=`form-repeater-group-${cfg._id}-en`)
 															each cf in cfg.fields
 																.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container
-																	if cf.field_type !='file'
-																		label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
-																			span.required #{cf.field_label}
-																			i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
+																	label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+																		span.required #{cf.field_label}
+																		i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
 																	if cf.field_type === 'text'
 																		input.form-control.form-control-solid(type='text' placeholder=`Enter ${cf.field_label}` name=`${cf.field_name}[]`)
 																		.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
@@ -344,15 +349,18 @@ block content
 																	else if cf.field_type === 'textarea'
 																		textarea.form-control.form-control-solid(rows='6' name=`${cf.field_name}[]` placeholder='' spellcheck='false')
 																		.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-																	//- else if cf.field_type === 'file'
+																	else if cf.field_type === 'file'
 																		if cf.info && cf.info.length 
 																			.alert.bg-warning.d-flex.align-items-center.p-5
 																				span.svg-icon.svg-icon-2hx.svg-icon-primary.me-3
 																				.d-flex.flex-column
 																					each i in cf.info 
 																						span #{i}
-																		.col-md-4.col-lg-4
-																			include ../../partials/_image-input-form-field
+																		.col-md-6.col-lg-6
+																			if(contentDetail && contentDetail.group_content[brandLanguage.prefix] && contentDetail.group_content[brandLanguage.prefix][cf.field_name] && contentDetail.group_content[brandLanguage.prefix][cf.field_name].media_url) 
+																				input(name=`${cf.field_name}-url[${brandLanguage.prefix}]` value=JSON.stringify(contentDetail.content[brandLanguage.prefix][cf.field_name])   hidden)
+																			else 
+																			input(type='file' class='form-control form-control-solid' name=`${cf.field_name}.${brandLanguage.prefix}` id=`image-input.${brandLanguage.prefix}` )
 																		.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
 																	else if cf.field_type === 'date'
 																		.kt_daterangepicker
@@ -392,10 +400,9 @@ block content
 												else 
 													each cf in cfg.fields
 														.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container
-															if cf.field_type !='file'
-																label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
-																	span.required #{cf.field_label}
-																	i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
+															label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
+																span.required #{cf.field_label}
+																i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
 															if cf.field_type === 'text'
 																input.form-control.form-control-solid(type='text' placeholder=`Enter  ${cf.field_label}` name=`${cf.field_name}`)
 																.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
@@ -405,15 +412,18 @@ block content
 															else if cf.field_type === 'textarea'
 																textarea.form-control.form-control-solid(rows='6' name=`${cf.field_name}` placeholder='' spellcheck='false')
 																.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
-															//- else if cf.field_type === 'file'
+															else if cf.field_type === 'file'
 																if cf.info && cf.info.length 
 																	.alert.bg-warning.d-flex.align-items-center.p-5
 																		span.svg-icon.svg-icon-2hx.svg-icon-primary.me-3
 																		.d-flex.flex-column
 																			each i in cf.info 
 																				span #{i}
-																.col-md-4.col-lg-4
-																	include ../../partials/_image-input-form-field
+																	.col-md-6.col-lg-6
+																		if(contentDetail && contentDetail.group_content[brandLanguage.prefix] && contentDetail.group_content[brandLanguage.prefix][cf.field_name] && contentDetail.group_content[brandLanguage.prefix][cf.field_name].media_url) 
+																			input(name=`${cf.field_name}-url[${brandLanguage.prefix}]` value=JSON.stringify(contentDetail.content[brandLanguage.prefix][cf.field_name])   hidden)
+																		else 
+																		input(type='file' class='form-control form-control-solid' name=`${cf.field_name}.${brandLanguage.prefix}` id=`image-input.${brandLanguage.prefix}` )
 																.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
 															else if cf.field_type === 'date'
 																.kt_daterangepicker

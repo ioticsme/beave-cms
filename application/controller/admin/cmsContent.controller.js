@@ -583,7 +583,7 @@ const save = async (req, res) => {
                                     fieldGroupData['common'] = {
                                         ...fieldGroupData['common'],
                                         [cf.field_name]:
-                                            images[cf.field_name] || '',
+                                            images[cf.field_name] || '', 
                                     }
                                 }
                             }
