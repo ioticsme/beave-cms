@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     // console.log(field_key)
-                    // console.log(field_error_message_id)
+                    console.log(field_error_message_id)
 
                     if (
                         document.querySelector(
@@ -69,7 +69,8 @@ document.addEventListener('DOMContentLoaded', function () {
             else {
                 for (const index in result.details) {
                     // console.log(result.details[index].properties.path)
-                    const errorFieldPath = result.details[index].properties.path.split('.')
+                    const errorFieldPath =
+                        result.details[index].properties.path.split('.')
                     let field_key = errorFieldPath[0]
                     let field_error_message_id = errorFieldPath[0]
                     if (errorFieldPath.length > 1) {
@@ -188,12 +189,22 @@ document.addEventListener('DOMContentLoaded', function () {
             // Creating form data with json
             for (let key in sendData) {
                 if (typeof sendData[key] == 'object') {
-                    // append nested object
                     for (let nestedKey in sendData[key]) {
-                        formData.append(
-                            `${key}[${nestedKey}]`,
-                            sendData[key][nestedKey]
-                        )
+                        if (typeof sendData[key][nestedKey] == 'object') {
+                            for (let nestedNestedKey in sendData[key][
+                                nestedKey
+                            ]) {
+                                formData.append(
+                                    `${key}[${nestedKey}][${nestedNestedKey}]`,
+                                    sendData[key][nestedKey][nestedNestedKey]
+                                )
+                            }
+                        } else {
+                            formData.append(
+                                `${key}[${nestedKey}]`,
+                                sendData[key][nestedKey]
+                            )
+                        }
                     }
                 } else {
                     formData.append(key, sendData[key])

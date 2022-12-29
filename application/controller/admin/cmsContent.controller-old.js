@@ -401,7 +401,6 @@ const save = async (req, res) => {
             code: session.selected_brand.country_code,
         })
         let customData = {}
-        let fieldGroupData = {}
         let metaData = {}
         let images = {}
 
@@ -423,22 +422,12 @@ const save = async (req, res) => {
                 // Deleting the image saved to uploads/
                 fs.unlinkSync(`uploads/${file.filename}`)
                 if (media && media._id) {
-                    if (fieldLang) {
-                        images[fieldName] = {
-                            ...images[fieldName],
-                            [fieldLang]: {
-                                media_url: media.url,
-                                media_id: media._id,
-                            },
-                        }
-                    } else {
-                        images = {
-                            ...images,
-                            [fieldName]: {
-                                media_url: media.url,
-                                media_id: media._id,
-                            },
-                        }
+                    images[fieldName] = {
+                        ...images[fieldName],
+                        [fieldLang]: {
+                            media_url: media.url,
+                            media_id: media._id,
+                        },
                     }
                 } else {
                     return res.status(503).json({
@@ -509,136 +498,8 @@ const save = async (req, res) => {
                         }
                     }
                 })
-                // Field group map
-                req.contentType.custom_field_groups?.map((cfg) => {
-                    // console.log(cfg)
-                    if (cfg.repeater_group) {
-                        if (cfg.bilingual) {
-                            fieldGroupData[lang.prefix] = {
-                                ...fieldGroupData[lang.prefix],
-                                [cfg.row_name]: {
-                                    is_repeater: true,
-                                    values: {},
-                                },
-                            }
-                        } else {
-                            fieldGroupData['common'] = {
-                                ...fieldGroupData['common'],
-                                [cfg.row_name]: {
-                                    is_repeater: false,
-                                    values: {},
-                                },
-                            }
-                        }
-                    }
-                    cfg.fields?.map((cf) => {
-                        // If field type is file take value from images object o.w from req.body
-                        if (cf.field_type === 'file') {
-                            if (isEdit) {
-                                // if user uplaod new iamge
-                                if (images?.[cf.field_name]?.[lang.prefix]) {
-                                    customData[lang.prefix] = {
-                                        ...customData[lang.prefix],
-                                        [cf.field_name]:
-                                            images[cf.field_name][
-                                                lang.prefix
-                                            ] || '',
-                                    }
-                                    // if image content have already uploaded image
-                                } else if (
-                                    body?.[`${[cf.field_name]}-url`]?.[
-                                        lang.prefix
-                                    ]
-                                ) {
-                                    // this image data is in stringfied form so it is parsing json
-                                    let val = JSON.parse(
-                                        body[`${[cf.field_name]}-url`][
-                                            lang.prefix
-                                        ]
-                                    )
-                                    customData[lang.prefix] = {
-                                        ...customData[lang.prefix],
-                                        [cf.field_name]: val || '',
-                                    }
-                                } else {
-                                    // If no image is uploaded and content have no iamge then the error object will push to customError array
-                                    customErrors.push({
-                                        message: `${cf.field_name}.${lang.prefix} is not allowed to be empty`,
-                                        path: [
-                                            `${cf.field_name}`,
-                                            `${lang.prefix}`,
-                                        ],
-                                    })
-                                }
-                            } else {
-                                if (cfg.bilingual) {
-                                    fieldGroupData[lang.prefix] = {
-                                        ...fieldGroupData[lang.prefix],
-                                        [cf.field_name]:
-                                            images[cf.field_name][
-                                                lang.prefix
-                                            ] || '',
-                                    }
-                                } else {
-                                    fieldGroupData['common'] = {
-                                        ...fieldGroupData['common'],
-                                        [cf.field_name]:
-                                            images[cf.field_name] || '',
-                                    }
-                                }
-                            }
-                        } else {
-                            if (cfg.bilingual) {
-                                if (cfg.repeater_group) {
-                                    fieldGroupData[lang.prefix][cfg.row_name][
-                                        'values'
-                                    ] = {
-                                        ...fieldGroupData[lang.prefix]?.[
-                                            cfg.row_name
-                                        ]?.['values'],
-                                        [cf.field_name]:
-                                            body[cf.field_name]?.[
-                                                lang.prefix
-                                            ] || '',
-                                    }
-                                } else {
-                                    fieldGroupData[lang.prefix] = {
-                                        ...fieldGroupData[lang.prefix],
-                                        [cf.field_name]:
-                                            body[cf.field_name][lang.prefix] ||
-                                            '',
-                                    }
-                                }
-                            } else {
-                                if (cfg.repeater_group) {
-                                    fieldGroupData['common'][cfg.row_name][
-                                        'values'
-                                    ] = {
-                                        ...fieldGroupData['common']?.[
-                                            cfg.row_name
-                                        ]?.['values'],
-                                        [cf.field_name]:
-                                            body[cf.field_name] || '',
-                                    }
-                                } else {
-                                    fieldGroupData['common'] = {
-                                        ...fieldGroupData['common'],
-                                        [cf.field_name]:
-                                            body[cf.field_name] || '',
-                                    }
-                                }
-                            }
-                        }
-                    })
-                })
                 customData[lang.prefix] = {
                     ...customData[lang.prefix],
-                    title: body.title?.[lang.prefix],
-                    body_content: body.body_content?.[lang.prefix],
-                    excerpt: body.excerpt?.[lang.prefix],
-                }
-                fieldGroupData[lang.prefix] = {
-                    ...fieldGroupData[lang.prefix],
                     title: body.title?.[lang.prefix],
                     body_content: body.body_content?.[lang.prefix],
                     excerpt: body.excerpt?.[lang.prefix],
@@ -703,153 +564,6 @@ const save = async (req, res) => {
                         }
                     }
                 })
-                // Field group
-                req.contentType.custom_field_groups?.map((cfg, cfgIndex) => {
-                    console.log(cfg)
-                    if (cfg.repeater_group) {
-                        if (cfg.bilingual) {
-                            fieldGroupData[lang.prefix] = {
-                                ...fieldGroupData[lang.prefix],
-                                [cfg.row_name]: {
-                                    is_repeater: true,
-                                    values: {},
-                                },
-                            }
-                        } else {
-                            fieldGroupData['common'] = {
-                                ...fieldGroupData['common'],
-                                [cfg.row_name]: {
-                                    is_repeater: false,
-                                    values: {},
-                                },
-                            }
-                        }
-                    }
-                    cfg.fields?.map((cf) => {
-                        if (cf.field_type === 'file') {
-                            // Image editing start
-                            if (isEdit) {
-                                if (cfg.bilingual) {
-                                    // if user uplaod new iamge
-                                    if (
-                                        images?.[cf.field_name]?.[lang.prefix]
-                                    ) {
-                                        fieldGroupData[lang.prefix] = {
-                                            ...fieldGroupData[lang.prefix],
-                                            [cf.field_name]:
-                                                images[cf.field_name][
-                                                    lang.prefix
-                                                ] || '',
-                                        }
-                                        // if image content have already uploaded image
-                                    } else if (
-                                        body?.[`${[cf.field_name]}-url`]?.[
-                                            lang.prefix
-                                        ]
-                                    ) {
-                                        // this image data is in stringified form so it is parsing to json
-                                        let val = JSON.parse(
-                                            body[`${[cf.field_name]}-url`][
-                                                lang.prefix
-                                            ]
-                                        )
-                                        fieldGroupData[lang.prefix] = {
-                                            ...fieldGroupData[lang.prefix],
-                                            [cf.field_name]: val || '',
-                                        }
-                                    } else {
-                                        // If no image is uploaded and content have no iamge then the error object will push to customError array
-                                        customErrors.push({
-                                            message: `${cf.field_name}.${lang.prefix} is not allowed to be empty`,
-                                            path: [
-                                                `${cf.field_name}`,
-                                                `${lang.prefix}`,
-                                            ],
-                                        })
-                                    }
-                                } else {
-                                    // Single language
-                                    // if user upload new iamge
-                                    if (images?.[cf.field_name]) {
-                                        fieldGroupData['common'] = {
-                                            ...fieldGroupData['common'],
-                                            [cf.field_name]:
-                                                images[cf.field_name] || '',
-                                        }
-                                        // if image content have already uploaded image
-                                    } else if (
-                                        body?.[`${[cf.field_name]}-url`]
-                                    ) {
-                                        // this image data is in stringified form so it is parsing to json
-                                        let val = JSON.parse(
-                                            body[`${[cf.field_name]}-url`]
-                                        )
-                                        fieldGroupData['common'] = {
-                                            ...fieldGroupData['common'],
-                                            [cf.field_name]: val || '',
-                                        }
-                                    } else {
-                                        // If no image is uploaded and content have no iamge then the error object will push to customError array
-                                        customErrors.push({
-                                            message: `${cf.field_name}.${lang.prefix} is not allowed to be empty`,
-                                            path: [
-                                                `${cf.field_name}`,
-                                                `${lang.prefix}`,
-                                            ],
-                                        })
-                                    }
-                                }
-                            }
-                        } else {
-                            if (cf.bilingual) {
-                                if (cfg.repeater_group) {
-                                    fieldGroupData[lang.prefix][cfg.row_name][
-                                        'values'
-                                    ] = {
-                                        ...fieldGroupData[lang.prefix]?.[
-                                            cfg.row_name
-                                        ]?.['values'],
-                                        [cf.field_name]:
-                                            body[cf.field_name]?.[
-                                                lang.prefix
-                                            ] || '',
-                                    }
-                                } else {
-                                    fieldGroupData[lang.prefix] = {
-                                        ...fieldGroupData[lang.prefix],
-                                        [cf.field_name]:
-                                            body[cf.field_name][lang.prefix] ||
-                                            '',
-                                    }
-                                }
-                            } else {
-                                if (cfg.repeater_group) {
-                                    fieldGroupData['common'][cfg.row_name][
-                                        'values'
-                                    ] = {
-                                        ...fieldGroupData['common']?.[
-                                            cfg.row_name
-                                        ]?.['values'],
-                                        [cf.field_name]:
-                                            body[cf.field_name] || '',
-                                    }
-                                } else {
-                                    fieldGroupData['common'] = {
-                                        ...fieldGroupData['common'],
-                                        [cf.field_name]:
-                                            body[cf.field_name] || '',
-                                    }
-                                }
-                            }
-                        }
-                    })
-                })
-                fieldGroupData[lang.prefix] = {
-                    ...fieldGroupData[lang.prefix],
-                    title: body.title?.[lang.prefix],
-                    body_content: body.body_content?.[lang.prefix],
-                    excerpt: body.excerpt?.[lang.prefix],
-                }
                 customData[lang.prefix] = {
                     ...customData[lang.prefix],
                     title: body.title?.[lang.prefix],
@@ -887,13 +601,10 @@ const save = async (req, res) => {
             template_name: type.template_name,
             custom_fields: type.custom_fields,
             content: customData,
-            group_content: fieldGroupData,
             meta: metaData,
             in_home: body.in_home || false,
         }
-        console.log('fieldGroupData :>> ', fieldGroupData)
-        console.log(data)
-        // getting attached contents
+        // gettting attached contents
         // TODO Find Permenant solution for issue
         // ISSUE : Sometime the data get in the form of array sometime in the form of string
         if (
@@ -933,18 +644,19 @@ const save = async (req, res) => {
                 redirect_to: `/admin/cms/${type.slug}/detail/${req.body._id}`,
             })
         } else {
-            // data.slug = slugify(body.title.en.toLowerCase())
-            // // Create content
-            // const save = await Content.create(data)
-            // if (!save?._id) {
-            //     return res.status(400).json({ error: 'Something went wrong' })
-            // }
-            // const cache_key = `content-${brandCode}-${countryCode}-${type.slug}`
-            // Redis.removeCache([cache_key])
-            // return res.status(200).json({
-            //     message: 'Content added successfully',
-            //     redirect_to: `/admin/cms/${type.slug}/detail/${save._id}`,
-            // })
+            data.slug = slugify(body.title.en.toLowerCase())
+            // Create content
+            const save = await Content.create(data)
+            if (!save?._id) {
+                return res.status(400).json({ error: 'Something went wrong' })
+            }
+            const cache_key = `content-${brandCode}-${countryCode}-${type.slug}`
+            Redis.removeCache([cache_key])
+
+            return res.status(200).json({
+                message: 'Content added successfully',
+                redirect_to: `/admin/cms/${type.slug}/detail/${save._id}`,
+            })
         }
     } catch (error) {
         console.log(error)

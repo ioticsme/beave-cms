@@ -57,6 +57,7 @@ const ContentTypeSchema = new mongoose.Schema(
         custom_field_groups: [
             {
                 row_name: String,
+                row_label: String,
                 repeater_group: Boolean,
                 bilingual: Boolean,
                 fields: [

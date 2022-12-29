@@ -78,7 +78,8 @@ block customScript
 			let targetElement = event.target
 			let parentId = targetElement.getAttribute('target-id')
 			let parentLang = targetElement.getAttribute('target-lang')
-			let p = document.querySelector(`.form-repeater-group-${parentLang}`)
+			let langPrefix = targetElement.getAttribute('target-lang-prefix')
+			let p = document.querySelector(`.form-repeater-group-${parentLang}-${langPrefix}`)
 			let p_prime = p.cloneNode(true)
 			let newElement = document.getElementById(`${parentId}`).appendChild(p_prime)
 			newElement.setAttribute("id", `form_repeater_child_${parentLang}-${childIndex*10000}`) //setting ID for newly created card
@@ -169,24 +170,24 @@ block content
 											//- BEGIN::Custom Fields with Bilingual
 											each cfg, cfg_i in reqContentType.custom_field_groups
 												if cfg.repeater_group == true && cfg.bilingual
-													h4 #{cfg.row_name}
+													h4 #{cfg.row_label}
 													//- if cfg.bilingual
 													.group_repeater(id=`kt_docs_repeater_${brandLanguage.prefix}_${cfg._id}_${cfg_i}`)
-														.row(id=`form_repeater_child_${brandLanguage.prefix}_${cfg._id}-${cfg_i}` class=`form-repeater-group-${cfg._id}`)
-															each cf in cfg.fields
+														.row(id=`form_repeater_child_${brandLanguage.prefix}_${cfg._id}-${cfg_i}` class=`form-repeater-group-${cfg._id}-${brandLanguage.prefix}`)
+															each cf,cf_idx in cfg.fields
 																.d-flex.flex-column.mb-8.fv-row.fv-plugins-icon-container
 																	//- if cf.field_type !='file'
 																	label.d-flex.align-items-center.fs-6.fw-semibold.mb-2
 																		span.required #{cf.field_label} (#{brandLanguage.prefix})
 																	if cf.field_type === 'text'
 																		input.form-control.form-control-solid(type='text' placeholder=`Enter ${cf.field_label}` name=`${cf.field_name}[${brandLanguage.prefix}][]`)
-																		.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+																		
 																	else if cf.field_type === 'wysiwyg'
-																		textarea.content_wysiwyg(name=`${cf.field_name}[${brandLanguage.prefix}]` id=`wysiwyg-cf-${brandLanguage.prefix}-${cf_i}`)
-																		.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+																		textarea.content_wysiwyg(name=`${cf.field_name}[${brandLanguage.prefix}][]` id=`wysiwyg-cf-${brandLanguage.prefix}-${cf_i}`)
+																		
 																	else if cf.field_type === 'textarea'
-																		textarea.form-control.form-control-solid(rows='6' name=`${cf.field_name}[${brandLanguage.prefix}]` placeholder='' spellcheck='false')
-																		.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+																		textarea.form-control.form-control-solid(rows='6' name=`${cf.field_name}[${brandLanguage.prefix}][]` placeholder='' spellcheck='false')
+																		
 																	else if cf.field_type === 'file'
 																		if cf.info && cf.info.length
 																			.alert.bg-warning.d-flex.align-items-center.p-5
@@ -196,32 +197,32 @@ block content
 																						span #{i}
 																		.col-md-4.col-lg-4
 																			include ../../partials/_image-input-form-field
-																		.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+																		
 																	else if cf.field_type === 'date'
 																		.kt_daterangepicker
-																			input.form-control.mb-2(id=`kt_daterangepicker_${brandLanguage.prefix}-${cf_i}` name=`${cf.field_name}[${brandLanguage.prefix}]` placeholder=`${cf.placeholder}` value='')
-																			.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+																			input.form-control.mb-2(id=`kt_daterangepicker_${brandLanguage.prefix}-${cf_i}` name=`${cf.field_name}[${brandLanguage.prefix}][]` placeholder=`${cf.placeholder}` value='')
+																			
 																	else if cf.field_type === 'radio'
 																		.row.row-cols-1.row-cols-md-3.row-cols-lg-1.row-cols-xl-3.g-9(data-kt-buttons='true' data-kt-buttons-target="[data-kt-button='true']")
 																			each option,i in cf.options 
 																				.col.d-flex.text-start.p-6
 																					span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-																						input.form-check-input(type='radio' name=`${cf.field_name}[${brandLanguage.prefix}]` id=`${option.value}-${i}` value=`${option.value}` checked=i==0)
+																						input.form-check-input(type='radio' name=`${cf.field_name}[${brandLanguage.prefix}][]` id=`${option.value}-${i}` value=`${option.value}` checked=i==0)
 																					span.ms-5
 																						label.form-label(for=`${option.value}-${i}`) #{option.label}
 																			else 
 																				.col.d-flex.text-start.p-6
 																					span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-																						input.form-check-input(type='radio' name=`${cf.field_name}[${brandLanguage.prefix}]` id="percentage" value=`true` )
+																						input.form-check-input(type='radio' name=`${cf.field_name}[${brandLanguage.prefix}][]` id="percentage" value=`true` )
 																					span.ms-5
 																						label.form-label(for="percentage") 
-																			.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+																			
 																	else if cf.field_type === 'dropdown'
-																		select.form-select(data-control='select2' name=`${cf.field_name}[${brandLanguage.prefix}]` data-placeholder='Select an option')
+																		select.form-select(data-control='select2' name=`${cf.field_name}[${brandLanguage.prefix}][]` data-placeholder='Select an option')
 																			option
 																			each dropdown, dd_i in cf.options
 																				option(value=`${dropdown.value}`) #{dropdown.label}
-																		.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
+																	.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
 															.text-center
 																//- a.btn.btn-sm.btn-light-danger.mt-3.mt-md-8(href='javascript:;' data-repeater-delete='')
 																a.btn.btn-sm.btn-light-danger.mt-3.mt-md-8(onClick='deleteChild(event)' child-id=`form-repeater-child-${brandLanguage.prefix}_${cfg._id}-${cfg_i}` target-id=`kt_docs_repeater_${brandLanguage.prefix}_${cfg._id}_${cfg_i}`)
@@ -229,7 +230,7 @@ block content
 																	| Delete
 													.form-group.mt-5.text-center
 														//- a.btn.btn-light-primary(href='javascript:;' data-repeater-create='')
-														a.btn.btn-light-primary.mb-10(onClick='cloneChild(event)' target-lang=`${cfg._id}` target-id=`kt_docs_repeater_${brandLanguage.prefix}_${cfg._id}_${cfg_i}` data-repeater-create='')
+														a.btn.btn-light-primary.mb-10(onClick='cloneChild(event)' target-lang=`${cfg._id}` target-lang-prefix=`${brandLanguage.prefix}` target-id=`kt_docs_repeater_${brandLanguage.prefix}_${cfg._id}_${cfg_i}` data-repeater-create='')
 															i.la.la-plus
 															| Add		
 												else
@@ -242,7 +243,7 @@ block content
 																	i.fas.fa-exclamation-circle.ms-2.fs-7(data-bs-toggle='tooltip' aria-label='Specify a target name for future usage and reference' data-kt-initialized='1')
 																// end::Label
 																if cf.field_type === 'text'
-																	input.form-control.form-control-solid(type='text' placeholder=`Enter  ${cf.field_label}` name=`${cf.field_name}[${brandLanguage.prefix}]`)
+																	input.form-control.form-control-solid(type='text' placeholder=`Enter ${cf.field_label}` name=`${cf.field_name}[${brandLanguage.prefix}]`)
 																	.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
 																else if cf.field_type === 'wysiwyg'
 																	textarea.content_wysiwyg(name=`${cf.field_name}[${brandLanguage.prefix}]` id=`wysiwyg-cf-${brandLanguage.prefix}-${cf_i}`)
@@ -325,7 +326,7 @@ block content
 										each cfg, cfg_i in reqContentType.custom_field_groups
 											if cfg.bilingual == false 
 												if cfg.repeater_group == true
-													h4 #{cfg.row_name}
+													h4 #{cfg.row_label}
 													.group_repeater(id=`kt_docs_repeater_${cfg._id}_${cfg_i}`)
 														.form-group.row(id=`form_repeater_child_${cfg._id}-${cfg_i}` class=`form-repeater-group-${cfg._id}`)
 															each cf in cfg.fields
@@ -385,7 +386,7 @@ block content
 																	| Delete
 													.form-group.mt-5.text-center
 														//- a.btn.btn-light-primary(href='javascript:;' data-repeater-create='')
-														a.btn.btn-light-primary(onClick='cloneChild(event)' target-lang=`${cfg._id}`  target-id=`kt_docs_repeater_${cfg._id}_${cfg_i}`)
+														a.btn.btn-light-primary(onClick='cloneChild(event)' target-lang=`${cfg._id}` target-lang-prefix='en'  target-id=`kt_docs_repeater_${cfg._id}_${cfg_i}`)
 															i.la.la-plus
 															| Add
 												else 

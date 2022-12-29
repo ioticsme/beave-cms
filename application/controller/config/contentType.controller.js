@@ -107,6 +107,7 @@ const save = async (req, res) => {
             })
             customFieldGroups.push({
                 row_name: repeater.name,
+                row_label: repeater.label,
                 repeater_group:
                     repeater.repeater_group == 'true' ? true : false,
                 bilingual: repeater.bilingual == 'true' ? true : false,

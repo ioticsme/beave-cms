@@ -129,8 +129,11 @@ block content
 													div(data-repeater-item='')
 														.form-group.row.mb-5.mt-2
 															.col-md-6
+																label.form-label Row Label:
+																input.form-control.form-control-solid.mb-2.mb-md-0(type='text' name="label" placeholder='Enter Row Label' value=`${cfg.row_label || ''}`)
+															.col-md-6
 																label.form-label Row Name:
-																input.form-control.form-control-solid.mb-2.mb-md-0(type='text' name="name" placeholder='Enter Row name' value=`${cfg.row_name}`)
+																input.form-control.form-control-solid.mb-2.mb-md-0(type='text' name="name" placeholder='Enter Row name' value=`${cfg.row_name || ''}`)
 															.col-md-6
 																label.form-label Row Type:
 																select.form-select.form-control.select2.form-select-lg.form-select-solid.mb-2.mb-md-0(name="repeater_group"  )
@@ -151,16 +154,16 @@ block content
 																			label.form-label Field:
 																			.row
 																				.mt-2.col-md-6
-																					input.form-control.form-control-lg.form-control-solid(type='text' name='field_label' placeholder='Field Label' value=`${cf.field_label}`)
+																					input.form-control.form-control-lg.form-control-solid(type='text' name='field_label' placeholder='Field Label' value=`${cf.field_label || ''}`)
 																					.fv-plugins-message-container.invalid-feedback(id=`field-error-field_label`)
 																				.mt-2.col-md-6
-																					input.form-control.form-control-lg.form-control-solid(type='text' name='field_name' placeholder='Field Name' value=`${cf.field_name}`)
+																					input.form-control.form-control-lg.form-control-solid(type='text' name='field_name' placeholder='Field Name' value=`${cf.field_name || ''}`)
 																					.fv-plugins-message-container.invalid-feedback(id=`field-error-field_name`)
 																				.mt-2.col-md-6
-																					input.form-control.form-control-lg.form-control-solid(type='text' name='placeholder' placeholder='Placeholder' value=`${cf.placeholder}`)
+																					input.form-control.form-control-lg.form-control-solid(type='text' name='placeholder' placeholder='Placeholder' value=`${cf.placeholder || ''}`)
 																					.fv-plugins-message-container.invalid-feedback(id=`field-error-placeholder`)
 																				.mt-2.col-md-6
-																					input.form-control.form-control-lg.form-control-solid(type='text' name='validation' placeholder='Validation' value=`${cf.validation}`)
+																					input.form-control.form-control-lg.form-control-solid(type='text' name='validation' placeholder='Validation' value=`${cf.validation || ''}`)
 																					.fv-plugins-message-container.invalid-feedback(id=`field-error-validation`)
 
 																				.mt-2.col-md-6
@@ -208,6 +211,9 @@ block content
 											div(data-repeater-list='kt_docs_repeater_nested_outer')
 												div(data-repeater-item='')
 													.form-group.row.mb-5
+														.col-md-6
+															label.form-label Row Label:
+															input.form-control.form-control-solid.mb-2.mb-md-0(type='text' name="label" placeholder='Enter Row Label')
 														.col-md-6
 															label.form-label Row Name:
 															input.form-control.form-control-solid.mb-2.mb-md-0(type='text' name="name" placeholder='Enter Row name')
@@ -269,18 +275,19 @@ block content
 																			.fv-plugins-message-container.invalid-feedback(id=`field-error-option_value`)
 																		//- button.border.border-secondary.btn.btn-icon.btn-light-danger(data-repeater-delete='' type='button')
 																		//- i.la.la-trash-o.fs-3
-																	.col-md-6.mb-2.mt-2
+																	.text-center.mb-2.mt-2
 																		button.btn-sm.btn.btn-light-danger(data-repeater-delete='' type='button')
 																			i.la.la-trash-o.fs-3
 																			| Delete field
-															button.btn.btn-sm.btn-light-primary(data-repeater-create='' type='button')
-																i.la.la-plus
-																|  Add Field
-														.col-md-4
+															.text-center
+																button.btn.btn-sm.btn-light-primary(data-repeater-create='' type='button')
+																	i.la.la-plus
+																	|  Add Field
+														.text-center
 															a.btn.btn-sm.btn-light-danger.mt-3.mt-md-9(href='javascript:;' data-repeater-delete='')
 																i.la.la-trash-o.fs-3
 																| Delete Row
-										.form-group.mt-2
+										.form-group.mt-2.text-center
 											a.btn.btn-light-primary(href='javascript:;' data-repeater-create='')
 												i.la.la-plus
 												| Add Row
