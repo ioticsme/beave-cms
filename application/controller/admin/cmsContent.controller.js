@@ -423,12 +423,14 @@ const save = async (req, res) => {
                 // Deleting the image saved to uploads/
                 fs.unlinkSync(`uploads/${file.filename}`)
                 if (media && media._id) {
+                    console.log(Object.keys(images))
                     if (fieldLang) {
                         images[fieldName] = {
                             ...images[fieldName],
                             [fieldLang]: {
                                 media_url: media.url,
                                 media_id: media._id,
+                                field_name: fieldName,
                             },
                         }
                     } else {
@@ -437,6 +439,7 @@ const save = async (req, res) => {
                             [fieldName]: {
                                 media_url: media.url,
                                 media_id: media._id,
+                                field_name: fieldName,
                             },
                         }
                     }
@@ -452,12 +455,12 @@ const save = async (req, res) => {
         if (Object.keys(images) && Object.keys(images).length) {
             // Looping through the languages
             session?.selected_brand?.languages.map((lang) => {
-                // Looping through content tyep custom fields
+                // Looping through content type custom fields
                 req.contentType.custom_fields?.map((cf) => {
                     // If field type is file take value from images object o.w from req.body
                     if (cf.field_type === 'file') {
                         if (isEdit) {
-                            // if user uplaod new iamge
+                            // if user upload new image
                             if (images?.[cf.field_name]?.[lang.prefix]) {
                                 customData[lang.prefix] = {
                                     ...customData[lang.prefix],
@@ -469,7 +472,7 @@ const save = async (req, res) => {
                             } else if (
                                 body?.[`${[cf.field_name]}-url`]?.[lang.prefix]
                             ) {
-                                // this image data is in stringfied form so it is parsing json
+                                // this image data is in stringified form so it is parsing to json
                                 let val = JSON.parse(
                                     body[`${[cf.field_name]}-url`][lang.prefix]
                                 )
@@ -478,7 +481,7 @@ const save = async (req, res) => {
                                     [cf.field_name]: val || '',
                                 }
                             } else {
-                                // If no image is uploaded and content have no iamge then the error object will push to customError array
+                                // If no image is uploaded and content have no image then the error object will push to customError array
                                 customErrors.push({
                                     message: `${cf.field_name}.${lang.prefix} is not allowed to be empty`,
                                     path: [
@@ -495,7 +498,7 @@ const save = async (req, res) => {
                             }
                         }
                     } else {
-                        if (cf.bilingual) {
+                        if (cfg.bilingual) {
                             customData[lang.prefix] = {
                                 ...customData[lang.prefix],
                                 [cf.field_name]:
@@ -561,7 +564,7 @@ const save = async (req, res) => {
                                         [cf.field_name]: val || '',
                                     }
                                 } else {
-                                    // If no image is uploaded and content have no iamge then the error object will push to customError array
+                                    // If no image is uploaded and content have no image then the error object will push to customError array
                                     customErrors.push({
                                         message: `${cf.field_name}.${lang.prefix} is not allowed to be empty`,
                                         path: [
@@ -583,7 +586,7 @@ const save = async (req, res) => {
                                     fieldGroupData['common'] = {
                                         ...fieldGroupData['common'],
                                         [cf.field_name]:
-                                            images[cf.field_name] || '', 
+                                            images[cf.field_name] || '',
                                     }
                                 }
                             }
@@ -689,7 +692,7 @@ const save = async (req, res) => {
                             }
                         }
                     } else {
-                        if (cf.bilingual) {
+                        if (cfg.bilingual) {
                             customData[lang.prefix] = {
                                 ...customData[lang.prefix],
                                 [cf.field_name]:
@@ -801,7 +804,7 @@ const save = async (req, res) => {
                                 }
                             }
                         } else {
-                            if (cf.bilingual) {
+                            if (cfg.bilingual) {
                                 if (cfg.repeater_group) {
                                     fieldGroupData[lang.prefix][cfg.row_name][
                                         'values'

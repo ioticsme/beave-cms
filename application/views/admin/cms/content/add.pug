@@ -263,9 +263,9 @@ block content
 																					span #{i}
 																	.col-md-6.col-lg-6
 																		if(contentDetail && contentDetail.group_content[brandLanguage.prefix] && contentDetail.group_content[brandLanguage.prefix][cf.field_name] && contentDetail.group_content[brandLanguage.prefix][cf.field_name].media_url) 
-																			input(name=`${cf.field_name}-url[${brandLanguage.prefix}]` value=JSON.stringify(contentDetail.content[brandLanguage.prefix][cf.field_name])   hidden)
+																			input(name=`${cf.field_name}-url]` value=JSON.stringify(contentDetail.content[brandLanguage.prefix][cf.field_name])   hidden)
 																		else 
-																		input(type='file' class='form-control form-control-solid' name=`${cf.field_name}.${brandLanguage.prefix}` id=`image-input.${brandLanguage.prefix}` )
+																		input(type='file' class='form-control form-control-solid' name=`${cf.field_name}` id=`image-input` )
 																	.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}_${brandLanguage.prefix}`)
 																else if cf.field_type === 'date'
 																	.kt_daterangepicker
@@ -421,9 +421,9 @@ block content
 																				span #{i}
 																	.col-md-6.col-lg-6
 																		if(contentDetail && contentDetail.group_content[brandLanguage.prefix] && contentDetail.group_content[brandLanguage.prefix][cf.field_name] && contentDetail.group_content[brandLanguage.prefix][cf.field_name].media_url) 
-																			input(name=`${cf.field_name}-url[${brandLanguage.prefix}]` value=JSON.stringify(contentDetail.content[brandLanguage.prefix][cf.field_name])   hidden)
+																			input(name=`${cf.field_name}-url` value=JSON.stringify(contentDetail.content[brandLanguage.prefix][cf.field_name])   hidden)
 																		else 
-																		input(type='file' class='form-control form-control-solid' name=`${cf.field_name}.${brandLanguage.prefix}` id=`image-input.${brandLanguage.prefix}` )
+																		input(type='file' class='form-control form-control-solid' name=`${cf.field_name}` id=`image-input` )
 																.fv-plugins-message-container.invalid-feedback(id=`field-error-${cf.field_name}`)
 															else if cf.field_type === 'date'
 																.kt_daterangepicker
