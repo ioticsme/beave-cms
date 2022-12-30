@@ -75,13 +75,11 @@ const add = async (req, res) => {
             const grouped = collection.groupBy('type_slug')
             allowed_content = JSON.parse(JSON.stringify(grouped.items))
         }
-        console.log(req.contentType.custom_field_groups)
         const has_common_field_groups = collect(
             req.contentType.custom_field_groups
         )
             .where('bilingual', false)
             .count()
-        console.log(has_common_field_groups)
         res.render(`admin/cms/content/add`, {
             reqContentType: req.contentType,
             has_common_field_groups: has_common_field_groups ? true : false,
@@ -90,7 +88,6 @@ const add = async (req, res) => {
             gallery,
         })
     } catch (error) {
-        console.log(error)
         return res.render(`admin/error-500`)
     }
 }
@@ -139,7 +136,6 @@ const edit = async (req, res) => {
             gallery,
         })
     } catch (error) {
-        // console.log(error)
         return res.render(`admin/error-404`)
     }
 }
@@ -174,7 +170,7 @@ const changeStatus = async (req, res) => {
         if (!id) {
             return res.status(404).json({ error: 'Invalid data' })
         }
-        // Upadte
+        // Update
         const update = await Content.findOneAndUpdate(
             {
                 _id: id,
@@ -202,9 +198,8 @@ const changeStatus = async (req, res) => {
 
 const save = async (req, res) => {
     try {
-        console.log(req.body)
-        console.log(req.files)
-        console.log(req.body.repeater_field)
+        // console.log(req.body)
+        // console.log(req.files)
         session = req.authUser
         // BEGIN:: Generating default field validation rule for content type (title, description)
         let defaultValidationObj = {}
@@ -407,49 +402,46 @@ const save = async (req, res) => {
 
         // Upload image to imagekit
         if (req.files && req.files.length) {
-            for (i = 0; i < req.files.length; i++) {
-                let file = req.files[i]
-                // Creating base64 from file
-                const base64 = Buffer.from(fs.readFileSync(file.path)).toString(
-                    'base64'
-                )
-                let fieldName = req.files[i].fieldname.split('.')[0]
-                let fieldLang = req.files[i].fieldname.split('.')[1]
-                const media = await uploadMedia(
-                    base64,
-                    'Funcity/Content',
-                    file.filename
-                ) //file.originalname
-                // Deleting the image saved to uploads/
-                fs.unlinkSync(`uploads/${file.filename}`)
-                if (media && media._id) {
-                    console.log(Object.keys(images))
-                    if (fieldLang) {
-                        images[fieldName] = {
-                            ...images[fieldName],
-                            [fieldLang]: {
-                                media_url: media.url,
-                                media_id: media._id,
-                                field_name: fieldName,
-                            },
-                        }
-                    } else {
-                        images = {
-                            ...images,
-                            [fieldName]: {
-                                media_url: media.url,
-                                media_id: media._id,
-                                field_name: fieldName,
-                            },
-                        }
+            let files = collect(req.files).groupBy('fieldname')
+            files = JSON.parse(JSON.stringify(files))
+            for (let key in files) {
+                let images = files[key]
+                let uploaded = []
+                for (i = 0; i < images.length; i++) {
+                    let file = images[i]
+                    const base64 = Buffer.from(
+                        fs.readFileSync(file.path)
+                    ).toString('base64')
+                    const media = await uploadMedia(
+                        base64,
+                        'Content',
+                        file.filename
+                    )
+                    if (media?._id) {
+                        uploaded.push({
+                            media_url: media.url,
+                            media_id: media._id,
+                        })
+                    }
+                }
+                let keyName = key.split('.')[0]
+                let keyLang = key.split('.')[1]
+                if (keyLang) {
+                    images[keyName] = {
+                        ...images[keyName],
+                        [keyLang]:
+                            uploaded.length == 1 ? uploaded[0] : uploaded,
                     }
                 } else {
-                    return res.status(503).json({
-                        error: 'Some error occured while uploading the image',
-                    })
+                    images = {
+                        ...images,
+                        [keyName]:
+                            uploaded.length == 1 ? uploaded[0] : uploaded,
+                    }
                 }
             }
         }
+        // console.log('images :>> ', images)
         let customErrors = []
         // If image files are present
         if (Object.keys(images) && Object.keys(images).length) {
@@ -491,10 +483,13 @@ const save = async (req, res) => {
                                 })
                             }
                         } else {
-                            customData[lang.prefix] = {
-                                ...customData[lang.prefix],
-                                [cf.field_name]:
-                                    images[cf.field_name][lang.prefix] || '',
+                            if (images[cf.field_name]?.[lang.prefix]) {
+                                customData[lang.prefix] = {
+                                    ...customData[lang.prefix],
+                                    [cf.field_name]:
+                                        images[cf.field_name][lang.prefix] ||
+                                        '',
+                                }
                             }
                         }
                     } else {
@@ -514,7 +509,6 @@ const save = async (req, res) => {
                 })
                 // Field group map
                 req.contentType.custom_field_groups?.map((cfg) => {
-                    // console.log(cfg)
                     if (cfg.repeater_group) {
                         if (cfg.bilingual) {
                             fieldGroupData[lang.prefix] = {
@@ -538,7 +532,7 @@ const save = async (req, res) => {
                         // If field type is file take value from images object o.w from req.body
                         if (cf.field_type === 'file') {
                             if (isEdit) {
-                                // if user uplaod new iamge
+                                // if user upload new image
                                 if (images?.[cf.field_name]?.[lang.prefix]) {
                                     customData[lang.prefix] = {
                                         ...customData[lang.prefix],
@@ -553,7 +547,7 @@ const save = async (req, res) => {
                                         lang.prefix
                                     ]
                                 ) {
-                                    // this image data is in stringfied form so it is parsing json
+                                    // this image data is in stringified form so it is parsing json
                                     let val = JSON.parse(
                                         body[`${[cf.field_name]}-url`][
                                             lang.prefix
@@ -575,18 +569,50 @@ const save = async (req, res) => {
                                 }
                             } else {
                                 if (cfg.bilingual) {
-                                    fieldGroupData[lang.prefix] = {
-                                        ...fieldGroupData[lang.prefix],
-                                        [cf.field_name]:
-                                            images[cf.field_name][
+                                    if (cfg.repeater_group) {
+                                        if (
+                                            images?.[cf.field_name]?.[
                                                 lang.prefix
-                                            ] || '',
+                                            ]
+                                        ) {
+                                            fieldGroupData[lang.prefix][
+                                                cfg.row_name
+                                            ]['values'] = {
+                                                ...fieldGroupData[
+                                                    lang.prefix
+                                                ]?.[cfg.row_name]?.['values'],
+                                                [cf.field_name]:
+                                                    images[cf.field_name][
+                                                        lang.prefix
+                                                    ] || '',
+                                            }
+                                        }
+                                    } else {
+                                        fieldGroupData[lang.prefix] = {
+                                            ...fieldGroupData[lang.prefix],
+                                            [cf.field_name]:
+                                                images[cf.field_name][
+                                                    lang.prefix
+                                                ] || '',
+                                        }
                                     }
                                 } else {
-                                    fieldGroupData['common'] = {
-                                        ...fieldGroupData['common'],
-                                        [cf.field_name]:
-                                            images[cf.field_name] || '',
+                                    if (cfg.repeater_group) {
+                                        fieldGroupData['common'][cfg.row_name][
+                                            'values'
+                                        ] = {
+                                            ...fieldGroupData['common']?.[
+                                                cfg.row_name
+                                            ]?.['values'],
+                                            [cf.field_name]:
+                                                images[cf.field_name] || '',
+                                        }
+                                    } else {
+                                        fieldGroupData['common'] = {
+                                            ...fieldGroupData['common'],
+                                            [cf.field_name]:
+                                                images[cf.field_name] || '',
+                                        }
                                     }
                                 }
                             }
@@ -660,7 +686,7 @@ const save = async (req, res) => {
                     if (cf.field_type === 'file') {
                         // Image editing start
                         if (isEdit) {
-                            // if user uplaod new iamge
+                            // if user upload new image
                             if (images?.[cf.field_name]?.[lang.prefix]) {
                                 customData[lang.prefix] = {
                                     ...customData[lang.prefix],
@@ -672,7 +698,7 @@ const save = async (req, res) => {
                             } else if (
                                 body?.[`${[cf.field_name]}-url`]?.[lang.prefix]
                             ) {
-                                // this image data is in stringfied form so it is parsing json
+                                // this image data is in stringified form so it is parsing json
                                 let val = JSON.parse(
                                     body[`${[cf.field_name]}-url`][lang.prefix]
                                 )
@@ -681,7 +707,7 @@ const save = async (req, res) => {
                                     [cf.field_name]: val || '',
                                 }
                             } else {
-                                // If no image is uploaded and content have no iamge then the error object will push to customError array
+                                // If no image is uploaded and content have no image then the error object will push to customError array
                                 customErrors.push({
                                     message: `${cf.field_name}.${lang.prefix} is not allowed to be empty`,
                                     path: [
@@ -708,7 +734,6 @@ const save = async (req, res) => {
                 })
                 // Field group
                 req.contentType.custom_field_groups?.map((cfg, cfgIndex) => {
-                    console.log(cfg)
                     if (cfg.repeater_group) {
                         if (cfg.bilingual) {
                             fieldGroupData[lang.prefix] = {
@@ -733,7 +758,7 @@ const save = async (req, res) => {
                             // Image editing start
                             if (isEdit) {
                                 if (cfg.bilingual) {
-                                    // if user uplaod new iamge
+                                    // if user upload new image
                                     if (
                                         images?.[cf.field_name]?.[lang.prefix]
                                     ) {
@@ -761,7 +786,7 @@ const save = async (req, res) => {
                                             [cf.field_name]: val || '',
                                         }
                                     } else {
-                                        // If no image is uploaded and content have no iamge then the error object will push to customError array
+                                        // If no image is uploaded and content have no image then the error object will push to customError array
                                         customErrors.push({
                                             message: `${cf.field_name}.${lang.prefix} is not allowed to be empty`,
                                             path: [
@@ -772,7 +797,7 @@ const save = async (req, res) => {
                                     }
                                 } else {
                                     // Single language
-                                    // if user upload new iamge
+                                    // if user upload new image
                                     if (images?.[cf.field_name]) {
                                         fieldGroupData['common'] = {
                                             ...fieldGroupData['common'],
@@ -894,10 +919,10 @@ const save = async (req, res) => {
             meta: metaData,
             in_home: body.in_home || false,
         }
-        console.log('fieldGroupData :>> ', fieldGroupData)
-        console.log(data)
+        // console.log('fieldGroupData :>> ', fieldGroupData)
+        // console.log(data)
         // getting attached contents
-        // TODO Find Permenant solution for issue
+        // TODO Find Permanent solution for issue
         // ISSUE : Sometime the data get in the form of array sometime in the form of string
         if (
             Object?.keys(body.attached_type ? body.attached_type : {})?.length
@@ -936,18 +961,18 @@ const save = async (req, res) => {
                 redirect_to: `/admin/cms/${type.slug}/detail/${req.body._id}`,
             })
         } else {
-            // data.slug = slugify(body.title.en.toLowerCase())
-            // // Create content
-            // const save = await Content.create(data)
-            // if (!save?._id) {
-            //     return res.status(400).json({ error: 'Something went wrong' })
-            // }
-            // const cache_key = `content-${brandCode}-${countryCode}-${type.slug}`
-            // Redis.removeCache([cache_key])
-            // return res.status(200).json({
-            //     message: 'Content added successfully',
-            //     redirect_to: `/admin/cms/${type.slug}/detail/${save._id}`,
-            // })
+            data.slug = slugify(body.title.en.toLowerCase())
+            // Create content
+            const save = await Content.create(data)
+            if (!save?._id) {
+                return res.status(400).json({ error: 'Something went wrong' })
+            }
+            const cache_key = `content-${brandCode}-${countryCode}-${type.slug}`
+            Redis.removeCache([cache_key])
+            return res.status(200).json({
+                message: 'Content added successfully',
+                redirect_to: `/admin/cms/${type.slug}/detail/${save._id}`,
+            })
         }
     } catch (error) {
         console.log(error)
