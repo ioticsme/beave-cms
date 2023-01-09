@@ -24,6 +24,7 @@ const edit = async (req, res) => {
     const contentType = await ContentType.findOne({
         _id: req.params.id,
     })
+    console.log('contentType :>> ', contentType)
     const contentTypes = await ContentType.find()
     return res.render('admin/config/content-type/form', {
         contentType,
@@ -35,8 +36,6 @@ const edit = async (req, res) => {
 const save = async (req, res) => {
     try {
         console.log(req.body)
-        // console.log(req.body.kt_docs_repeater_nested_outer);
-        // console.log(req.body.kt_docs_repeater_nested_outer[0]);
         const schema = Joi.object({
             title: Joi.string().required().min(3).max(60),
             slug: Joi.string().required().min(3).max(60),
@@ -76,43 +75,45 @@ const save = async (req, res) => {
             return
         }
 
-        let customFields = []
-        let repeaterGroups = []
+        let customFieldGroups = []
         req.body.kt_docs_repeater_nested_outer?.map((repeater) => {
-            console.log('repeater :>> ', repeater)
-            if (repeater?.group_repeater?.[0] == 'true') {
-            } else {
-                console.log('NO repeat')
-                repeater.kt_docs_repeater_nested_inner?.map((inner) => {
-                    let obj = {
-                        field_label: inner.field_label,
-                        field_name: inner.field_name,
-                        placeholder: inner.placeholder,
-                        validation: inner.validation.split(','),
-                        bilingual: inner.bilingual || false,
-                        field_type: inner.field_type,
+            let fields = []
+            repeater.kt_docs_repeater_nested_inner?.map((inner) => {
+                let obj = {
+                    field_label: inner.field_label,
+                    field_name: inner.field_name,
+                    placeholder: inner.placeholder,
+                    validation: inner.validation,
+                    bilingual: inner.bilingual || false,
+                    field_type: inner.field_type,
+                }
+                let options = []
+                for (
+                    let j = 0;
+                    j < inner.option_label?.split(',').length;
+                    j++
+                ) {
+                    if (inner.option_value?.split(',')?.[j]) {
+                        options.push({
+                            label: inner.option_label?.split(',')?.[j],
+                            value: inner.option_value.split(',')[j],
+                        })
                     }
-                    let options = []
-                    for (
-                        let j = 0;
-                        j < inner.option_label?.split(',').length;
-                        j++
-                    ) {
-                        if (inner.option_value?.split(',')?.[j]) {
-                            options.push({
-                                label: inner.option_label?.split(',')?.[j],
-                                value: inner.option_value.split(',')[j],
-                            })
-                        }
-                    }
-                    if (options.length) {
-                        obj.options = options
-                    }
-                    customFields.push(obj)
-                })
-            }
+                }
+                if (options.length) {
+                    obj.options = options
+                }
+                fields.push(obj)
+            })
+            customFieldGroups.push({
+                row_name: repeater.name,
+                row_label: repeater.label,
+                repeater_group:
+                    repeater.repeater_group == 'true' ? true : false,
+                bilingual: repeater.bilingual == 'true' ? true : false,
+                fields: fields,
+            })
         })
-        console.log('custom_fields :>> ', customFields)
         let data = {
             title: req.body.title,
             slug: slugify(req.body.slug.toLowerCase()),
@@ -128,24 +129,23 @@ const save = async (req, res) => {
             hide_excerpt: req.body.hide_excerpt || false,
             hide_meta: req.body.hide_meta || false,
             in_use: req.body.in_use || false,
-            custom_fields: customFields,
-            repeater_groups: repeaterGroups,
+            custom_field_groups: customFieldGroups,
             allowed_type: req.body.attachable_type?.length
                 ? req.body.attachable_type
                 : null,
         }
-        // if (req.body.id) {
-        //     await ContentType.updateOne(
-        //         {
-        //             _id: req.body.id,
-        //         },
-        //         data
-        //     )
-        // } else {
-        //     await ContentType.create(data)
-        // }
+        if (req.body.id) {
+            await ContentType.updateOne(
+                {
+                    _id: req.body.id,
+                },
+                data
+            )
+        } else {
+            await ContentType.create(data)
+        }
 
-        // return res.status(200).json({ message: 'Content Type added' })
+        return res.status(200).json({ message: 'Content Type added' })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ error: 'Something went wrong' })

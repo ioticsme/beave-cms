@@ -54,20 +54,18 @@ const ContentTypeSchema = new mongoose.Schema(
                 ],
             },
         ],
-        repeater_groups: [
+        custom_field_groups: [
             {
-                name: String,
-                label: String,
+                row_name: String,
+                row_label: String,
+                repeater_group: Boolean,
+                bilingual: Boolean,
                 fields: [
                     {
                         field_label: String,
                         field_name: String,
                         field_type: String, // TextInput, TextArea, Radio, Checkbox, Dropdown, File, Wysiwyg
                         placeholder: String,
-                        bilingual: {
-                            type: Boolean,
-                            default: true,
-                        },
                         options: [
                             {
                                 label: String,
@@ -76,11 +74,7 @@ const ContentTypeSchema = new mongoose.Schema(
                         ],
                         addValidation: String,
                         editValidation: String,
-                        validation: [
-                            {
-                                type: String,
-                            },
-                        ],
+                        validation: String,
                         info: [
                             {
                                 type: String,

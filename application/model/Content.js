@@ -69,6 +69,10 @@ const ContentSchema = new mongoose.Schema(
             type: Object,
             required: true,
         },
+        group_content: {
+            type: Object,
+            required: true,
+        },
         // custom_fields: Object,
         meta: {
             en: {
