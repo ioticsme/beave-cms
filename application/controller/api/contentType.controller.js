@@ -22,46 +22,29 @@ const list = async (req, res) => {
 
                     let allContents
                     let liveData
-                    if (req.params.contentType == 'store') {
-                        allContents = await Content.find({
-                            type_id: { $ne: contentType._id },
-                            published: true,
-                        })
-                        liveData = await Content.find({
-                            type_id: contentType._id,
-                            published: true,
-                        })
-                            .populate('brand', 'name code')
-                            .populate('country', 'name')
-                            .sort('position')
-                            .select(
-                                '-type_id -author -__v  -template_name -in_home -isDeleted -deletedAt -created_at -updated_at -meta'
-                            )
-                            .populate('banner')
-                            .populate('gallery')
-                    } else {
-                        allContents = await Content.find({
-                            type_id: { $ne: contentType._id },
-                            brand: req.brand._id,
-                            country: req.country._id,
-                            published: true,
-                        })
-                        liveData = await Content.find({
-                            type_id: contentType._id,
-                            brand: req.brand._id,
-                            country: req.country._id,
-                            published: true,
-                        })
-                            .populate('brand', 'name code')
-                            .populate('country', 'name')
-                            .sort('position')
-                            .select(
-                                '-type_id -author -__v  -template_name -in_home -isDeleted -deletedAt -created_at -updated_at -meta'
-                            )
-                            .populate('banner')
-                            .populate('gallery')
-                    }
 
+                    allContents = await Content.find({
+                        type_id: { $ne: contentType._id },
+                        brand: req.brand._id,
+                        country: req.country._id,
+                        published: true,
+                    })
+                    liveData = await Content.find({
+                        type_id: contentType._id,
+                        brand: req.brand._id,
+                        country: req.country._id,
+                        published: true,
+                    })
+                        .populate('brand', 'name code')
+                        .populate('country', 'name')
+                        .sort('position')
+                        .select(
+                            '-type_id -author -__v  -template_name -in_home -isDeleted -deletedAt -created_at -updated_at -meta'
+                        )
+                        .populate('banner')
+                        .populate('gallery')
+
+                        
                     let liveContent = []
                     if (liveData?.length) {
                         // Looping through contents
