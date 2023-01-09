@@ -645,12 +645,6 @@ const save = async (req, res) => {
                     body_content: body.body_content?.[lang.prefix],
                     excerpt: body.excerpt?.[lang.prefix],
                 }
-                fieldGroupData[lang.prefix] = {
-                    ...fieldGroupData[lang.prefix],
-                    title: body.title?.[lang.prefix],
-                    body_content: body.body_content?.[lang.prefix],
-                    excerpt: body.excerpt?.[lang.prefix],
-                }
                 if (req.contentType.hide_meta == false) {
                     metaData[lang.prefix] = {
                         title: body.meta_title[lang.prefix],
@@ -711,6 +705,7 @@ const save = async (req, res) => {
                         }
                     }
                 })
+
                 // Field group
                 req.contentType.custom_field_groups?.map((cfg, cfgIndex) => {
                     if (cfg.repeater_group) {
@@ -850,12 +845,6 @@ const save = async (req, res) => {
                         }
                     })
                 })
-                fieldGroupData[lang.prefix] = {
-                    ...fieldGroupData[lang.prefix],
-                    title: body.title?.[lang.prefix],
-                    body_content: body.body_content?.[lang.prefix],
-                    excerpt: body.excerpt?.[lang.prefix],
-                }
                 customData[lang.prefix] = {
                     ...customData[lang.prefix],
                     title: body.title?.[lang.prefix],
