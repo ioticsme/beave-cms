@@ -24,13 +24,13 @@ const list = async (req, res) => {
                     let liveData
 
                     allContents = await Content.find({
-                        type_id: { $ne: contentType._id },
+                        type_id: { $ne: contentType?._id },
                         brand: req.brand._id,
                         country: req.country._id,
                         published: true,
                     })
                     liveData = await Content.find({
-                        type_id: contentType._id,
+                        type_id: contentType?._id,
                         brand: req.brand._id,
                         country: req.country._id,
                         published: true,

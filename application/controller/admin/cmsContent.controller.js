@@ -199,7 +199,7 @@ const changeStatus = async (req, res) => {
 
 const save = async (req, res) => {
     try {
-        // console.log(req.body)
+        console.log(req.body)
         // console.log(req.files)
         session = req.authUser
         // BEGIN:: Generating default field validation rule for content type (title, description)
@@ -323,7 +323,7 @@ const save = async (req, res) => {
                         req.authUser.selected_brand.languages.forEach(
                             (lang) => {
                                 _.assign(validationObject, {
-                                    [lang.prefix]: eval(`Joi.${field.validation}`),
+                                    [lang.prefix]: eval(`${field.validation}`),
                                 })
                             }
                         )
@@ -400,16 +400,15 @@ const save = async (req, res) => {
         let fieldGroupData = {}
         let metaData = {}
         let images = {}
-
         // Upload image to imagekit
         if (req.files && req.files.length) {
             let files = collect(req.files).groupBy('fieldname')
             files = JSON.parse(JSON.stringify(files))
             for (let key in files) {
-                let images = files[key]
+                let imagesToUpload = files[key]
                 let uploaded = []
-                for (i = 0; i < images.length; i++) {
-                    let file = images[i]
+                for (i = 0; i < imagesToUpload.length; i++) {
+                    let file = imagesToUpload[i]
                     const base64 = Buffer.from(
                         fs.readFileSync(file.path)
                     ).toString('base64')
@@ -523,6 +522,24 @@ const save = async (req, res) => {
                             fieldGroupData['common'] = {
                                 ...fieldGroupData['common'],
                                 [cfg.row_name]: {
+                                    is_repeater: true,
+                                    values: {},
+                                },
+                            }
+                        }
+                    } else {
+                        if (cfg.bilingual) {
+                            fieldGroupData[lang.prefix] = {
+                                ...fieldGroupData[lang.prefix],
+                                [cfg.row_name]: {
+                                    is_repeater: false,
+                                    values: {},
+                                },
+                            }
+                        } else {
+                            fieldGroupData['common'] = {
+                                ...fieldGroupData['common'],
+                                [cfg.row_name]: {
                                     is_repeater: false,
                                     values: {},
                                 },
@@ -570,27 +587,15 @@ const save = async (req, res) => {
                                 }
                             } else {
                                 if (cfg.bilingual) {
-                                    if (cfg.repeater_group) {
-                                        if (
-                                            images?.[cf.field_name]?.[
-                                                lang.prefix
-                                            ]
-                                        ) {
-                                            fieldGroupData[lang.prefix][
+                                    if (
+                                        images?.[cf.field_name]?.[lang.prefix]
+                                    ) {
+                                        fieldGroupData[lang.prefix][
+                                            cfg.row_name
+                                        ]['values'] = {
+                                            ...fieldGroupData[lang.prefix]?.[
                                                 cfg.row_name
-                                            ]['values'] = {
-                                                ...fieldGroupData[
-                                                    lang.prefix
-                                                ]?.[cfg.row_name]?.['values'],
-                                                [cf.field_name]:
-                                                    images[cf.field_name][
-                                                        lang.prefix
-                                                    ] || '',
-                                            }
-                                        }
-                                    } else {
-                                        fieldGroupData[lang.prefix] = {
-                                            ...fieldGroupData[lang.prefix],
+                                            ]?.['values'],
                                             [cf.field_name]:
                                                 images[cf.field_name][
                                                     lang.prefix
@@ -598,49 +603,6 @@ const save = async (req, res) => {
                                         }
                                     }
                                 } else {
-                                    if (cfg.repeater_group) {
-                                        fieldGroupData['common'][cfg.row_name][
-                                            'values'
-                                        ] = {
-                                            ...fieldGroupData['common']?.[
-                                                cfg.row_name
-                                            ]?.['values'],
-                                            [cf.field_name]:
-                                                images[cf.field_name] || '',
-                                        }
-                                    } else {
-                                        fieldGroupData['common'] = {
-                                            ...fieldGroupData['common'],
-                                            [cf.field_name]:
-                                                images[cf.field_name] || '',
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            if (cfg.bilingual) {
-                                if (cfg.repeater_group) {
-                                    fieldGroupData[lang.prefix][cfg.row_name][
-                                        'values'
-                                    ] = {
-                                        ...fieldGroupData[lang.prefix]?.[
-                                            cfg.row_name
-                                        ]?.['values'],
-                                        [cf.field_name]:
-                                            body[cf.field_name]?.[
-                                                lang.prefix
-                                            ] || '',
-                                    }
-                                } else {
-                                    fieldGroupData[lang.prefix] = {
-                                        ...fieldGroupData[lang.prefix],
-                                        [cf.field_name]:
-                                            body[cf.field_name][lang.prefix] ||
-                                            '',
-                                    }
-                                }
-                            } else {
-                                if (cfg.repeater_group) {
                                     fieldGroupData['common'][cfg.row_name][
                                         'values'
                                     ] = {
@@ -648,14 +610,30 @@ const save = async (req, res) => {
                                             cfg.row_name
                                         ]?.['values'],
                                         [cf.field_name]:
-                                            body[cf.field_name] || '',
+                                            images[cf.field_name] || '',
                                     }
-                                } else {
-                                    fieldGroupData['common'] = {
-                                        ...fieldGroupData['common'],
-                                        [cf.field_name]:
-                                            body[cf.field_name] || '',
-                                    }
+                                }
+                            }
+                        } else {
+                            if (cfg.bilingual) {
+                                fieldGroupData[lang.prefix][cfg.row_name][
+                                    'values'
+                                ] = {
+                                    ...fieldGroupData[lang.prefix]?.[
+                                        cfg.row_name
+                                    ]?.['values'],
+                                    [cf.field_name]:
+                                        body[cf.field_name]?.[lang.prefix] ||
+                                        '',
+                                }
+                            } else {
+                                fieldGroupData['common'][cfg.row_name][
+                                    'values'
+                                ] = {
+                                    ...fieldGroupData['common']?.[
+                                        cfg.row_name
+                                    ]?.['values'],
+                                    [cf.field_name]: body[cf.field_name] || '',
                                 }
                             }
                         }
@@ -753,6 +731,24 @@ const save = async (req, res) => {
                                 },
                             }
                         }
+                    } else {
+                        if (cfg.bilingual) {
+                            fieldGroupData[lang.prefix] = {
+                                ...fieldGroupData[lang.prefix],
+                                [cfg.row_name]: {
+                                    is_repeater: false,
+                                    values: {},
+                                },
+                            }
+                        } else {
+                            fieldGroupData['common'] = {
+                                ...fieldGroupData['common'],
+                                [cfg.row_name]: {
+                                    is_repeater: false,
+                                    values: {},
+                                },
+                            }
+                        }
                     }
                     cfg.fields?.map((cf) => {
                         if (cf.field_type === 'file') {
@@ -818,7 +814,7 @@ const save = async (req, res) => {
                                             [cf.field_name]: val || '',
                                         }
                                     } else {
-                                        // If no image is uploaded and content have no iamge then the error object will push to customError array
+                                        // If no image is uploaded and content have no image then the error object will push to customError array
                                         customErrors.push({
                                             message: `${cf.field_name}.${lang.prefix} is not allowed to be empty`,
                                             path: [
@@ -831,43 +827,24 @@ const save = async (req, res) => {
                             }
                         } else {
                             if (cfg.bilingual) {
-                                if (cfg.repeater_group) {
-                                    fieldGroupData[lang.prefix][cfg.row_name][
-                                        'values'
-                                    ] = {
-                                        ...fieldGroupData[lang.prefix]?.[
-                                            cfg.row_name
-                                        ]?.['values'],
-                                        [cf.field_name]:
-                                            body[cf.field_name]?.[
-                                                lang.prefix
-                                            ] || '',
-                                    }
-                                } else {
-                                    fieldGroupData[lang.prefix] = {
-                                        ...fieldGroupData[lang.prefix],
-                                        [cf.field_name]:
-                                            body[cf.field_name][lang.prefix] ||
-                                            '',
-                                    }
+                                fieldGroupData[lang.prefix][cfg.row_name][
+                                    'values'
+                                ] = {
+                                    ...fieldGroupData[lang.prefix]?.[
+                                        cfg.row_name
+                                    ]?.['values'],
+                                    [cf.field_name]:
+                                        body[cf.field_name]?.[lang.prefix] ||
+                                        '',
                                 }
                             } else {
-                                if (cfg.repeater_group) {
-                                    fieldGroupData['common'][cfg.row_name][
-                                        'values'
-                                    ] = {
-                                        ...fieldGroupData['common']?.[
-                                            cfg.row_name
-                                        ]?.['values'],
-                                        [cf.field_name]:
-                                            body[cf.field_name] || '',
-                                    }
-                                } else {
-                                    fieldGroupData['common'] = {
-                                        ...fieldGroupData['common'],
-                                        [cf.field_name]:
-                                            body[cf.field_name] || '',
-                                    }
+                                fieldGroupData['common'][cfg.row_name][
+                                    'values'
+                                ] = {
+                                    ...fieldGroupData['common']?.[
+                                        cfg.row_name
+                                    ]?.['values'],
+                                    [cf.field_name]: body[cf.field_name] || '',
                                 }
                             }
                         }

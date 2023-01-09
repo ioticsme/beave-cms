@@ -14,6 +14,7 @@ class ContentResource extends Resource {
             brand: this.brand,
             country: this.country,
             content: this.content,
+            group_content: this.group_content,
             attached_content: this.attached_content,
             banner: this.banner ? new BannerResource(this.banner).exec() : undefined,
             gallery: this.gallery ? new GalleryResource(this.gallery).exec() : undefined,

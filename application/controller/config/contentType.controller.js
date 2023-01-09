@@ -35,7 +35,7 @@ const edit = async (req, res) => {
 
 const save = async (req, res) => {
     try {
-        console.log(req.body)
+        console.log(req.body.kt_docs_repeater_nested_outer)
         const schema = Joi.object({
             title: Joi.string().required().min(3).max(60),
             slug: Joi.string().required().min(3).max(60),

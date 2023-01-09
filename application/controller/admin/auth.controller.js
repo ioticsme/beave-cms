@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const Admin = require('../../model/Admin')
 const Brand = require('../../model/Brand')
 var session = require('express-session')
-const Settings = require('../../model/Settings')
+const Settings = require('../../model/Settings') 
 
 const login = async (req, res) => {
     try {
