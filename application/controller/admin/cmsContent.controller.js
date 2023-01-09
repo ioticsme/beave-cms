@@ -323,7 +323,7 @@ const save = async (req, res) => {
                         req.authUser.selected_brand.languages.forEach(
                             (lang) => {
                                 _.assign(validationObject, {
-                                    [lang.prefix]: eval(field.validation),
+                                    [lang.prefix]: eval(`Joi.${field.validation}`),
                                 })
                             }
                         )
