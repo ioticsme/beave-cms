@@ -197,6 +197,7 @@ const loginSubmit = async (req, res) => {
 const socialLoginSubmit = async (req, res) => {
     const schema = Joi.object({
         provider: Joi.string().required().valid('facebook', 'google'),
+        accessToken: Joi.string().required(),
     })
 
     const validationResult = schema.validate(req.body, { abortEarly: false })
@@ -206,36 +207,30 @@ const socialLoginSubmit = async (req, res) => {
             details: validationResult.error.details,
         })
     }
+    // const bearerToken = req.headers?.authorization?.split(' ')[1]
+    const bearerToken = req.body.accessToken
 
-    const bearerToken = req.headers?.authorization?.split(' ')[1]
+    let profile = {}
+    if (req.body.provider == 'facebook') {
+        profile = await getFacebookProfile(bearerToken)
+        console.log('FB: ', profile)
+    }
+    else if (req.body.provider == 'google') {
+        profile = await getGoogleProfile(bearerToken)
+        console.log('GP: ', profile)
+    }
 
-    if (!bearerToken) {
+    if (!profile || !profile.email) {
         return res.status(401).json({
             error: 'Unauthorized',
         })
     }
-    // console.log(bearerToken)
-    const CLIENT_ID_GOOGLE = process.env.GOOGLE_CLIENT_ID
 
     try {
-        const client = new OAuth2Client(CLIENT_ID_GOOGLE)
-
-        const socialAuthData = await client.verifyIdToken({
-            idToken: bearerToken,
-            audience: CLIENT_ID_GOOGLE,
-        })
-
-        if (!socialAuthData?.payload) {
-            return res.status(401).json({
-                error: 'Unauthorized',
-            })
-        }
-
-        // return res.json(socialAuthData)
 
         let user = await User.findOne({
             // email: { $regex: req.body.email, $options: 'i' },
-            email: socialAuthData.payload.email,
+            email: profile.email,
             active: true,
             // isDeleted: false,
         })
@@ -247,18 +242,18 @@ const socialLoginSubmit = async (req, res) => {
             const saltRounds = 10
             const salt = bcrypt.genSaltSync(saltRounds)
 
-            const user = await User.create({
-                first_name: socialAuthData.payload.given_name,
-                last_name: socialAuthData.payload.family_name,
-                email: socialAuthData.payload.email,
-                email_verified: socialAuthData.payload.email_verified,
-                mobile: mobile,
-                consent_marketing:
-                    req.body.consent_marketing == 'true' || false,
-                password: bcrypt.hashSync(socialAuthData.payload.nbf, salt),
+            user = await User.create({
+                first_name: profile.first_name,
+                last_name: profile.last_name,
+                email: profile.email,
+                email_verified: profile.email_verified,
+                // mobile: mobile,
+                // consent_marketing:
+                //     req.body.consent_marketing == 'true' || false,
+                password: bcrypt.hashSync(`${profile.id}-${Date.now()}-${salt}`, salt),
                 provider: req.body.provider,
-                provider_user_id: socialAuthData.envelope.kid,
-                profile_image_url: socialAuthData.payload.picture,
+                provider_user_id: profile.id,
+                profile_image_url: profile.picture,
                 log: {
                     last_login: {
                         brand: req.brand.code,
@@ -269,24 +264,66 @@ const socialLoginSubmit = async (req, res) => {
                     },
                 },
             })
+
+            const featured_packages = ProductResource.collection(
+                await Product.find({
+                    brand: req.brand._id,
+                    country: req.country._id,
+                    product_type: 'regular',
+                    featured: true,
+                    published: true,
+                })
+                    .limit(4)
+                    .sort('position')
+                    .populate('country')
+                    .select('name price image actual_price sales_price')
+            )
+
+            const promotions = await Content.find({
+                type_slug: 'promotion',
+            })
+                .limit(4)
+                .select('content')
+
+            const mg_settings =
+                req.brand.settings?.notification_settings?.mailgun
+            sendEmail(
+                mg_settings.from,
+                req.body.email,
+                `Thank you for Registering`,
+                mg_settings.welcome_template,
+                {
+                    user: user,
+                    packages: featured_packages,
+                    promotions: promotions,
+                },
+                mg_settings
+            )
+        } else {
+            user.first_name = profile.first_name
+            user.last_name = profile.last_name
+            user.email_verified = profile.email_verified
+            user.provider = req.body.provider
+            user.provider_user_id = profile.id
+            user.profile_image_url = profile.picture
+
+            user.log.last_login = {
+                brand: req.brand.code,
+                country: req.country.code,
+                lang: req.language,
+                ip: ip,
+                user_agent: req.user_agent_data,
+            }
+
+            await user.save()
         }
 
-        user.first_name = socialAuthData.payload.given_name
-        user.last_name = socialAuthData.payload.family_name
-        user.email_verified = socialAuthData.payload.email_verified
-        user.provider = req.body.provider
-        user.provider_user_id = socialAuthData.envelope.kid
-        user.profile_image_url = socialAuthData.payload.picture
-
-        user.log.last_login = {
-            brand: req.brand.code,
-            country: req.country.code,
-            lang: req.language,
-            ip: ip,
-            user_agent: req.user_agent_data,
+        if (!user.mobile) {
+            return res.status(206).json({
+                message: 'Some fields are mandatory',
+                fields: ['mobile', 'consent_marketing'],
+            })
         }
-
-        await user.save()
 
         const token = jwt.sign(
             {
@@ -325,6 +362,194 @@ const socialLoginSubmit = async (req, res) => {
         return res.status(500).json({
             error: 'Something went wrong',
         })
+    }
+}
+
+const getGoogleProfile = async (accessToken) => {
+    try {
+        const token = `Bearer ${accessToken}`
+        const url = `https://www.googleapis.com/oauth2/v3/userinfo`
+        const response = await axios
+            .get(url, {
+                headers: {
+                    Authorization: token,
+                },
+            })
+            .catch((error) => {
+                console.log(error)
+                return false
+            })
+
+        if (response && response.data && response.data.sub) {
+            const profile = {
+                id: response.data.sub,
+                first_name: response.data.given_name,
+                last_name: response.data.family_name,
+                email: response.data.email,
+                email_verified: response.data.email_verified,
+                picture: response.data.picture,
+            }
+            return profile
+        }
+        return false
+    } catch (error) {
+        return false
+    }
+}
+
+const getFacebookProfile = async (accessToken) => {
+    try {
+        const url = `https://graph.facebook.com/me?fields=id,name,email,picture,first_name,last_name&access_token=${accessToken}`
+        const response = await axios.get(url)
+
+        if (response && response.data && response.data.id) {
+            const profile = {
+                id: response.data.id,
+                first_name: response.data.first_name,
+                last_name: response.data.last_name,
+                email: response.data.email,
+                picture: response.data.picture?.data?.url,
+            }
+            return profile
+        }
+        return false
+    } catch (error) {
+        return false
+    }
+}
+
+const updateMobileNo = async (req, res) => {
+    const schema = Joi.object({
+        provider: Joi.string().required().valid('facebook', 'google'),
+        mobile: Joi.string()
+            .custom((value, helper) => {
+                // you can use any libs for check phone
+                value = value.replace(/ /g, '')
+                value = value.replace('+', '')
+                console.log('VALUE', value)
+                var regex = /^(971|973|968|965|974){1}]?[0-9]{8,9}$/
+                if (!regex.test(value.replace(' ', ''))) {
+                    return helper.message('Invalid phone number')
+                }
+                return value
+            })
+            // .regex(/^\+(?:[0-9] ?){6,14}[0-9]$/)
+            .required()
+            .min(11)
+            .max(12),
+        consent_marketing: Joi.boolean().optional().allow(null, ''),
+        accessToken: Joi.string().optional().allow(null, ''),
+    })
+
+    const validationResult = schema.validate(req.body, { abortEarly: false })
+
+    if (validationResult.error) {
+        res.status(422).json({
+            details: validationResult.error.details,
+        })
+        return
+    }
+
+    // Verifying captcha with token
+    if (
+        (process.env.NODE_ENV == 'production' ||
+            process.env.NODE_ENV == 'staging') &&
+        req.source == 'web'
+    ) {
+        const isVerified = await verifyCaptcha(req.body.token)
+        if (!isVerified) {
+            return res.status(400).json({ error: 'captcha token not verified' })
+        }
+    }
+
+    try {
+        const bearerToken = req.body.accessToken
+
+    if (!bearerToken) {
+        return res.status(401).json({
+            error: 'Unauthorized',
+        })
+    }
+    // console.log(bearerToken)
+    let profile = {}
+    if (req.body.provider == 'facebook') {
+        profile = await getFacebookProfile(bearerToken)
+        console.log('FB: ', profile)
+    }
+    else if (req.body.provider == 'google') {
+        profile = await getGoogleProfile(bearerToken)
+        console.log('GP: ', profile)
+    }
+
+    if (!profile || !profile.email) {
+        return res.status(401).json({
+            error: 'Unauthorized',
+        })
+    }
+
+        // const CLIENT_ID_GOOGLE = process.env.GOOGLE_CLIENT_ID
+
+        // const client = new OAuth2Client(CLIENT_ID_GOOGLE)
+
+        // const socialAuthData = await client.verifyIdToken({
+        //     idToken: bearerToken,
+        //     audience: CLIENT_ID_GOOGLE,
+        // })
+
+        // if (!socialAuthData?.payload) {
+        //     return res.status(401).json({
+        //         error: 'Unauthorized',
+        //     })
+        // }
+
+        let user = await User.findOne({
+            email: profile.email,
+            active: true,
+            // isDeleted: false,
+        })
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' })
+        }
+
+        let mobile = req.body.mobile.replace(/\D/g, '').replace(/^0+/, '')
+        const isMobileExist = await User.findOne({ mobile })
+
+        if (isMobileExist) {
+            return res.status(422).json({
+                details: [
+                    {
+                        message: '"mobile" number already exist',
+                        path: ['mobile'],
+                        type: 'any.exist',
+                        context: {
+                            label: 'mobile',
+                            key: 'mobile',
+                        },
+                    },
+                ],
+            })
+        }
+
+        user.mobile = mobile
+        user.consent_marketing = req.body.consent_marketing == 'true' || false
+        await user.save()
+
+        authenticator.options = {
+            digits: 8,
+            epoch: Date.now(),
+            step: 20000,
+        }
+        const otp = authenticator.generate(mobile) //TODO Same OTP for same mobile number
+        let smsSettings = req.brand.settings?.notification_settings?.sms
+        SMS.sendOTP(otp, mobile, req.brand.name.en, smsSettings)
+
+        return res.status(200).json({
+            message: 'OTP sent to mobile ',
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ error: 'Something went wrong' })
     }
 }
 
@@ -1077,6 +1302,7 @@ module.exports = {
     loginSubmit,
     socialLoginSubmit,
     signupSubmit,
+    updateMobileNo,
     otpVerification,
     resendOTP,
     forgotCredentials,

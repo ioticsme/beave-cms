@@ -31,6 +31,7 @@ router.group('/v1', (router) => {
         router.group('/login', (router) => {
             router.post('/', authController.loginSubmit)
             router.post('/social', authController.socialLoginSubmit)
+            router.post('/update-mobile', authController.updateMobileNo)
         })
         router.post('/signup', authController.signupSubmit)
         router.post('/verify', authController.otpVerification)
