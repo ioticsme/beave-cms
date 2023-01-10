@@ -128,7 +128,7 @@ block content
 							h3.fw-bold.m-0 Custom Fields
 					#kt_account_settings_profile_details.collapse.show
 							.card-body.border-top.p-9
-								.row.mb-6#kt_docs_repeater_nested
+								.row#kt_docs_repeater_nested
 									if(contentType && contentType.custom_field_groups && contentType.custom_field_groups.length)
 										.form-group.mt-10
 											div(data-repeater-list='kt_docs_repeater_nested_outer')
@@ -217,9 +217,9 @@ block content
 										//- Add Method
 										.form-group.mt-10
 											div(data-repeater-list='kt_docs_repeater_nested_outer')
-												div(data-repeater-item='').border.rounded.p-6.pt-12.position-relative
+												div(data-repeater-item='', style='background-color: #ebebeb').border.rounded.p-6.pt-12.mb-4.position-relative
 													.position-absolute(style='top:10px; right:10px;')
-														a.btn.btn-sm.btn-light-danger.py-2.px-3(href='javascript:;' data-repeater-delete='')
+														a.btn.btn-sm.btn-light-danger.border.border-danger.py-2.px-3(href='javascript:;' data-repeater-delete='')
 															i.la.la-trash-o.fs-4
 															| Delete Row
 													.form-group.row.mb-5
@@ -246,11 +246,11 @@ block content
 																option(value="true" selected=contentType && contentType.bilingual == true) Bilingual
 																option(value="false" selected=contentType && contentType.bilingual == false) English Only
 													div
-														.inner-repeater.border.rounded.p-6.pt-10
+														.inner-repeater
 															.mb-5(data-repeater-list='kt_docs_repeater_nested_inner')
-																div(data-repeater-item='').position-relative
-																	.position-absolute(style='top:-18px; right:-8px;')
-																		button.btn-sm.btn.btn-light-danger.py-2.px-3(data-repeater-delete='' type='button')
+																div(data-repeater-item='').position-relative.border.rounded.p-6.pt-10.bg-white.mt-4
+																	.position-absolute(style='top:10px; right:10px;')
+																		button.btn-sm.btn.btn-light-danger.border.border-danger.py-2.px-3(data-repeater-delete='' type='button')
 																			i.la.la-trash-o.fs-4
 																			| Delete field
 																	label.form-label Field:
@@ -293,12 +293,12 @@ block content
 																		//- i.la.la-trash-o.fs-3
 																	
 															.text-center
-																button.btn.btn-sm.btn-light-primary.py-2.px-3(data-repeater-create='' type='button')
+																button.btn.btn-sm.btn-light-primary.border.border-primary.py-2.px-3(data-repeater-create='' type='button')
 																	i.la.la-plus
 																	|  Add Field
 														
-										.form-group.mt-2.text-center
-											a.btn.btn-sm.btn-light-primary.py-2.px-3(href='javascript:;' data-repeater-create='')
+										.form-group.mt-2.text-center.mt-4
+											a.btn.btn-sm.btn-light-primary.border.border-primary.py-2.px-3(href='javascript:;' data-repeater-create='')
 												i.la.la-plus
 												| Add Row
 										// end::Form group
