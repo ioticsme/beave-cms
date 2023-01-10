@@ -3,10 +3,15 @@ require('dotenv').config()
 const axios = require('axios')
 
 const sendAdminNotification = async (message) => {
-    axios.post(`${process.env.SLACK_ADMIN_CHANNEL}`, {
-        username: 'LML-OTP',
-        text: message,
-    })
+    if (
+        globalModuleConfig.has_slack &&
+        globalModuleConfig.slack_admin_channel
+    ) {
+        axios.post(`${globalModuleConfig.slack_admin_channel}`, {
+            username: 'LML-OTP',
+            text: message,
+        })
+    }
 }
 
 const orderNotification = async (order) => {
@@ -77,75 +82,82 @@ const orderNotification = async (order) => {
     //     ],
     // }
 
-    await axios.post(
-        `${process.env.SLACK_ADMIN_CHANNEL}`,
-        {
-            // username: 'LML-OTP',
-            // text: 'I hope the tour went well, Mr. Wonka.',
-            attachments: [
-                {
-                    color:
-                        order.order_status == 'success' ? '#38be25' : '#Ff0606',
-                    blocks: [
-                        {
-                            type: 'section',
-                            text: {
-                                type: 'mrkdwn',
-                                text: `You have a new order: ${order.order_no}`,
+    if (
+        globalModuleConfig.has_slack &&
+        globalModuleConfig.slack_admin_channel
+    ) {
+        await axios.post(
+            `${globalModuleConfig.slack_admin_channel}`,
+            {
+                // username: 'LML-OTP',
+                // text: 'I hope the tour went well, Mr. Wonka.',
+                attachments: [
+                    {
+                        color:
+                            order.order_status == 'success'
+                                ? '#38be25'
+                                : '#Ff0606',
+                        blocks: [
+                            {
+                                type: 'section',
+                                text: {
+                                    type: 'mrkdwn',
+                                    text: `You have a new order: ${order.order_no}`,
+                                },
                             },
-                        },
-                        {
-                            type: 'section',
-                            fields: [
-                                {
-                                    type: 'mrkdwn',
-                                    text: `*Order No:*\n ${order.order_no}`,
-                                },
-                                {
-                                    type: 'mrkdwn',
-                                    text: `*Name:*\n ${order.user.first_name} ${order.user.last_name}`,
-                                },
-                                {
-                                    type: 'mrkdwn',
-                                    text: `*Paid Amount:*\n ${order.amount_to_pay}`,
-                                },
-                            ],
-                        },
-                        // {
-                        //     type: 'actions',
-                        //     elements: [
-                        //         {
-                        //             type: 'button',
-                        //             text: {
-                        //                 type: 'plain_text',
-                        //                 emoji: true,
-                        //                 text: 'View Order',
-                        //             },
-                        //             style: 'primary',
-                        //             value: 'click_me_123',
-                        //         },
-                        //         // {
-                        //         //     type: 'button',
-                        //         //     text: {
-                        //         //         type: 'plain_text',
-                        //         //         emoji: true,
-                        //         //         text: 'Deny',
-                        //         //     },
-                        //         //     style: 'danger',
-                        //         //     value: 'click_me_123',
-                        //         // },
-                        //     ],
-                        // },
-                    ],
-                },
-            ],
-        },
-        {
-            headers: {
-                'Content-Type': 'application/json',
+                            {
+                                type: 'section',
+                                fields: [
+                                    {
+                                        type: 'mrkdwn',
+                                        text: `*Order No:*\n ${order.order_no}`,
+                                    },
+                                    {
+                                        type: 'mrkdwn',
+                                        text: `*Name:*\n ${order.user.first_name} ${order.user.last_name}`,
+                                    },
+                                    {
+                                        type: 'mrkdwn',
+                                        text: `*Paid Amount:*\n ${order.amount_to_pay}`,
+                                    },
+                                ],
+                            },
+                            // {
+                            //     type: 'actions',
+                            //     elements: [
+                            //         {
+                            //             type: 'button',
+                            //             text: {
+                            //                 type: 'plain_text',
+                            //                 emoji: true,
+                            //                 text: 'View Order',
+                            //             },
+                            //             style: 'primary',
+                            //             value: 'click_me_123',
+                            //         },
+                            //         // {
+                            //         //     type: 'button',
+                            //         //     text: {
+                            //         //         type: 'plain_text',
+                            //         //         emoji: true,
+                            //         //         text: 'Deny',
+                            //         //     },
+                            //         //     style: 'danger',
+                            //         //     value: 'click_me_123',
+                            //         // },
+                            //     ],
+                            // },
+                        ],
+                    },
+                ],
             },
-        }
-    )
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
+    }
 }
 
 module.exports = {

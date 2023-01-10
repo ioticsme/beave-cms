@@ -9,17 +9,15 @@ const baseURL = `https://smsapi.aptivadigi.com/api/?username=lmleisure&password=
 const sendSMS = async (mobile, senderID, message) => {
     console.log(mobile, senderID, message)
     // if (process.env.NODE_ENV == 'production') {
-        axios
-            .get(
-                `${baseURL}${message}&sender=${senderID}&uniCode=0&to=${mobile}`
-            )
-            .then(function (response) {
-                // console.log(response)
-            })
-            .catch(function (error) {
-                console.log(error)
-                // TODO::Send slack notification to the admin
-            })
+    axios
+        .get(`${baseURL}${message}&sender=${senderID}&uniCode=0&to=${mobile}`)
+        .then(function (response) {
+            // console.log(response)
+        })
+        .catch(function (error) {
+            console.log(error)
+            // TODO::Send slack notification to the admin
+        })
     // } else {
     //     axios.post(`${process.env.SLACK_ADMIN_CHANNEL}`, {
     //         username: 'LML-OTP',
@@ -54,21 +52,30 @@ const sendThanks = async (message, mobile, brand, smsSettings) => {
         //         // TODO::Send slack notification to the admin
         //     })
     } else {
-        axios.post(`${process.env.SLACK_ADMIN_CHANNEL}`, {
-            username: 'LML-OTP',
-            text: message,
-        })
+        if (
+            globalModuleConfig.has_slack &&
+            globalModuleConfig.slack_admin_channel
+        ) {
+            axios.post(`${globalModuleConfig.slack_admin_channel}`, {
+                username: 'LML-OTP',
+                text: message,
+            })
+        }
     }
 }
 
-async function sendOrderSms (payload) {
+async function sendOrderSms(payload) {
     // console.log('SENDING SMS:', payload)
     if (payload && payload.has_otp && payload.order.semnox_otp) {
         const user = await User.findOne({
             _id: payload.order.user._id,
         })
         // console.log('SENDING SMS TO: ', user.mobile)
-        sendTransactionOTP(payload.order.semnox_otp, user.mobile, payload.generic_details.brand.name.en)
+        sendTransactionOTP(
+            payload.order.semnox_otp,
+            user.mobile,
+            payload.generic_details.brand.name.en
+        )
     }
 }
 
@@ -76,5 +83,5 @@ module.exports = {
     sendOTP,
     sendThanks,
     sendTransactionOTP,
-    sendOrderSms
+    sendOrderSms,
 }
