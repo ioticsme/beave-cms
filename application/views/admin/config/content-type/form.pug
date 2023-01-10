@@ -70,6 +70,7 @@ block content
 						li.breadcrumb-item.text-muted Content Type 
 							span.bullet.bg-gray-400.w-5px.h-2px.ms-1
 						li.breadcrumb-item.text-muted #{contentType ? 'Edit' : 'New'}
+	form#kt_account_profile_details_form.form.es-form(action=`/admin/config/content-type/save` data-redirect-url=`/admin/config/content-type`  method='post' autocomplete="off")
 		#kt_app_content.app-content.flex-column-fluid
 			#kt_app_content_container.app-container.container-xxl
 				.card.mb-5.mb-xl-10
@@ -77,7 +78,6 @@ block content
 						.card-title.m-0
 							h3.fw-bold.m-0 Content Type Form
 					#kt_account_settings_profile_details.collapse.show
-						form#kt_account_profile_details_form.form.es-form(action=`/admin/config/content-type/save` data-redirect-url=`/admin/config/content-type`  method='post' autocomplete="off")
 							input(type='hidden' name='id' value=`${contentType ? contentType._id : ''}`)
 							.card-body.border-top.p-9
 								.row.mb-6
@@ -117,10 +117,17 @@ block content
 											each ct in contentTypes
 												option(value=`${ct.slug}` selected=contentType && contentType.allowed_type && contentType.allowed_type.length && contentType.allowed_type.find((at)=>at==ct.slug) ) #{ct.title}
 										.fv-plugins-message-container.invalid-feedback(id=`field-error-attachable_type`)
-								.ribbon.ribbon-start.ribbon-clip
-									.ribbon-label
-										| Custom Fields
-										span.ribbon-inner.bg-success
+				
+				.ribbon.ribbon-start.ribbon-clip
+					.ribbon-label
+						| Custom Fields
+						span.ribbon-inner.bg-success
+				.card.mb-5.mb-xl-10
+					.card-header.border-0.cursor-pointer(role='button' data-bs-toggle='collapse' data-bs-target='#kt_account_profile_details' aria-expanded='true' aria-controls='kt_account_profile_details')
+						.card-title.m-0
+							h3.fw-bold.m-0 Custom Fields
+					#kt_account_settings_profile_details.collapse.show
+							.card-body.border-top.p-9
 								.row.mb-6#kt_docs_repeater_nested
 									if(contentType && contentType.custom_field_groups && contentType.custom_field_groups.length)
 										.form-group.mt-10
@@ -146,6 +153,7 @@ block content
 																	option(value="" ) Select language type
 																	option(value="true" selected=cfg && cfg.bilingual == true) Bilingual
 																	option(value="false" selected=cfg && cfg.bilingual == false) English Only
+														hr
 														.row
 															.inner-repeater
 																.mb-5(data-repeater-list='kt_docs_repeater_nested_inner')
@@ -209,7 +217,11 @@ block content
 										//- Add Method
 										.form-group.mt-10
 											div(data-repeater-list='kt_docs_repeater_nested_outer')
-												div(data-repeater-item='')
+												div(data-repeater-item='').border.rounded.p-6.pt-12.position-relative
+													.position-absolute(style='top:10px; right:10px;')
+														a.btn.btn-sm.btn-light-danger.py-2.px-3(href='javascript:;' data-repeater-delete='')
+															i.la.la-trash-o.fs-4
+															| Delete Row
 													.form-group.row.mb-5
 														.col-md-6
 															label.form-label Row Label:
@@ -233,10 +245,14 @@ block content
 																option(value="" ) Select language type
 																option(value="true" selected=contentType && contentType.bilingual == true) Bilingual
 																option(value="false" selected=contentType && contentType.bilingual == false) English Only
-													.row
-														.inner-repeater
+													div
+														.inner-repeater.border.rounded.p-6.pt-10
 															.mb-5(data-repeater-list='kt_docs_repeater_nested_inner')
-																div(data-repeater-item='')
+																div(data-repeater-item='').position-relative
+																	.position-absolute(style='top:-18px; right:-8px;')
+																		button.btn-sm.btn.btn-light-danger.py-2.px-3(data-repeater-delete='' type='button')
+																			i.la.la-trash-o.fs-4
+																			| Delete field
 																	label.form-label Field:
 																	//- .input-group.pb-3
 																	.row
@@ -275,23 +291,24 @@ block content
 																			.fv-plugins-message-container.invalid-feedback(id=`field-error-option_value`)
 																		//- button.border.border-secondary.btn.btn-icon.btn-light-danger(data-repeater-delete='' type='button')
 																		//- i.la.la-trash-o.fs-3
-																	.text-center.mb-2.mt-2
-																		button.btn-sm.btn.btn-light-danger(data-repeater-delete='' type='button')
-																			i.la.la-trash-o.fs-3
-																			| Delete field
+																	
 															.text-center
-																button.btn.btn-sm.btn-light-primary(data-repeater-create='' type='button')
+																button.btn.btn-sm.btn-light-primary.py-2.px-3(data-repeater-create='' type='button')
 																	i.la.la-plus
 																	|  Add Field
-														.text-center
-															a.btn.btn-sm.btn-light-danger.mt-3.mt-md-9(href='javascript:;' data-repeater-delete='')
-																i.la.la-trash-o.fs-3
-																| Delete Row
+														
 										.form-group.mt-2.text-center
-											a.btn.btn-light-primary(href='javascript:;' data-repeater-create='')
+											a.btn.btn-sm.btn-light-primary.py-2.px-3(href='javascript:;' data-repeater-create='')
 												i.la.la-plus
 												| Add Row
 										// end::Form group
+								
+				.card.mb-5.mb-xl-10
+					.card-header.border-0.cursor-pointer(role='button' data-bs-toggle='collapse' data-bs-target='#kt_account_profile_details' aria-expanded='true' aria-controls='kt_account_profile_details')
+						.card-title.m-0
+							h3.fw-bold.m-0 Features Checklist
+					#kt_account_settings_profile_details.collapse.show
+							.card-body.border-top.p-9
 								.row.mb-6
 									span.col-lg-4.col-form-label.required.fw-semibold.fs-6 Features Checklist
 									small Please include the following in your content type.
