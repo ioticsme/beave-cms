@@ -19,26 +19,26 @@ const readFile = utils.promisify(fs.readFile)
 
 const projectRootDir = require('path').resolve('./')
 
-// SDK initialization
-const imagekit = new ImageKit({
-    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
-    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
-    urlEndpoint: process.env.IMAGEKIT_URL,
-})
-
-// URL generation
-const imageURL = imagekit.url({
-    path: '/default-image.jpg',
-    transformation: [
-        {
-            height: '300',
-            width: '400',
-        },
-    ],
-})
-
 // Upload function internally uses the ImageKit.io javascript SDK
 const uploadMedia = async (media, folder, new_name) => {
+    // SDK initialization
+    const imagekit = new ImageKit({
+        publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+        privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+        urlEndpoint: process.env.IMAGEKIT_URL,
+    })
+
+    // URL generation
+    const imageURL = imagekit.url({
+        path: '/default-image.jpg',
+        transformation: [
+            {
+                height: '300',
+                width: '400',
+            },
+        ],
+    })
+
     let nodeEnv = process.env.NODE_ENV
     let baseFolder = `${process.env.IMAGEKIT_FOLDER}/${
         nodeEnv.charAt(0).toUpperCase() + nodeEnv.slice(1)
@@ -181,7 +181,7 @@ const fileLogger = async (message, service, type, level = 'info') => {
     })
 }
 
-const createFcmSwJS = async(credentials) => {
+const createFcmSwJS = async (credentials) => {
     const wrapper_public_dir = `${projectRootDir}/public`
     if (!fs.existsSync(wrapper_public_dir)) {
         fs.mkdirSync(wrapper_public_dir)
