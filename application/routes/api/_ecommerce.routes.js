@@ -33,11 +33,6 @@ router.group('/', (router) => {
         router.get('/:id', userController.orderDetail)
     })
 
-    router.group('/pam', (router) => {
-        router.get('/parent', userController.pamGetParent)
-        // router.get('/renewable-memberships/:id', userController.pamGetParent)
-    })
-
     router.group('/payment-cards', (router) => {
         router.get('/', userController.listPaymentCard)
         router.post('/', userController.deletePaymentCards)

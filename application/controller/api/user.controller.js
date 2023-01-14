@@ -342,54 +342,6 @@ const deletePaymentCards = async (req, res) => {
     }
 }
 
-// PAM Search Parent
-const pamGetParent = async (req, res) => {
-    try {
-        const noCache = req.query['no-cache'] || false
-
-        const cache_key = `pam-parent-${req.authPublicUser._id}`
-
-        const parentData = await getCache(cache_key)
-        let data = {};
-        if (parentData && !req.query['no-cache']) {
-            // console.log('FROM CACHE', cache_key)
-            data = JSON.parse(parentData);
-        } else {
-            const parentDetail = await getParent(req.authPublicUser)
-            // const parentDetail = await getParent(97477988020)
-            if (!parentDetail) {
-                return res.status(400).json({ error: 'PAM data not found' })
-            }
-            data = new PAMParentResource(parentDetail).exec();
-            await removeCache(cache_key)
-            await setCache(cache_key, JSON.stringify(data), 60 * 60)
-            // console.log('cache set', cache_key)
-        }
-        res.status(200).json(data)
-        // res.status(200).json(new PAMParentResource(data).exec())
-
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({ error: 'Something went wrong' })
-    }
-}
-
-// PAM Search Parent
-const pamRenewableMemberships = async (req, res) => {
-    try {
-        const parentDetail = await getParent(req.authPublicUser)
-        const pamMemberships = await getPamMemberships()
-        // const parentDetail = await getParent(97477988020)
-        if (!parentDetail) {
-            return res.status(404).json({ error: 'PAM data not found' })
-        }
-        res.status(200).json(new PAMParentResource(parentDetail).exec())
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({ error: 'Something went wrong' })
-    }
-}
-
 module.exports = {
     detail,
     editUser,
@@ -398,5 +350,4 @@ module.exports = {
     deletePaymentCards,
     orderHistory,
     orderDetail,
-    pamGetParent,
 }
