@@ -5,7 +5,6 @@ const { sendEmail } = require('../../helper/Mail.helper')
 // const Content = require('../../node_modules/@ioticsme/cms/model/Content')
 const CustomForm = require('../../model/CustomForm')
 const CustomFormData = require('../../model/CustomFormData')
-const FormData = require('../../model/FormData')
 const ContentResource = require('../../resources/api/content.resource')
 
 const customFormSubmit = async (req, res) => {

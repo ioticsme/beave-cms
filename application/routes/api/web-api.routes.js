@@ -6,7 +6,6 @@ const generalController = require('../../controller/api/general.controller')
 const pageController = require('../../controller/api/page.controller')
 const contentTypeController = require('../../controller/api/contentType.controller')
 const catalogController = require('../../controller/api/catalog.controller')
-const formController = require('../../controller/api/form.controller')
 const customFormController = require('../../controller/api/customForm.controller')
 const checkoutController = require('../../controller/api/checkout.controller')
 const userController = require('../../controller/api/user.controller')
@@ -48,12 +47,12 @@ router.group('/', (router) => {
     // CMS Related Routes
     router.use('/cms', cmsRoutes)
 
-    // catalog
-    router.group('/catalog', (router) => {
-        // Product
-        router.get('/products', catalogController.productList)
-        router.get('/products/:id', catalogController.productDetail)
-    })
+    // // catalog
+    // router.group('/catalog', (router) => {
+    //     // Product
+    //     router.get('/products', catalogController.productList)
+    //     router.get('/products/:id', catalogController.productDetail)
+    // })
 
     // General
     router.group('/general', (router) => {
@@ -81,9 +80,6 @@ router.group('/', (router) => {
     })
     // custom forms
     router.post('/custom-forms/submit', customFormController.customFormSubmit)
-
-    router.post('/contact/submit', formController.contactFormSubmit)
-    router.post('/birthday/submit', formController.birthdayFormSubmit)
     router.group('/payfort-webhook', (router) => {
         router.all('/feedback', checkoutController.payfortWebHookFeedback)
         router.all(
@@ -107,7 +103,7 @@ router.group('/user', (router) => {
         )
     })
     // Ecommerce related routes
-    router.use('/', [ecommerceModeCheck, UserAuthCheck], ecommerceRoutes)
+    // router.use('/', [ecommerceModeCheck, UserAuthCheck], ecommerceRoutes)
 })
 
 module.exports = router

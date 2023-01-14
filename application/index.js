@@ -174,7 +174,6 @@ app.get('/health', async (req, res) => {
 // BEGIN:: API Route Groups
 const adminRoutes = require('./routes/admin/admin.routes')
 const webAPIRoutes = require('./routes/api/web-api.routes')
-const mobileAPIRoutes = require('./routes/api/mobile-api.routes')
 // END:: API Route Groups
 
 // TODO::Below code is only for continuos development purpose. Should be removed on staging and production
@@ -238,7 +237,6 @@ app.use('/api', apiLimiter)
 app.get('/', (req, res) => {
     return res.status(404).json('Not Found')
 })
-app.use('/app', mobileAPIRoutes)
 app.use('/api', webAPIRoutes)
 app.use(
     '/admin',

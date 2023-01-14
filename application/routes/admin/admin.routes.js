@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
 })
 router.use('/dashboard', [authCheck], dashboardRoutes)
 
-router.use('/ecommerce', [authCheck], ecommerceRoutes)
+// router.use('/ecommerce', [authCheck], ecommerceRoutes)
 
 router.use('/cms', [authCheck], cmsRoutes)
 

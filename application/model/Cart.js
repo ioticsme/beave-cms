@@ -13,25 +13,11 @@ const CartSchema = new mongoose.Schema(
             ref: 'Product',
             required: true,
         },
-        card: {
-            type: Schema.ObjectId,
-            ref: 'UserCard',
-            required: false,
-        },
-        card_name: {
-            type: String,
-        },
         qty: {
             type: Number,
             required: true,
             default: 1,
         },
-        pam: {}
-        // type: {
-        //     type: String,
-        //     required: true,
-        //     enum: ['new', 'recharge'],
-        // },
     },
     {
         timestamps: {
