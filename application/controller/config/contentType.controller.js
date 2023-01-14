@@ -24,7 +24,7 @@ const edit = async (req, res) => {
     const contentType = await ContentType.findOne({
         _id: req.params.id,
     })
-    console.log('contentType :>> ', contentType)
+    // console.log('contentType :>> ', contentType)
     const contentTypes = await ContentType.find()
     return res.render('admin/config/content-type/form', {
         contentType,

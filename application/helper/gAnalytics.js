@@ -3,20 +3,24 @@
 // Reference:: https://developers.google.com/analytics/devguides/reporting/core/v4/basics#reports
 
 const { google } = require('googleapis')
-// Config
-const clientEmail = process.env.CLIENT_EMAIL
-const privateKey = process.env.GA_PRIVATE_KEY.replace(new RegExp('\\\\n'), '\n')
-const scopes = [
-    'https://www.googleapis.com/auth/analytics.readonly',
-    // 'https://analyticsreporting.googleapis.com/v4/reports:batchGet',
-]
-
-// API's
-const analytics = google.analyticsreporting('v4')
-const viewId = process.env.VIEW_ID
-let jwt = new google.auth.JWT(clientEmail, null, privateKey, scopes)
 
 const metricsQuery = (startDate, endDate) => {
+    // Config
+    const clientEmail = process.env.CLIENT_EMAIL
+    const privateKey = process.env.GA_PRIVATE_KEY.replace(
+        new RegExp('\\\\n'),
+        '\n'
+    )
+    const scopes = [
+        'https://www.googleapis.com/auth/analytics.readonly',
+        // 'https://analyticsreporting.googleapis.com/v4/reports:batchGet',
+    ]
+
+    // API's
+    const analytics = google.analyticsreporting('v4')
+    const viewId = process.env.VIEW_ID
+    let jwt = new google.auth.JWT(clientEmail, null, privateKey, scopes)
+
     return (basic_report = {
         reportRequests: [
             {
