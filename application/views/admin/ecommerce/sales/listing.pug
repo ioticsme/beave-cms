@@ -113,8 +113,6 @@ block content
 									th.min-w-150px Order No
 									th.min-w-150px Customer
 									th.text-end.min-w-70px Payment Status
-									if globalModuleConfig.has_semnox
-										th.text-end.min-w-70px Semnox Status
 									th.text-end.min-w-100px Date Created
 									th.text-end.min-w-100px Date Modified
 									th.text-end.min-w-100px Total
@@ -150,25 +148,6 @@ block content
 										else if item.payment_status =="pending"
 											td.text-end.pe-0(data-order='Pending')
 												.badge.badge-light Pending
-										
-										//- Semnox status
-										if globalModuleConfig.has_semnox
-											if item.semnox_status =="success"
-												td.text-end.pe-0(data-order='Success')
-													.badge.badge-success Success
-											else if item.semnox_status =="cancelled"
-												td.text-end.pe-0(data-order='Cancelled')
-													.badge.badge-danger Cancelled
-											else if item.semnox_status =="failed"
-												td.text-end.pe-0(data-order='Failed')
-													.badge.badge-danger Failed
-											else if item.semnox_status =="hold"
-												td.text-end.pe-0(data-order='Hold')
-													.badge.badge-warning On-Hold
-											else if item.semnox_status =="pending"
-												td.text-end.pe-0(data-order='Pending')
-													.badge.badge-light Pending
-
 										td.text-end(data-order=`${item.date_created_filter}`)
 											span.fw-bold #{item.date_created_display}
 										td.text-end(data-order=`${item.date_updated_filter}`)

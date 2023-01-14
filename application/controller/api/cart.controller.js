@@ -21,14 +21,6 @@ const getUserCart = async (req) => {
 
         let has_free_toy = false
         let number_of_free_toy = 0
-        if (req.brand.settings?.semnox_free_toy_available) {
-            const freeToyEligibilityAmount =
-                req.brand.settings?.semnox_free_toy_threshold
-            has_free_toy = cart_sum >= freeToyEligibilityAmount
-            number_of_free_toy =
-                Math.floor(cart_sum / freeToyEligibilityAmount) || 0
-        }
-
         return {
             has_free_toy: has_free_toy,
             number_of_free_toy: number_of_free_toy,
@@ -82,7 +74,6 @@ const add = async (req, res) => {
 
     try {
         const product = await Product.findOne({ _id: req.body.product })
-        // TODO:: Validate product on semnox
         if (!product) {
             return res.status(422).json({
                 details: [

@@ -8,8 +8,6 @@ const Product = require('../../model/Product')
 const Country = require('../../model/Country')
 const { formatInTimeZone } = require('date-fns-tz')
 const { uploadMedia } = require('../../helper/Operations.helper')
-const { getProductPriceController } = require('../../helper/Semnox.helper')
-const { getPamMemberships } = require('../../helper/PAM.helper')
 
 let session
 
@@ -345,17 +343,8 @@ const productAdd = async (req, res) => {
             published: true,
         })
 
-        const semnoxProducts =
-            globalModuleConfig.has_semnox == 'true'
-                ? await getProductPriceController(req.authUser.selected_brand)
-                : []
-
-        const pamMemberships = await getPamMemberships()
-
         res.render(`admin/ecommerce/catalog/product/form`, {
             categories,
-            semnoxProducts: semnoxProducts?.data,
-            pamMemberships: pamMemberships,
             ecommerceSettings: session?.selected_brand?.settings,
         })
     } catch (error) {
@@ -374,17 +363,9 @@ const productEdit = async (req, res) => {
             published: true,
         })
 
-        const semnoxProducts =
-            globalModuleConfig.has_semnox == 'true'
-                ? await getProductPriceController(req.authUser.selected_brand)
-                : []
-
-        const pamMemberships = await getPamMemberships()
         res.render(`admin/ecommerce/catalog/product/edit-form`, {
             product,
             categories,
-            semnoxProducts: semnoxProducts?.data,
-            pamMemberships: pamMemberships,
             ecommerceSettings: session?.selected_brand?.settings,
         })
     } catch (error) {
@@ -478,10 +459,6 @@ const productSave = async (req, res) => {
                 }),
             }),
             featured_image: Joi.optional(),
-            semnox_id:
-                globalModuleConfig.has_semnox == 'true'
-                    ? Joi.string().required().min(3)
-                    : Joi.string().optional().allow(null, ''),
             position: Joi.number().required(),
             featured: Joi.boolean().optional(),
             id: Joi.optional(),
@@ -653,10 +630,6 @@ const productSave = async (req, res) => {
             })
         })
         // parsing stringified semnox data
-        const semnox =
-            globalModuleConfig.has_semnox == 'true'
-                ? JSON.parse(body.semnox_id)
-                : undefined
         let data = {
             name,
             slug: slugify(body.name.en.toLowerCase()),
@@ -680,7 +653,6 @@ const productSave = async (req, res) => {
             author: session.admin_id,
             brand: req.authUser.selected_brand._id,
             country: req.authUser.selected_brand.country,
-            semnox: semnox,
             published: body.published === 'true',
             position: body.position,
             image: images,

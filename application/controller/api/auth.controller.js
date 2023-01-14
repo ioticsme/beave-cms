@@ -12,7 +12,6 @@ const Mailgun = require('mailgun.js')
 const User = require('../../model/User')
 const UserResource = require('../../resources/api/user.resource')
 const SMS = require('../../helper/SMS.helper')
-const { saveCustomer } = require('../../helper/Semnox.helper')
 const { sendEmail } = require('../../helper/Mail.helper')
 const Product = require('../../model/Product')
 const ProductResource = require('../../resources/api/product.resource')
@@ -87,28 +86,6 @@ const loginSubmit = async (req, res) => {
         }
 
         if (bcrypt.compareSync(req.body.password, user.password)) {
-            if (!user.semnox_user_id) {
-                // save customer to semnox
-                const save = await saveCustomer(
-                    req.brand,
-                    new UserResource(user).exec()
-                )
-                //updating user
-                user = await User.findOneAndUpdate(
-                    {
-                        _id: user._id,
-                    },
-                    {
-                        $set: {
-                            semnox_user_id: save.Id,
-                        },
-                    },
-                    {
-                        new: true,
-                    }
-                )
-            }
-
             let token
             if (!user.mobile_verified) {
                 authenticator.options = {
@@ -788,16 +765,6 @@ const otpVerification = async (req, res) => {
         // If otp verified
         if (isValid) {
             const user = await User.findOne({ mobile })
-            // save customer to semnox
-            const save = await saveCustomer(
-                req.brand,
-                new UserResource(user).exec()
-            )
-            if (!save?.Id) {
-                return res
-                    .status(400)
-                    .json({ error: 'Customer not regitered to semnox' })
-            }
             //updating user
             const update = await User.findOneAndUpdate(
                 {
@@ -808,7 +775,6 @@ const otpVerification = async (req, res) => {
                         failed_attempt: {
                             otp: 0,
                         },
-                        semnox_user_id: save.Id,
                         mobile_verified: true,
                         active: true,
                     },

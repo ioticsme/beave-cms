@@ -16,46 +16,6 @@ const SettingsSchema = new mongoose.Schema(
             type: Schema.ObjectId,
             ref: 'Admin',
         },
-        semnox_base_url: {
-            type: String,
-        },
-        semnox_login_id: {
-            type: String,
-        },
-        semnox_password: {
-            type: String,
-        },
-        semnox_site_id: {
-            type: String,
-        },
-        semnox_machine_name: {
-            type: String,
-        },
-        semnox_payment_mode: {
-            type: Number,
-            required: true,
-        },
-        // semnox_package_group_id: {
-        //     type: String,
-        // },
-        // semnox_free_product_group_id: {
-        //     type: String,
-        // },
-        // semnox_var_coupon_id: {
-        //     type: String,
-        // },
-        // semnox_has_toy_promo: {
-        //     type: Boolean,
-        // },
-        // semnox_toy_promo_value: {
-        //     type: Number,
-        // },
-        semnox_free_toy_available: {
-            type: Boolean,
-        },
-        semnox_free_toy_threshold: {
-            type: Double,
-        },
         cache_expiry_time: {
             type: String,
         },

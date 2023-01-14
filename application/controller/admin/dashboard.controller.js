@@ -19,7 +19,6 @@ const {
 } = require('date-fns')
 
 // Services
-const { getReports } = require('../../helper/gAnalytics')
 const { default: collect } = require('collect.js')
 const Order = require('../../model/Order')
 const { differenceInPercentage } = require('../../helper/Operations.helper')

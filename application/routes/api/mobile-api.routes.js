@@ -103,11 +103,6 @@ router.group('/v1', (router) => {
             // router.post('/delete', cartController.remove)
         })
 
-        router.group('/card', (router) => {
-            router.post('/add', userController.addCard)
-            router.get('/list', userController.listCard)
-            router.post('/remove', userController.unlinkCard)
-        })
         router.group('/payment-cards', (router) => {
             router.get('/', userController.listPaymentCard)
             router.post('/', userController.deletePaymentCards)

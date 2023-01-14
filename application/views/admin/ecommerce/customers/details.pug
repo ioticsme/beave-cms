@@ -104,9 +104,6 @@ block content
 									.fw-bold.mt-5 Mobile
 									.text-gray-600 #{user.mobile}
 									//- a.text-gray-600.text-hover-primary(href='#') info@keenthemes.com
-									if globalModuleConfig.has_semnox
-										.fw-bold.mt-5 Semnox User ID
-										.text-gray-600 #{user.semnox_user_id || "Nil"}
 									.fw-bold.mt-5 Status
 									if(user.active)
 											.badge.badge-light-success Active
@@ -160,7 +157,6 @@ block content
 												tr.text-start.text-muted.text-uppercase.gs-0
 													th.min-w-100px Card No.
 													th Card Name
-													th Account ID
 													//- th.min-w-100px Rewards
 													th.min-w-100px Linked Date
 											tbody.fs-6.fw-semibold.text-gray-600
@@ -168,7 +164,6 @@ block content
 													tr
 														td #{card.card_number}														
 														td #{card.card_name}
-														td #{card.semnox_account_id}
 														td #{card.created_at.toLocaleDateString("en-IN")}
 														//- td 120
 														//- td 14 Dec 2020, 8:43 pm

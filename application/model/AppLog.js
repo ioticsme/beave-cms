@@ -9,7 +9,7 @@ const AppLogSchema = new mongoose.Schema(
         type: {
             type: String,
             required: true,
-            enum: ['payfort', 'semnox'],
+            enum: ['payfort'],
         },
         event: {
             type: String,

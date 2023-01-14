@@ -32,16 +32,6 @@ router.group('/', (router) => {
         router.post('/save', upload.any(), settingsController.seoSave)
     })
     router.group('/integrations', (router) => {
-        // Semnox
-        router.group('/semnox', (router) => {
-            router.get('/', settingsController.semnoxList)
-            router.post('/save', settingsController.semnoxSave)
-        })
-        // PAM
-        router.group('/pam', (router) => {
-            router.get('/', settingsController.pamList)
-            router.post('/save', settingsController.pamSave)
-        })
         // Marketing
         router.group('/marketing', (router) => {
             router.get('/', settingsController.marketingList)

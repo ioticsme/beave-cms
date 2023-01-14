@@ -16,10 +16,6 @@ const UserCardSchema = new Schema(
             type: Schema.ObjectId,
             ref: 'User',
         },
-        semnox_account_id: {
-            type: String,
-            required: true,
-        },
         card_name: {
             type: String,
         },

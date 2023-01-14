@@ -18,10 +18,6 @@ const userRoutes = require('./user.routes')
 
 // BEGIN::Admin Middleware
 const {
-    checkHasEcom,
-    checkHasCMS,
-} = require('../../middleware/global.middleware')
-const {
     authCheck,
     checkSuperAdmin,
 } = require('../../middleware/cms.middleware')
@@ -34,9 +30,9 @@ router.get('/', (req, res) => {
 })
 router.use('/dashboard', [authCheck], dashboardRoutes)
 
-router.use('/ecommerce', [authCheck, checkHasEcom], ecommerceRoutes)
+router.use('/ecommerce', [authCheck], ecommerceRoutes)
 
-router.use('/cms', [authCheck, checkHasCMS], cmsRoutes)
+router.use('/cms', [authCheck], cmsRoutes)
 
 router.use('/settings', [authCheck], settingsRoutes)
 router.use('/custom-forms', [authCheck], customFormsRoutes)

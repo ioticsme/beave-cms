@@ -76,21 +76,14 @@ const authUser = async (req, res, next) => {
 }
 
 const mainNavGenerator = async (req, res, next) => {
-    if (globalModuleConfig.has_cms) {
-        const ContentType = require('../model/ContentType')
-        const contentTypes = await ContentType.find({ in_use: true }).sort([
-            ['position', 'ascending'],
-        ])
-        // app.locals.mainNav = contentTypes
-        res.locals.mainNav = contentTypes
-        res.locals.activeNav = req.originalUrl
-        // console.log(req.originalUrl)
-    } else {
-        // app.locals.mainNav = contentTypes
-        res.locals.mainNav = []
-        res.locals.activeNav = req.originalUrl
-        // console.log(req.originalUrl)
-    }
+    const ContentType = require('../model/ContentType')
+    const contentTypes = await ContentType.find({ in_use: true }).sort([
+        ['position', 'ascending'],
+    ])
+    // app.locals.mainNav = contentTypes
+    res.locals.mainNav = contentTypes
+    res.locals.activeNav = req.originalUrl
+    // console.log(req.originalUrl)
     next()
 }
 
@@ -110,20 +103,6 @@ const checkSuperAdmin = (req, res, next) => {
     next()
 }
 
-const checkHasCMS = (req, res, next) => {
-    if (!globalModuleConfig.has_ecommerce) {
-        return res.render(`admin/error-500`)
-    }
-    next()
-}
-
-const checkHasEcom = (req, res, next) => {
-    if (!globalModuleConfig.has_ecommerce) {
-        return res.render(`admin/error-500`)
-    }
-    next()
-}
-
 module.exports = {
     baseConfig,
     authCheck,
@@ -132,6 +111,4 @@ module.exports = {
     mainNavGenerator,
     allBrands,
     checkSuperAdmin,
-    checkHasCMS,
-    checkHasEcom,
 }

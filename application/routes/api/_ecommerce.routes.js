@@ -33,12 +33,6 @@ router.group('/', (router) => {
         router.get('/:id', userController.orderDetail)
     })
 
-    router.group('/card', (router) => {
-        router.get('/list', userController.listCard)
-        router.post('/add', userController.addCard)
-        router.post('/remove', userController.unlinkCard)
-    })
-
     router.group('/pam', (router) => {
         router.get('/parent', userController.pamGetParent)
         // router.get('/renewable-memberships/:id', userController.pamGetParent)

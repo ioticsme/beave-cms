@@ -58,9 +58,6 @@ const UserSchema = new Schema(
         otp_freez_until: {
             type: Date,
         },
-        semnox_user_id: {
-            type: String,
-        },
         social_auth: {
             type: Boolean,
             default: false,

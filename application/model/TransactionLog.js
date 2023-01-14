@@ -16,7 +16,7 @@ const TransactionLogSchema = new mongoose.Schema(
         type: {
             type: String,
             required: true,
-            enum: ['payfort', 'semnox', 'pam'],
+            enum: ['payfort', 'pam'],
         },
         event: {
             type: String,

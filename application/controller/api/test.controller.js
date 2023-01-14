@@ -8,12 +8,6 @@ const OrderResource = require('../../resources/api/order.resource')
 const formData = require('form-data')
 const Mailgun = require('mailgun.js')
 
-const {
-    buyNewCard,
-    getCard,
-    getCustomers,
-    saveCustomer,
-} = require('../../helper/Semnox.helper')
 // const { generatePdfInvoice } = require('../../helper/Operations.helper')
 const Order = require('../../model/Order')
 const { currencyConverter } = require('../../helper/Payfort.helper')

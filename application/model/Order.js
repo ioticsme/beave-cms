@@ -10,12 +10,6 @@ const OrderSchema = new mongoose.Schema(
         order_no: {
             type: String,
         },
-        semnox_transaction_id: {
-            type: Number,
-        },
-        semnox_transaction_otp: {
-            type: String,
-        },
         user: {
             type: Schema.ObjectId,
             ref: 'User',
@@ -58,7 +52,6 @@ const OrderSchema = new mongoose.Schema(
                     ref: 'Product',
                 },
                 name: Object,
-                semnox: Object,
                 actual_price: Double,
                 sales_price: Double,
                 new_card: Boolean,
@@ -82,7 +75,6 @@ const OrderSchema = new mongoose.Schema(
                         ref: 'Product',
                     },
                     name: Object,
-                    semnox: Object,
                 },
                 pam: Object
             }),
@@ -104,11 +96,7 @@ const OrderSchema = new mongoose.Schema(
                 ref: 'Product',
             },
             name: Object,
-            semnox: Object,
             received_card_nos: [],
-        },
-        semnox_response_at: {
-            type: Date,
         },
         payment_method: {
             type: String,
@@ -122,10 +110,6 @@ const OrderSchema = new mongoose.Schema(
             type: String,
             default: Date.now(),
         },
-        semnox_status: {
-            type: String,
-            enum: ['pending', 'success', 'failed', 'hold', 'cancelled'],
-        },
         pam_status: {
             type: String,
             enum: ['pending', 'success', 'failed', 'hold', 'cancelled'],
@@ -136,9 +120,6 @@ const OrderSchema = new mongoose.Schema(
             enum: ['pending', 'success', 'failed', 'cancelled', 'abandoned'],
         },
         sale_invoice: {
-            semnox_id: {
-                type: Number,
-            },
             local_no: {
                 type: String,
             },

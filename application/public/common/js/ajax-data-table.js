@@ -35,7 +35,6 @@ try {
                         data: 'payment_status',
                         className: 'min-w-70px text-end',
                     },
-                    { data: 'semnox_status', className: 'min-w-70px text-end' },
                     { data: 'created_at', className: 'min-w-100px text-end' },
                     // { data: 'updated_at', className: 'min-w-100px text-end' },
                     { data: 'amount', className: 'min-w-100px text-end' },

@@ -14,8 +14,6 @@ const User = require('../../model/User')
 const UserCard = require('../../model/UserCard')
 const OrderResource = require('../../resources/api/order.resource')
 const PayFort = require('../../helper/Payfort.helper')
-const Semnox = require('../../helper/Semnox.helper')
-const PAM = require('../../helper/PAM.helper')
 const Product = require('../../model/Product')
 const { json } = require('express')
 const {

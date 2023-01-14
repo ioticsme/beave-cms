@@ -6,7 +6,6 @@ class OrderItemResource extends Resource {
         return {
             _id: this.id,
             name: this.name,
-            semnox: this.semnox,
             price: this.sales_price > 0 ? this.sales_price : this.actual_price,
             actual_price: this.actual_price,
             sales_price: this.sales_price,

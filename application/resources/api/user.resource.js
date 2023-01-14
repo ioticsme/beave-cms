@@ -9,7 +9,6 @@ class UserResource extends Resource {
             last_name: this.last_name,
             email: this.email,
             mobile: this.mobile,
-            semnox_user_id: this.semnox_user_id,
             verified: {
                 email: this.email_verified || false,
                 mobile: this.mobile_verified || false,

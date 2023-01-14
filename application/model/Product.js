@@ -98,10 +98,6 @@ const ProductSchema = new mongoose.Schema(
             type: Schema.ObjectId,
             ref: 'Country',
         },
-        semnox: {
-            id: String,
-            name: String,
-        },
         position: {
             type: Number,
             default: 0,

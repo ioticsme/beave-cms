@@ -130,13 +130,9 @@ const orderDetail = async (req, res) => {
         const payfortLogs = collect(transactionLogs)
             .where('type', 'payfort')
             .all()
-        const semnoxLogs = collect(transactionLogs)
-            .where('type', 'semnox')
-            .all()
 
         return res.render(`admin/ecommerce/sales/details`, {
             order,
-            semnoxLogs,
             payfortLogs,
             brand: req.authUser.selected_brand,
         })

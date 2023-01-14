@@ -66,13 +66,12 @@ const sendThanks = async (message, mobile, brand, smsSettings) => {
 
 async function sendOrderSms(payload) {
     // console.log('SENDING SMS:', payload)
-    if (payload && payload.has_otp && payload.order.semnox_otp) {
+    if (payload && payload.has_otp) {
         const user = await User.findOne({
             _id: payload.order.user._id,
         })
         // console.log('SENDING SMS TO: ', user.mobile)
         sendTransactionOTP(
-            payload.order.semnox_otp,
             user.mobile,
             payload.generic_details.brand.name.en
         )

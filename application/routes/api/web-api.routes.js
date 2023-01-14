@@ -12,7 +12,7 @@ const checkoutController = require('../../controller/api/checkout.controller')
 const userController = require('../../controller/api/user.controller')
 
 // Middleware
-const { checkHasCMS } = require('../../middleware/global.middleware')
+// const { checkHasCMS } = require('../../middleware/global.middleware')
 const {
     BrandWithCountryCheck,
     webDefaultHeader,
@@ -46,7 +46,7 @@ router.group('/', (router) => {
     // })
 
     // CMS Related Routes
-    router.use('/cms', [checkHasCMS], cmsRoutes)
+    router.use('/cms', cmsRoutes)
 
     // catalog
     router.group('/catalog', (router) => {

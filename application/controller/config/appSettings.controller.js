@@ -10,7 +10,6 @@ const list = async (req, res) => {
     const configs = await Config.findOne().select(
         '-_id -__v -created_at -updated_at'
     )
-    // console.log(configs.schema.path('general.has_cms').instance)
     // console.log(configs.schema.path('general')?.instance || 'Mixed')
     // return false
     // console.log(configs.schema.path('order_no').options.Comment)
@@ -32,11 +31,6 @@ const save = async (req, res) => {
         general: Joi.object({
             client_name: Joi.string().required(),
             frontend_url: Joi.string().optional(),
-            has_cms: Joi.boolean(),
-            has_ecommerce: Joi.boolean(),
-            has_semnox: Joi.boolean(),
-            has_pam: Joi.boolean(),
-            has_booknow: Joi.boolean(),
             push_notification: Joi.boolean(),
             slack: Joi.boolean(),
         }),
@@ -61,11 +55,7 @@ const save = async (req, res) => {
         const config = await Config.create(req.body)
         // console.log(config)
         globalModuleConfig = {
-            has_cms: config.general?.has_cms || false,
-            has_ecommerce: config.general?.has_ecommerce || false,
-            has_semnox: config.general?.has_semnox || false,
-            has_pam: config.general?.has_pam || false,
-            has_booknow: config.general?.has_booknow || false,
+            // has_booknow: config.general?.has_booknow || false,
         }
 
         if (config?.general?.push_notification && config?.firebase?.admin_web) {

@@ -154,12 +154,6 @@ block content
 											input.form-check-input(type='radio' name='product_type' id="free_product" value='free_product' )
 										span.ms-5
 											label.form-label(for="free_product") Free product
-									if ecommerceSettings &&  ecommerceSettings.semnox_free_toy_available
-										.col.d-flex.text-start.p-6
-											span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-												input.form-check-input(type='radio' name='product_type' id="free_toy" value='free_toy' )
-											span.ms-5
-												label.form-label(for="free_toy") Free Toy
 						.card.card-flush.py-4
 							.card-header
 								.card-title
@@ -277,22 +271,6 @@ block content
 																	span.btn.btn-icon.btn-circle.btn-active-color-primary.w-25px.h-25px.bg-body.shadow(data-kt-image-input-action='remove' data-bs-toggle='tooltip' title='Remove avatar')
 																		i.bi.bi-x.fs-2
 															.fv-plugins-message-container.invalid-feedback(id=`field-error-default_image_${brandLanguage.prefix}`)
-									if globalModuleConfig.has_semnox
-										.card.card-flush.py-4
-											.card-header
-												.card-title
-													h2 Semnox
-											.card-body.pt-0
-												label.form-label Semnox ID
-												select.form-select.mb-2(data-control='select2' name="semnox_id" data-placeholder='Select an option' data-allow-clear='true' )
-													option
-													if semnoxProducts && semnoxProducts.length
-														each product in semnoxProducts
-															option(value=JSON.stringify({id:product.ProductId,name:product.ProductName})) #{product.ProductName}
-													else 
-														option No products found
-												.fv-plugins-message-container.invalid-feedback(id=`field-error-semnox_id`)
-												//- .text-muted.fs-7.mb-7 Select semnox id
 									.card.card-flush.py-4
 										.card-header
 											.card-title
@@ -316,20 +294,3 @@ block content
 												label.required.form-label Sale Price
 												input.form-control.mb-2(type='text' name='sales_price' placeholder='Product sales price' value='')
 												.fv-plugins-message-container.invalid-feedback(id=`field-error-sales_price`)
-									if globalModuleConfig.has_pam
-										.card.card-flush.py-4
-											.card-header
-												.card-title
-													h2 PAM
-											.card-body.pt-0
-												.mb-10.fv-row
-													label.required.form-label Is a Membership
-													input.form-check.mb-2(type='checkbox' name='is_membership' placeholder='Is a Membership' value= 'true')
-													.fv-plugins-message-container.invalid-feedback(id=`field-error-actual_price`)
-												.mb-10.fv-row
-													label.required.form-label PAM Product ID
-													select.form-select.mb-2(data-control='select2' name="valid_pam_ids" data-placeholder='Select Pam products' data-allow-clear='true' multiple='multiple')
-														each pam,i in pamMemberships
-															option(value=`${pam.id}`) #{pam.membership_name}
-															.fv-plugins-message-container.invalid-feedback(id=`field-error-valid_pam_ids`)
-															//- .text-muted.fs-7.mb-7 Add product to a category.

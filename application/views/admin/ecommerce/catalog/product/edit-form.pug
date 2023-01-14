@@ -157,33 +157,16 @@ block content
 									h3  Product Type
 							.card-body.pt-0
 								.column
-									if ecommerceSettings &&  ecommerceSettings.semnox_free_toy_available
-										.col.d-flex.text-start.p-6
-											span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-												input.form-check-input(type='radio' id="regular" name='product_type' value='regular' checked=product.product_type=='regular')
-											span.ms-5
-												label.form-label(for="regular") Regular
-										.col.d-flex.text-start.p-6
-											span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-												input.form-check-input(type='radio' name='product_type' id="free_product" value='free_product' checked=product.product_type=='free_product')
-											span.ms-5
-												label.form-label(for="free_product") Free product
-										.col.d-flex.text-start.p-6
-											span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-												input.form-check-input(type='radio' name='product_type' id="free_toy" value='free_toy' checked=product.product_type=='free_toy')
-											span.ms-5
-												label.form-label(for="free_toy") Free Toy
-									else 
-										.col.d-flex.text-start.p-6
-											span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-												input.form-check-input(type='radio' id="regular" name='product_type' value='regular' checked=product.product_type=='regular'||product.product_type=='free_toy' )
-											span.ms-5
-												label.form-label(for="regular") Regular
-										.col.d-flex.text-start.p-6
-											span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
-												input.form-check-input(type='radio' name='product_type' id="free_product" value='free_product' checked=product.product_type=='free_product')
-											span.ms-5
-												label.form-label(for="free_product") Free product
+									.col.d-flex.text-start.p-6
+										span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+											input.form-check-input(type='radio' id="regular" name='product_type' value='regular' checked=product.product_type=='regular'||product.product_type=='free_toy' )
+										span.ms-5
+											label.form-label(for="regular") Regular
+									.col.d-flex.text-start.p-6
+										span.form-check.form-check-custom.form-check-solid.form-check-sm.align-items-start(data-kt-button='true')
+											input.form-check-input(type='radio' name='product_type' id="free_product" value='free_product' checked=product.product_type=='free_product')
+										span.ms-5
+											label.form-label(for="free_product") Free product
 						.card.card-flush.py-4
 							.card-header
 								.card-title
@@ -304,22 +287,6 @@ block content
 																	span.btn.btn-icon.btn-circle.btn-active-color-primary.w-25px.h-25px.bg-body.shadow(data-kt-image-input-action='remove' data-bs-toggle='tooltip' title='Remove avatar')
 																		i.bi.bi-x.fs-2
 															.fv-plugins-message-container.invalid-feedback(id=`field-error-featured_image_${brandLanguage.prefix}`)
-									if globalModuleConfig.has_semnox
-										.card.card-flush.py-4
-											.card-header
-												.card-title
-													h2 Semnox
-											.card-body.pt-0
-												label.form-label Semnox ID
-												select.form-select.mb-2(data-control='select2' name="semnox_id" data-placeholder='Select an option' data-allow-clear='true' )
-													option
-													if semnoxProducts && semnoxProducts.length
-														each item in semnoxProducts
-															option(value=JSON.stringify({id:item.ProductId,name:item.ProductName}) selected=item.ProductId.toString()==product.semnox.id)  #{item.ProductName} 
-													else 
-														option No products found
-												.fv-plugins-message-container.invalid-feedback(id=`field-error-semnox_id`)
-												//- .text-muted.fs-7.mb-7 Select semnox id
 									.card.card-flush.py-4
 										.card-header
 											.card-title

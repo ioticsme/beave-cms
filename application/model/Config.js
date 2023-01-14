@@ -16,26 +16,6 @@ const ConfigSchema = new mongoose.Schema(
                 type: String,
                 // required: true,
             },
-            has_cms: {
-                type: Boolean,
-                default: false,
-            },
-            has_ecommerce: {
-                type: Boolean,
-                default: false,
-            },
-            has_semnox: {
-                type: Boolean,
-                default: false,
-            },
-            has_pam: {
-                type: Boolean,
-                default: false,
-            },
-            has_booknow: {
-                type: Boolean,
-                default: false,
-            },
             push_notification: {
                 type: Boolean,
                 default: false,

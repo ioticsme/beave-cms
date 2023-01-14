@@ -24,7 +24,6 @@ class OrderResource extends Resource {
             free_toy_cards: this.free_toy.received_card_nos,
             payment_method: this.payment_method,
             payment_status: this.payment_status,
-            semnox_status: this.semnox_status,
             order_status: this.order_status,
             amount: parseFloat(this.amount).toFixed(2),
             sub_total: parseFloat(this.amount_to_pay - this.vat.incl).toFixed(2),
@@ -60,7 +59,6 @@ class OrderResource extends Resource {
                 email: this.user?.email,
             },
             payment_response: this.payment_response,
-            semnox_otp: this.semnox_transaction_otp,
         }
     }
 }

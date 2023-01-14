@@ -127,8 +127,6 @@ block content
 										.form-check.form-check-sm.form-check-custom.form-check-solid.me-3
 											input.form-check-input(type='checkbox' data-kt-check='true' data-kt-check-target='#kt_ecommerce_products_table .form-check-input' value='1')
 									th.min-w-200px Product
-									if globalModuleConfig.has_semnox
-										th.min-w-200px.text-center Semnox Name
 									th.text-end.min-w-100px Price
 									th.text-end.min-w-100px Type
 									th.text-end.min-w-100px Status
@@ -149,12 +147,6 @@ block content
 														span.symbol-label(style=`background-image:url(/admin/assets/media/svg/files/blank-image.svg);`)
 												.ms-5
 													a.text-gray-800.text-hover-primary.fs-5.fw-bold(href=`/admin/ecommerce/catalog/products/edit/${item._id}` data-kt-ecommerce-product-filter='product_name') #{item.name.en}
-										if globalModuleConfig.has_semnox
-											td.text-center.pe-0
-												if(item.semnox && item.semnox.name)
-													span.fw-bold.text-dark #{item.semnox.name}
-												else 
-													span.fw-bold.text-dark Nil
 										td.text-end.pe-0
 											span.fw-bold.text-dark #{item.sales_price > 0 ? item.sales_price : item.actual_price}
 										td.text-end.pe-0
