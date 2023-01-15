@@ -5,6 +5,7 @@ const Sentry = require('@sentry/node')
 const Tracing = require('@sentry/tracing')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
+const chalk = require('chalk')
 var session = require('express-session')
 const redis = require('redis')
 var redisStore = require('connect-redis')(session)
@@ -111,7 +112,7 @@ mongoose
     })
     .then(() => {
         dbSuccess = 'Success'
-        console.log('DB Connected')
+        console.log(chalk.cyan('DB Connected'))
         Config.findOne()
             .select('-order_no -created_at -updated_at -__v -_id')
             .then(async (data) => {

@@ -7,7 +7,7 @@ const Category = require('../../model/Category')
 const Product = require('../../model/Product')
 const Country = require('../../model/Country')
 const { formatInTimeZone } = require('date-fns-tz')
-const { uploadMedia } = require('../../helper/Operations.helper')
+const { uploadMedia } = require('../../helper/FileUpload.helper')
 
 let session
 

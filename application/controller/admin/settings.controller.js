@@ -7,7 +7,7 @@ const Country = require('../../model/Country')
 var session = require('express-session')
 const Settings = require('../../model/Settings')
 const Redis = require('../../helper/Redis.helper')
-const { uploadMedia } = require('../../helper/Operations.helper')
+const { uploadMedia } = require('../../helper/FileUpload.helper')
 const Admin = require('../../model/Admin')
 
 const switchBrand = async (req, res) => {
