@@ -102,6 +102,7 @@ app.set('view engine', 'pug')
 const Config = require('./model/Config')
 global.globalModuleConfig = {}
 let dbSuccess = 'Fail'
+mongoose.set('strictQuery', false)
 mongoose
     .connect(process.env.DB_CONNECTION, {
         dbName: `${process.env.DB_NAME}`,
