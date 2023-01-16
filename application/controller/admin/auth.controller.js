@@ -43,6 +43,7 @@ const signupSubmit = async (req, res) => {
             name: req.body.name,
             email: req.body.email,
             password: bcrypt.hashSync(req.body.password, salt),
+            role: 'super_admin',
         })
 
         if (admin?._id) {
@@ -69,10 +70,11 @@ const login = async (req, res) => {
         const admin = await Admin.findOne()
         if(!admin) {
             res.redirect('/admin/auth/signup')
+            return 
         }
-        res.render(`admin/authentication/sign-in`)
+        return res.render(`admin/authentication/sign-in`)
     } catch (error) {
-        res.render(`admin/error-404`)
+        return res.render(`admin/error-404`)
     }
 }
 
