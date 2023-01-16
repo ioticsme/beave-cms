@@ -1,5 +1,6 @@
 const { mongoose, Schema } = require('mongoose')
 // const { softDeletePlugin } = require('soft-delete-plugin-mongoose')
+const uniqueValidator = require('mongoose-unique-validator');
 
 const AdminSchema = new mongoose.Schema(
     {
@@ -10,6 +11,7 @@ const AdminSchema = new mongoose.Schema(
         email: {
             type: String,
             required: true,
+            unique: true,
         },
         password: {
             type: String,
@@ -45,5 +47,6 @@ const AdminSchema = new mongoose.Schema(
 )
 
 // AdminSchema.plugin(softDeletePlugin)
+AdminSchema.plugin(uniqueValidator)
 
 module.exports = mongoose.model('Admin', AdminSchema)
