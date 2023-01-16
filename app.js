@@ -2,8 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 
-const application = require('./application')
-// const application = require('@ioticsme/cms')
+// const application = require('./application')
+const application = require('@ioticsme/beave-cms')
 
 app.use(express.static('public'))
 
