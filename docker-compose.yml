@@ -1,16 +1,23 @@
 version: '3.8'
 services:
-  api:
-    container_name: iotics-cms
-    build:
-      context: ./
-      dockerfile: Dockerfile.dev
-      target: dev
-    volumes:
-      - .:/app
-    command: sh -c "npm i && npm run dev"
-    ports:
-      - "1380:1380"
-    environment:
-      NODE_ENV: development
-      DEBUG: nodejs-docker-express:*
+    redis_db:
+        image: "redis"
+        ports:
+            - "6380:6379"
+        expose:
+            - 6379
+        restart: always
+    api:
+        container_name: iotics-cms
+        build:
+            context: ./
+            dockerfile: Dockerfile.dev
+            target: dev
+        volumes:
+            - .:/app
+        command: sh -c "npm i && npm run dev"
+        ports:
+            - "1380:1380"
+        environment:
+            NODE_ENV: development
+            DEBUG: nodejs-docker-express:*
