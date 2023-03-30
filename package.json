@@ -11,7 +11,7 @@
     "author": "Iotics Middle East",
     "license": "ISC",
     "dependencies": {
-        "@ioticsme/beave-cms": "^1.0.52",
+        "@ioticsme/beave-cms": "^1.0.75",
         "express": "^4.17.1",
         "nunjucks": "^3.2.3"
     },

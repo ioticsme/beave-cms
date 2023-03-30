@@ -3,8 +3,8 @@ const express = require('express')
 const nunjucks = require('nunjucks')
 const app = express()
 
-// const application = require('../cms-package')
-const application = require('@ioticsme/beave-cms')
+const application = require('../cms-package')
+// const application = require('@ioticsme/beave-cms')
 
 app.use(express.static('public'))
 
