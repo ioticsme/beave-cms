@@ -17,7 +17,7 @@ services:
             - .:/app
         command: sh -c "npm i && npm run dev"
         ports:
-            - "1380:1380"
+            - "${PORT}:1380"
         environment:
             NODE_ENV: development
             DEBUG: nodejs-docker-express:*
