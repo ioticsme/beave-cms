@@ -8,7 +8,7 @@ services:
             - 6379
         restart: always
     api:
-        container_name: beave-cms
+        # container_name: beave-cms
         build:
             context: ./
             dockerfile: Dockerfile.dev

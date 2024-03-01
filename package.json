@@ -11,6 +11,7 @@
     "author": "Iotics Middle East",
     "license": "ISC",
     "dependencies": {
+        "dotenv": "^16.3.1",
         "express": "^4.17.1",
         "nunjucks": "^3.2.3"
     },
