@@ -7,8 +7,8 @@ services:
         expose:
             - 6379
         restart: always
-    api:
-        # container_name: beave-cms
+    cms:
+        container_name: "${DOCKER_CONTAINER_NAME}"
         build:
             context: ./
             dockerfile: Dockerfile.dev
