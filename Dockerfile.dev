@@ -16,7 +16,7 @@ ENV NODE_ENV=development
 # timezone env with default
 ENV TZ="Asia/Dubai"
 RUN apk add --no-cache python3 make g++
-RUN apk add --no-cache  chromium --repository=http://dl-cdn.alpinelinux.org/alpine/v3.10/main
+# RUN apk add --no-cache  chromium --repository=http://dl-cdn.alpinelinux.org/alpine/v3.10/main
 RUN npm install
 # RUN npm install -g nodemon
 # CMD sh -c 'npm install && npm run dev'
