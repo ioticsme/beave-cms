@@ -11,6 +11,7 @@
     "author": "Iotics Middle East",
     "license": "ISC",
     "dependencies": {
+        "@ioticsme/beave-cms": "^2.1.1",
         "dotenv": "^16.3.1",
         "express": "^4.17.1",
         "nunjucks": "^3.2.3"
@@ -18,6 +19,6 @@
     "devDependencies": {
         "concurrently": "^7.3.0",
         "jest": "^28.1.3",
-        "nodemon": "^2.0.15"
+        "nodemon": "^3.1.7"
     }
 }
