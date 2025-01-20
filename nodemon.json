@@ -2,6 +2,7 @@
     "watch": ["**/*.js", "../cms-package/**/*", "**/*.prisma"],
     "ignore": [
         "public/*.js",
+        "../cms-package/public/**/*",
         "README"
     ]
 }

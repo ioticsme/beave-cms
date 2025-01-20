@@ -1,4 +1,4 @@
-# IOTICS - CMS
+# BeaveCMS
 Operations handling
 
 - Global CMS or all brands
@@ -10,88 +10,70 @@ Operations handling
 - [MongoDB] - Database
 - [Redis] - Caching DB
 
-## Installation (Docker)
+## Installation
+To install BeaveCMS, follow these steps:
 
-Pull the code from repo.
-Setup the Redis DB on your Host machine / Docker 
-Create `.env` file on projetc root.
-```sh
-NODE_ENV=development
-PORT=8080
-APP_KEY=testkey
+- Open your terminal or command prompt.
+- Run the following command to install BeaveCMS:
 
-FRONTEND_URL=http://localhost:3000
-# Local DB
-DB_CONNECTION=mongodb+srv://<username>:<password>@cluster0.aukq2.mongodb.net/?retryWrites=true&w=majority
-DB_NAME=landmark-leisure
-
-# SLACK
-SLACK_ADMIN_CHANNEL=
-
-# IMAGEKIT
-IMAGEKIT_PUBLIC_KEY=public_
-IMAGEKIT_PRIVATE_KEY=private_
-IMAGEKIT_URL=
-
-# Mailgun
-MAILGUN_DOMAIN=
-MAILGUN_API_KEY=
-MAILGUN_FROM=
-MAILGUN_OTP_TEMPLATE=
-MAILGUN_FORGOT_PASSWORD_TEMPLATE=
-MAILGUN_FORGOT_PASSWORD_THANKYOU_TEMPLATE=
-MAILGUN_ORDER_COMPLETE_TEMPLATE=
-MAILGUN_WELCOME_TEMPLATE=
-
-# SMS -Aptiva
-APTIVA_SENDER_ID=
-APTIVA_USRNAME=
-APTIVA_PASSWORD=
-
-# GA Tracking API
-CLIENT_EMAIL="google-analytics-nodejs-test@experiment-d4168.iam.gserviceaccount.com"
-GA_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----"
-
-# PAYFORT
-PAYFORT_URL=https://sbcheckout.PayFort.com
-PAYFORT_API_URL=https://sbpaymentservices.payfort.com
-MERCHANT_IDENTIFIER=
-ACCESS_CODE=
-SHA_REQUEST_PARSE=
-SHA_RESPONSE_PARSE=
-SHA_TYPE=
-
-#Cache
-CACHE_LOCAL_DATA=true
-CACHE_SEMNOX_DATA=true
-WEB_USER_TOKEN_EXPIRY=24h
-MOBILE_USER_TOKEN_EXPIRY=24h
-CART_EXPIRY=600
-
-REDIS_URL=redis://host.docker.internal:6379
 ```
-Once done, run the Docker image and map the port to whatever you wish on
-your host. In this project, we simply map port `8400` of the host to
-port `8080` of the Docker (or whatever port was exposed in the Dockerfile and docker-compose.yml):
+npx create-beave-app my-app
+```
+Replace my-app with the desired name of your project folder.
+This will prompt you with a few questions regarding your project configurations. You can change these values later on.
 
-```sh
-cd <PROJECT_ROOT>
-docker compose up --build
+1. `Installation Type` :
+   You will be asked to choose an installation type:
+
+   | Options | Description                                                                                                                               |
+   | ------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+   | 1       | Quick Installation: This will create an auto-generated .env file on your project root with default configuration parameters.              |
+   | 2       | Manual Installation: You can configure the database connection and other values from the CLI terminal. You can change these values later. |
+
+If you choose Manual Installation, the terminal will ask you the following questions:
+
+2. `Docker` :
+   By default, the value will be false. If you want the Beave app in a Docker container, you can turn it to true.
+3. `Environment` :
+   You will be asked to choose the environment:
+
+   |     | Description                             |
+   | --- | --------------------------------------- |
+   | 1   | Development: Only for local development |
+   | 2   | Staging: For Staging application        |
+   | 3   | Production: For live application        |
+
+4. `PORT` :
+   By default, the port value will be 1380. You can change it if you want.
+
+5. `Organisation name`: Default value will be `beave-cms`.
+6. `Paste your Mongodb Connection URL`: Insert your mongodb connection URL. By default the value will be `mongodb://localhost:27017`. We recommend [MongoDB Atlas Connection](https://account.mongodb.com/account/login).
+7. `Your Database Name` : Mongodb collection name.
+8. `Redis URL` : Your redis connection URL. By Default value will be `redis://localhost:6379`.
+
+If you choose the `docker` value `true`, the installation will take bit higher than the normal installation.
+
+### Starting the Application
+To start the BeaveCMS application, follow these steps:
+
+- You are now ready to start the Beave app. Run the following commands to start:
+- Make sure you are in the root directory of your BeaveCMS project.
+
+Run the following command to start the application:
+```
+cd my-app && npm start
 ```
 
-Package Installation
-```sh
-docker exec -it landmark-leisure-cms npm i
-```
-
-Run Seeder
-```sh
-docker exec -it landmark-leisure-cms node seeder
-```
-
-Verify the project setup by navigating to your server address in
-your preferred browser.
+To check the health of the application, navigate to:
 
 ```sh
-127.0.0.1:8400/health
+127.0.0.1:1380/health
 ```
+
+To Access the admin panel:
+
+```sh
+127.0.0.1:1380/admin
+```
+
+If you are accessing this page for the first time, it will redirect you to sign up, and you can create a super admin account.
