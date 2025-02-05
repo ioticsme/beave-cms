@@ -3,8 +3,8 @@ const express = require('express')
 const nunjucks = require('nunjucks')
 const app = express()
 
-// const application = require('../cms-package')
-const application = require('@ioticsme/beave-cms')
+const application = require('../cms-package')
+// const application = require('@ioticsme/beave-cms')
 
 app.use(express.static('public'))
 
@@ -25,11 +25,13 @@ app.set('view engine', 'njk')
 //     return res.send('test')
 // })
 
-const port = process.env.PORT || 8080
+const internal_port = process.env.DOCKER_CONTAINER_NAME
+    ? 8080
+    : process.env.PORT
+const port = process.env.PORT
 
-app.listen(port, async () => {
-    console.log(`App running in port ${port}`)
-}).on('error', (e) => {
-    console.log(e)
+app.listen(internal_port, async () => {
+    console.log(`App running on port ${port}`)
+}).on('error', () => {
     console.log('Application error')
 })
