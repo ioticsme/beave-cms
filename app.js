@@ -2,8 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const nunjucks = require('nunjucks')
 const app = express()
-// const cms = require('../cms-package')
-const beaveCMS = require('beave-cms')
+// const beaverCMS = require('../cms-package')
+const beaverCMS = require('beaver-cms')
 
 
 app.use(express.static('public'))
@@ -13,7 +13,7 @@ app.use(express.static('public'))
 //     return res.json('Hellooo')
 // })
 
-app.use(beaveCMS)
+app.use(beaverCMS)
 // Setting template engine (nunjucks)
 nunjucks.configure('views', {
     express: app,
